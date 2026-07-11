@@ -12,6 +12,7 @@ dependencies = [
     "pydantic-settings>=2.7",
     "python-multipart>=0.0.20",
     "sentence-transformers>=5.0",
+    "streamlit>=1.40",
     "uvicorn[standard]>=0.34",
 ]
 

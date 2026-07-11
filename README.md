@@ -38,6 +38,13 @@ Nenhuma chave real deve ser colocada em `.env.example`. O arquivo `.env` local
 uv run uvicorn app.api:app --host 127.0.0.1 --port 8000
 ```
 
+O alias abaixo inicia a mesma aplicação e é o comando recomendado para uso
+com a interface Streamlit:
+
+```bash
+uv run uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
 Alternativamente:
 
 ```bash
@@ -102,6 +109,39 @@ tentativas de sair de `DOCUMENTS_DIR` são rejeitados.
 O provedor de LLM é opcional nesta etapa. Quando `LLM_PROVIDER=none`, o health
 check informa `not_configured`, sem tornar indisponíveis a API, o ChromaDB ou o
 modelo de embeddings.
+
+## Interface Streamlit
+
+A interface é uma camada de apresentação separada. Ela não acessa Docling,
+ChromaDB, embeddings ou serviços internos; todas as operações usam HTTP:
+
+```text
+Navegador → Streamlit → FastAPI → serviços RAG e de ingestão
+```
+
+Inicie os dois processos em terminais separados.
+
+Terminal 1:
+
+```bash
+uv run uvicorn app.main:app --reload
+```
+
+Terminal 2:
+
+```bash
+API_BASE_URL=http://127.0.0.1:8000 uv run streamlit run frontend/app.py
+```
+
+A interface fica em `http://localhost:8501`. `API_BASE_URL` é opcional e usa
+`http://127.0.0.1:8000` por padrão.
+
+Ela oferece duas áreas:
+
+- **Consultar acervo:** estado da API, quantidade de documentos, histórico,
+  chat e fontes expansíveis;
+- **Gerenciar documentos:** upload PDF, acompanhamento da ingestão, listagem,
+  confirmação e exclusão.
 
 ## Configuração
 
