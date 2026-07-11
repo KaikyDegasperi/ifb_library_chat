@@ -37,6 +37,13 @@ class Settings(BaseSettings):
     llm_base_url: str | None = None
     llm_model: str | None = None
     llm_api_key: str | None = Field(default=None, repr=False)
+    llm_timeout_seconds: float = Field(default=30.0, gt=0)
+
+    rag_retrieval_top_k: int = Field(default=8, ge=1)
+    rag_min_similarity: float = Field(default=0.35, ge=-1.0, le=1.0)
+    rag_max_context_chars: int = Field(default=12_000, ge=500)
+    rag_max_question_chars: int = Field(default=2_000, ge=1)
+    rag_duplicate_threshold: float = Field(default=0.92, ge=0.0, le=1.0)
 
     def ensure_directories(self) -> None:
         for directory in (

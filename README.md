@@ -79,6 +79,12 @@ modelo de embeddings.
 | `LLM_BASE_URL` | vazio | URL de provedor compatível |
 | `LLM_MODEL` | vazio | Modelo de linguagem |
 | `LLM_API_KEY` | vazio | Credencial local; nunca é retornada pela API |
+| `LLM_TIMEOUT_SECONDS` | `30` | Tempo máximo para geração |
+| `RAG_RETRIEVAL_TOP_K` | `8` | Candidatos recuperados antes da seleção |
+| `RAG_MIN_SIMILARITY` | `0.35` | Similaridade mínima aceita como contexto |
+| `RAG_MAX_CONTEXT_CHARS` | `12000` | Limite total do contexto enviado ao LLM |
+| `RAG_MAX_QUESTION_CHARS` | `2000` | Limite da pergunta |
+| `RAG_DUPLICATE_THRESHOLD` | `0.92` | Limiar para remover chunks quase idênticos |
 
 O health check verifica que o pacote de embeddings e o nome do modelo estão
 disponíveis. Os pesos do modelo serão baixados apenas quando a futura etapa de
@@ -172,6 +178,38 @@ uv run python -m app.cli.search \
 
 Cada resultado inclui similaridade, documento, arquivo, páginas, seção, hash
 e caminho do PDF original.
+
+## Pipeline RAG
+
+O serviço RAG é independente da API HTTP. Ele valida a pergunta, consulta o
+ChromaDB, descarta resultados abaixo do limiar, remove trechos quase idênticos,
+limita o contexto e chama o provedor de linguagem configurado.
+
+Configuração de um endpoint compatível com a API de chat da OpenAI:
+
+```dotenv
+LLM_PROVIDER=openai_compatible
+LLM_BASE_URL=https://provedor.example/v1
+LLM_MODEL=nome-do-modelo
+LLM_API_KEY=
+```
+
+Provedores locais compatíveis que não exigem chave podem deixar
+`LLM_API_KEY` vazio. Nenhuma credencial é escrita no código ou nos logs.
+
+Uso pela camada de aplicação:
+
+```python
+from app.config import get_settings
+from app.rag.factory import create_rag_service
+
+rag = create_rag_service(get_settings())
+response = rag.answer("O que os TCCs dizem sobre discalculia?")
+```
+
+Quando não há resultado com similaridade suficiente, o LLM não é chamado.
+Falhas e timeouts na geração retornam uma mensagem controlada junto das fontes
+recuperadas.
 
 ## Testes
 
