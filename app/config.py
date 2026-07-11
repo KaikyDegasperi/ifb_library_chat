@@ -20,6 +20,9 @@ class Settings(BaseSettings):
 
     documents_dir: Path = Path("pdfs_ifb")
     processed_dir: Path = Path("data/processed")
+    ingest_chunk_size: int = Field(default=500, ge=50)
+    ingest_chunk_overlap: int = Field(default=50, ge=0)
+    ingest_device: str = "auto"
     chroma_dir: Path = Path("data/chroma")
     logs_dir: Path = Path("logs")
     chroma_collection: str = "ifb_tcc_matematica"

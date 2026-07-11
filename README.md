@@ -4,8 +4,8 @@ Base da API para o chatbot de consulta aos Trabalhos de Conclusão de Curso da
 Licenciatura em Matemática do IFB Campus Estrutural.
 
 Nesta etapa o projeto oferece configuração local reproduzível, logging,
-persistência do ChromaDB e um endpoint de saúde. A ingestão com Docling e o
-pipeline RAG ainda serão implementados.
+persistência do ChromaDB, um endpoint de saúde e ingestão estruturada de PDFs
+com Docling. A indexação vetorial e o pipeline RAG ainda serão implementados.
 
 ## Requisitos
 
@@ -66,6 +66,9 @@ modelo de embeddings.
 | `LOG_LEVEL` | `INFO` | Nível de logging |
 | `DOCUMENTS_DIR` | `pdfs_ifb` | PDFs originais |
 | `PROCESSED_DIR` | `data/processed` | Artefatos processados |
+| `INGEST_CHUNK_SIZE` | `500` | Tamanho aproximado em palavras |
+| `INGEST_CHUNK_OVERLAP` | `50` | Sobreposição em palavras |
+| `INGEST_DEVICE` | `auto` | Dispositivo escolhido pelo Docling |
 | `CHROMA_DIR` | `data/chroma` | Persistência do ChromaDB |
 | `LOGS_DIR` | `logs` | Arquivos de log |
 | `CHROMA_COLLECTION` | `ifb_tcc_matematica` | Nome da coleção |
@@ -83,14 +86,50 @@ ingestão ou consulta carregar efetivamente o modelo.
 
 ```text
 pdfs_ifb/       documentos PDF originais
-data/processed/ resultados da futura extração com Docling
+data/processed/ documentos estruturados e chunks gerados pelo Docling
 data/chroma/    banco vetorial persistente
 logs/           logs rotativos da aplicação
 tests/          testes automatizados
 ```
 
-Os conteúdos gerados desses diretóios são ignorados pelo Git; arquivos
+Os conteúdos gerados desses diretórios são ignorados pelo Git; arquivos
 `.gitkeep` mantêm a estrutura no repositório.
+
+## Ingestão de PDFs com Docling
+
+Para processar o diretório configurado em `DOCUMENTS_DIR`:
+
+```bash
+uv run python -m app.cli.ingest
+```
+
+Para processar um PDF ou diretório específico:
+
+```bash
+uv run python -m app.cli.ingest \
+  --input ./pdfs_ifb \
+  --output ./data/processed \
+  --chunk-size 500 \
+  --overlap 50 \
+  --device auto
+```
+
+O tamanho e a sobreposição são aproximados em palavras. O chunker preserva os
+limites estruturais produzidos pelo Docling e subdivide somente elementos que
+ultrapassam o limite configurado. A sobreposição nunca combina seções distintas.
+
+Para cada documento são gravados:
+
+```text
+<document_id>.docling.json    documento estruturado original do Docling
+<document_id>.chunks.json     chunks e metadados prontos para embeddings
+manifest.json                 hashes e artefatos usados para deduplicação
+last-ingestion-report.json    resultado do lote mais recente
+```
+
+Na primeira execução, o Docling pode baixar modelos oficiais de layout e
+tabelas. Execuções posteriores reutilizam o cache local. Um PDF sem alterações
+é ignorado quando seus dois artefatos ainda existem.
 
 ## Testes
 
