@@ -30,6 +30,8 @@ class Settings(BaseSettings):
     embedding_model: str = (
         "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     )
+    embedding_batch_size: int = Field(default=32, ge=1)
+    search_top_k: int = Field(default=5, ge=1)
 
     llm_provider: str = "none"
     llm_base_url: str | None = None

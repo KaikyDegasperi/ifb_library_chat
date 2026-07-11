@@ -73,6 +73,8 @@ modelo de embeddings.
 | `LOGS_DIR` | `logs` | Arquivos de log |
 | `CHROMA_COLLECTION` | `ifb_tcc_matematica` | Nome da coleção |
 | `EMBEDDING_MODEL` | `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` | Modelo multilíngue configurado |
+| `EMBEDDING_BATCH_SIZE` | `32` | Textos processados por lote de embeddings |
+| `SEARCH_TOP_K` | `5` | Quantidade padrão de resultados da busca |
 | `LLM_PROVIDER` | `none` | Provedor configurado |
 | `LLM_BASE_URL` | vazio | URL de provedor compatível |
 | `LLM_MODEL` | vazio | Modelo de linguagem |
@@ -130,6 +132,46 @@ last-ingestion-report.json    resultado do lote mais recente
 Na primeira execução, o Docling pode baixar modelos oficiais de layout e
 tabelas. Execuções posteriores reutilizam o cache local. Um PDF sem alterações
 é ignorado quando seus dois artefatos ainda existem.
+
+## Indexação vetorial
+
+Depois da ingestão, indexe os arquivos `*.chunks.json` no ChromaDB persistente:
+
+```bash
+uv run python -m app.cli.index \
+  --input ./data/processed \
+  --chroma-dir ./data/chroma \
+  --collection ifb_tcc_matematica
+```
+
+O modelo configurado por `EMBEDDING_MODEL` é carregado por uma implementação
+isolada da interface de embeddings. Na primeira execução, seus pesos podem ser
+baixados. IDs derivados do hash, índice e conteúdo do chunk evitam duplicações.
+Quando a mesma origem possui versões diferentes, apenas a mais recente é
+selecionada e os chunks obsoletos são removidos.
+
+Consulta de teste:
+
+```bash
+uv run python -m app.cli.search \
+  "Como a discalculia afeta a aprendizagem?" \
+  --top-k 5
+```
+
+Filtros opcionais:
+
+```bash
+uv run python -m app.cli.search \
+  "ensino de geometria" \
+  --document-id d497a407dea443a3
+
+uv run python -m app.cli.search \
+  "educação inclusiva" \
+  --title "Título exato do trabalho"
+```
+
+Cada resultado inclui similaridade, documento, arquivo, páginas, seção, hash
+e caminho do PDF original.
 
 ## Testes
 
