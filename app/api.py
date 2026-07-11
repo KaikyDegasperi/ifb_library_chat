@@ -4,11 +4,15 @@ import logging
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 
-from app.config import Settings, get_settings
-from app.health import build_health
+from app.config import get_settings
+from app.dependencies import provide_settings
 from app.logging_config import configure_logging
+from app.routes.chat import router as chat_router
+from app.routes.documents import router as documents_router
+from app.routes.health import router as health_router
+from app.routes.search import router as search_router
 
 
 @asynccontextmanager
@@ -22,15 +26,18 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 
 settings = get_settings()
-app = FastAPI(title=settings.app_name, lifespan=lifespan)
+app = FastAPI(
+    title=settings.app_name,
+    version="0.1.0",
+    description=(
+        "API para ingestão, indexação, busca e consulta RAG dos TCCs da "
+        "Licenciatura em Matemática do IFB Campus Estrutural."
+    ),
+    lifespan=lifespan,
+)
+app.include_router(health_router)
+app.include_router(documents_router)
+app.include_router(search_router)
+app.include_router(chat_router)
 
-
-async def provide_settings() -> Settings:
-    return get_settings()
-
-
-@app.get("/health", tags=["operação"])
-async def health(
-    current_settings: Settings = Depends(provide_settings),
-) -> dict[str, object]:
-    return build_health(current_settings)
+__all__ = ["app", "provide_settings"]

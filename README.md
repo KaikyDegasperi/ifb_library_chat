@@ -53,6 +53,52 @@ Exemplo:
 curl --fail http://127.0.0.1:8000/health
 ```
 
+Endpoints disponíveis:
+
+```text
+GET    /health
+GET    /documents
+GET    /documents/{document_id}
+POST   /documents/ingest
+DELETE /documents/{document_id}
+POST   /search
+POST   /chat
+```
+
+Exemplo de busca sem geração:
+
+```bash
+curl -X POST http://127.0.0.1:8000/search \
+  -H 'Content-Type: application/json' \
+  -d '{"query":"tecnologia no ensino de matemática","top_k":5}'
+```
+
+Exemplo de conversa RAG:
+
+```bash
+curl -X POST http://127.0.0.1:8000/chat \
+  -H 'Content-Type: application/json' \
+  -d '{"question":"Quais TCCs discutem tecnologia?","top_k":5}'
+```
+
+Upload e ingestão:
+
+```bash
+curl -X POST http://127.0.0.1:8000/documents/ingest \
+  -F 'file=@trabalho.pdf;type=application/pdf'
+```
+
+Para um PDF que já esteja dentro de `DOCUMENTS_DIR`:
+
+```bash
+curl -X POST http://127.0.0.1:8000/documents/ingest \
+  -F 'path=trabalho.pdf'
+```
+
+O upload aceita apenas nomes seguros, extensão `.pdf`, MIME type de PDF,
+assinatura `%PDF-` e arquivos dentro do limite configurado. Caminhos absolutos e
+tentativas de sair de `DOCUMENTS_DIR` são rejeitados.
+
 O provedor de LLM é opcional nesta etapa. Quando `LLM_PROVIDER=none`, o health
 check informa `not_configured`, sem tornar indisponíveis a API, o ChromaDB ou o
 modelo de embeddings.
@@ -64,6 +110,7 @@ modelo de embeddings.
 | `APP_NAME` | `IFB Library Chat` | Nome exibido pela API |
 | `APP_ENV` | `development` | Identifica o ambiente |
 | `LOG_LEVEL` | `INFO` | Nível de logging |
+| `MAX_UPLOAD_SIZE_MB` | `25` | Tamanho máximo aceito no upload de PDF |
 | `DOCUMENTS_DIR` | `pdfs_ifb` | PDFs originais |
 | `PROCESSED_DIR` | `data/processed` | Artefatos processados |
 | `INGEST_CHUNK_SIZE` | `500` | Tamanho aproximado em palavras |

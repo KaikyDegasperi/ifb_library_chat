@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     app_name: str = "IFB Library Chat"
     app_env: str = "development"
     log_level: str = "INFO"
+    max_upload_size_mb: int = Field(default=25, ge=1)
 
     documents_dir: Path = Path("pdfs_ifb")
     processed_dir: Path = Path("data/processed")
@@ -53,6 +54,10 @@ class Settings(BaseSettings):
             self.logs_dir,
         ):
             directory.mkdir(parents=True, exist_ok=True)
+
+    @property
+    def max_upload_size_bytes(self) -> int:
+        return self.max_upload_size_mb * 1024 * 1024
 
 
 @lru_cache

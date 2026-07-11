@@ -44,9 +44,7 @@ def check_llm(settings: Settings) -> dict[str, Any]:
             "detail": "not_configured",
         }
 
-    available = bool(
-        provider and settings.llm_model and settings.llm_api_key
-    )
+    available = bool(provider and settings.llm_model and settings.llm_base_url)
     return {
         "available": available,
         "provider": provider,

@@ -70,6 +70,7 @@ class RAGService:
         question: str,
         document_id: str | None = None,
         title: str | None = None,
+        top_k: int | None = None,
     ) -> RAGResponse:
         question = question.strip()
         if not question:
@@ -78,12 +79,15 @@ class RAGService:
             raise InvalidQuestionError(
                 f"A pergunta excede {self.max_question_chars} caracteres"
             )
+        effective_top_k = top_k or self.retrieval_top_k
+        if effective_top_k < 1:
+            raise InvalidQuestionError("top_k deve ser maior que zero")
 
         retrieval_started = time.perf_counter()
         try:
             retrieved = self.retriever.search(
                 question,
-                top_k=self.retrieval_top_k,
+                top_k=effective_top_k,
                 document_id=document_id,
                 title=title,
             )
