@@ -1,0 +1,1 @@
+"""Aplicação IFB Library Chat."""

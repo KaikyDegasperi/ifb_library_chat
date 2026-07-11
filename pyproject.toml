@@ -1,0 +1,27 @@
+[project]
+name = "ifb-library-chat"
+version = "0.1.0"
+description = "API para consulta aos TCCs da Licenciatura em Matemática do IFB"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "chromadb>=1.0",
+    "fastapi>=0.115",
+    "pydantic-settings>=2.7",
+    "sentence-transformers>=5.0",
+    "uvicorn[standard]>=0.34",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28",
+    "pytest>=8.3",
+]
+scraper = [
+    "playwright>=1.50",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

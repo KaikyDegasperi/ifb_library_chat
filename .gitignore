@@ -1,0 +1,18 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+data/processed/*
+!data/processed/.gitkeep
+data/chroma/*
+!data/chroma/.gitkeep
+logs/*
+!logs/.gitkeep
+
+# Os PDFs são recriados pelo scraper e não devem inflar o Git.
+pdfs_ifb/*
+!pdfs_ifb/.gitkeep
