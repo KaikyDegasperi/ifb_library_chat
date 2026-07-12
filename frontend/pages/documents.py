@@ -1,4 +1,4 @@
-"""Página administrativa de documentos."""
+"""Página administrativa do acervo."""
 
 import os
 from typing import Any
@@ -19,29 +19,54 @@ def render_documents_page(
     documents: list[dict[str, Any]] | None,
     api_available: bool,
 ) -> None:
-    st.title("Gerenciar documentos")
-    st.write(
-        "Envie TCCs em PDF para processamento com Docling e indexação no "
-        "ChromaDB. A exclusão remove os vetores do documento do acervo consultável."
+    st.markdown(
+        """
+        <div class="hero-card">
+            <div class="section-kicker">Gerenciamento do acervo</div>
+            <h1>Gestão institucional dos documentos</h1>
+            <p>Esta área é reservada à equipe responsável por publicar, revisar e atualizar o acervo consultável.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
     if not api_available:
         st.error("A FastAPI está indisponível. O gerenciamento foi desativado.")
         return
 
+    summary = [
+        ("Total de documentos", len(documents or [])),
+        ("Indexados", len(documents or [])),
+        ("Processando", 0),
+        ("Com erro", 0),
+    ]
+    columns = st.columns(4)
+    for column, (label, value) in zip(columns, summary):
+        with column:
+            st.markdown(
+                f"""
+                <div class="metric-card">
+                    <div class="section-kicker">{label}</div>
+                    <h2>{value}</h2>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+    st.divider()
     _render_upload(client, documents or [])
     st.divider()
     _render_document_list(client, documents or [])
 
 
 def _render_upload(client: APIClient, documents: list[dict[str, Any]]) -> None:
-    st.subheader("Enviar novo PDF")
+    st.subheader("Upload de novo PDF")
     maximum_mb = int(os.getenv("MAX_UPLOAD_SIZE_MB", "25"))
     uploaded = st.file_uploader(
-        "Selecione um Trabalho de Conclusão de Curso",
+        "Selecione um arquivo PDF",
         type=["pdf"],
         accept_multiple_files=False,
-        help=f"Formato PDF, com tamanho máximo visual de {maximum_mb} MB.",
+        help=f"Formato PDF, com tamanho máximo de {maximum_mb} MB.",
     )
     valid = True
     if uploaded is not None:
@@ -65,7 +90,6 @@ def _render_upload(client: APIClient, documents: list[dict[str, Any]]) -> None:
     existing_ids = {item.get("document_id") for item in documents}
     with st.status("Enviando o PDF para a FastAPI...", expanded=True) as status:
         try:
-            st.write("O backend executará Docling, chunking, embeddings e indexação.")
             result = client.ingest_document(
                 uploaded.name,
                 uploaded.getvalue(),

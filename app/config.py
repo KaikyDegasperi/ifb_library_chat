@@ -40,11 +40,29 @@ class Settings(BaseSettings):
     llm_api_key: str | None = Field(default=None, repr=False)
     llm_timeout_seconds: float = Field(default=30.0, gt=0)
 
+    local_llm_context_size: int = Field(default=2_048, ge=256)
+    local_llm_max_tokens: int = Field(default=256, ge=32)
+    local_llm_temperature: float = Field(default=0.1, ge=0.0, le=1.0)
+    local_llm_top_p: float = Field(default=0.9, ge=0.0, le=1.0)
+    local_llm_threads: int = Field(default=4, ge=1)
+    local_llm_batch_size: int = Field(default=8, ge=1)
+    local_llm_gpu_layers: int = Field(default=0, ge=0)
+    local_llm_parallel_requests: int = Field(default=1, ge=1)
+    local_llm_keep_alive: str = "5m"
+    local_llm_model_path: str | None = None
+    local_llm_kv_cache_type: str = "q4_k"
+    local_llm_flash_attention: bool = False
+
+    rag_context_token_budget: int = Field(default=1_600, ge=256)
+    rag_output_token_reserve: int = Field(default=256, ge=32)
     rag_retrieval_top_k: int = Field(default=8, ge=1)
     rag_min_similarity: float = Field(default=0.35, ge=-1.0, le=1.0)
     rag_max_context_chars: int = Field(default=12_000, ge=500)
     rag_max_question_chars: int = Field(default=2_000, ge=1)
     rag_duplicate_threshold: float = Field(default=0.92, ge=0.0, le=1.0)
+
+    ingest_max_concurrency: int = Field(default=2, ge=1)
+    embedding_max_concurrency: int = Field(default=2, ge=1)
 
     def ensure_directories(self) -> None:
         for directory in (

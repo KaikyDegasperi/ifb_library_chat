@@ -3,6 +3,7 @@
 from app.config import Settings
 from app.rag.llm import (
     LanguageModelProvider,
+    OllamaChatProvider,
     OpenAICompatibleProvider,
     UnavailableLLMProvider,
 )
@@ -14,11 +15,25 @@ def create_llm_provider(settings: Settings) -> LanguageModelProvider:
     provider = settings.llm_provider.strip().lower()
     if provider == "none":
         return UnavailableLLMProvider()
-    if provider in {"openai", "openai_compatible"}:
+    if provider in {"openai", "openai_compatible", "openai-compatible"}:
         return OpenAICompatibleProvider(
             base_url=settings.llm_base_url or "",
             model=settings.llm_model or "",
             api_key=settings.llm_api_key,
+            default_temperature=settings.local_llm_temperature,
+            default_top_p=settings.local_llm_top_p,
+            default_max_tokens=settings.local_llm_max_tokens,
+        )
+    if provider in {"ollama", "ollama-compatible", "local-llm", "local_llm"}:
+        return OllamaChatProvider(
+            base_url=settings.llm_base_url or "",
+            model=settings.llm_model or "",
+            api_key=settings.llm_api_key,
+            default_temperature=settings.local_llm_temperature,
+            default_top_p=settings.local_llm_top_p,
+            default_max_tokens=settings.local_llm_max_tokens,
+            default_context_window=settings.local_llm_context_size,
+            keep_alive=settings.local_llm_keep_alive or None,
         )
     raise ValueError(f"Provedor de LLM não suportado: {settings.llm_provider}")
 
