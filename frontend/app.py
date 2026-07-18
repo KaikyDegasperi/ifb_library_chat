@@ -13,85 +13,15 @@ if str(PROJECT_ROOT) not in sys.path:
 from frontend.api_client import APIClient, APIClientError
 from frontend.pages.chat import render_chat_page
 from frontend.pages.documents import render_documents_page
+from frontend.styles import apply_styles
 
 st.set_page_config(
-    page_title="IFB Library Chat",
-    page_icon="📚",
+    page_title="Biblioteca IFB · Assistente de pesquisa",
+    page_icon=":material/local_library:",
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
-st.markdown(
-    """
-    <style>
-    :root {
-        --bg: #0b1220;
-        --surface: #111827;
-        --surface-2: #172033;
-        --border: #374151;
-        --text: #f8fafc;
-        --muted: #cbd5e1;
-        --primary: #10b981;
-        --primary-strong: #059669;
-        --warning: #f59e0b;
-        --danger: #ef4444;
-    }
-    .stApp {
-        background: linear-gradient(135deg, #0b1220 0%, #111827 100%);
-        color: var(--text);
-    }
-    [data-testid="stSidebar"] {
-        background: #0b1220;
-        border-right: 1px solid var(--border);
-    }
-    .block-container {
-        padding-top: 2rem;
-        padding-bottom: 3rem;
-    }
-    .hero-card, .metric-card, .source-card, .admin-card {
-        background: rgba(17, 24, 39, 0.95);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 1.2rem 1.3rem;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
-    }
-    .hero-card { margin-bottom: 1.25rem; }
-    .metric-card { min-height: 100px; }
-    .source-card { margin-bottom: 0.8rem; }
-    .section-kicker {
-        color: var(--primary);
-        text-transform: uppercase;
-        letter-spacing: 0.16em;
-        font-size: 0.75rem;
-        font-weight: 700;
-        margin-bottom: 0.3rem;
-    }
-    h1, h2, h3, h4, p, div, label {
-        color: var(--text);
-    }
-    .stTextArea textarea, .stTextInput input {
-        border-radius: 16px !important;
-        border: 1px solid var(--border) !important;
-        background: var(--surface-2) !important;
-        color: var(--text) !important;
-    }
-    .stButton>button, .stDownloadButton>button {
-        border-radius: 999px !important;
-        border: none !important;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-strong) 100%) !important;
-        color: white !important;
-        font-weight: 600 !important;
-    }
-    .stButton>button:hover {
-        filter: brightness(1.05);
-    }
-    .stRadio > div {
-        gap: 0.5rem;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+apply_styles()
 
 
 @st.cache_resource
@@ -113,36 +43,94 @@ def main() -> None:
 
     if "active_view" not in st.session_state:
         st.session_state.active_view = "Consulta"
+    if "chat_messages" not in st.session_state:
+        st.session_state.chat_messages = []
+    if "recent_questions" not in st.session_state:
+        st.session_state.recent_questions = []
 
     with st.sidebar:
-        st.markdown("### IFB")
-        st.markdown("#### Library Chat")
-        st.caption("Biblioteca digital do IFB")
-        st.divider()
-
-        selected_view = st.radio(
-            "Navegação",
-            ["Consulta", "Sobre o projeto"],
-            label_visibility="collapsed",
-            horizontal=False,
+        st.markdown(
+            """
+            <div class="ifb-brand">
+                <div class="ifb-brand-mark">IF</div>
+                <div class="ifb-brand-copy">
+                    <strong>Biblioteca IFB</strong>
+                    <small>Campus Estrutural</small>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
-        st.session_state.active_view = selected_view
+        if st.button(
+            "Nova conversa",
+            icon=":material/add:",
+            type="primary",
+            width="stretch",
+        ):
+            st.session_state.chat_messages = []
+            st.session_state.selected_source = None
+            st.session_state.active_view = "Consulta"
 
-        st.divider()
-        if st.button("Acesso institucional", use_container_width=True):
+        history_filter = st.text_input(
+            "Buscar conversas",
+            placeholder="Buscar conversas",
+            label_visibility="collapsed",
+            icon=":material/search:",
+        )
+
+        st.markdown('<div class="sidebar-label">Navegação</div>', unsafe_allow_html=True)
+        if st.button("Conversas", icon=":material/chat:", width="stretch"):
+            st.session_state.active_view = "Consulta"
+        if st.button("Explorar acervo", icon=":material/library_books:", width="stretch"):
             st.session_state.active_view = "Gerenciamento do acervo"
-        if st.session_state.active_view == "Gerenciamento do acervo":
-            if st.button("Voltar à consulta", use_container_width=True):
-                st.session_state.active_view = "Consulta"
+        if st.button("Sobre o projeto", icon=":material/info:", width="stretch"):
+            st.session_state.active_view = "Sobre o projeto"
 
-        st.caption("Licenciatura em Matemática · IFB Campus Estrutural")
+        recent = [
+            item
+            for item in st.session_state.recent_questions
+            if history_filter.casefold() in item.casefold()
+        ]
+        if recent:
+            st.markdown('<div class="sidebar-label">Recentes</div>', unsafe_allow_html=True)
+            for item in recent[:6]:
+                st.markdown(
+                    f'<div class="history-item">{_escape(item)}</div>',
+                    unsafe_allow_html=True,
+                )
+
+        st.space("small")
+        if st.button(
+            "Gerenciar acervo",
+            icon=":material/settings:",
+            width="stretch",
+            help="Acesso institucional",
+        ):
+            st.session_state.active_view = "Gerenciamento do acervo"
+
+        st.markdown(
+            """
+            <div class="ifb-profile">
+                <span>IF</span>
+                <div><strong>Acervo de Matemática</strong><small>Licenciatura · IFB</small></div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     if st.session_state.active_view == "Consulta":
         render_chat_page(client, documents, api_available)
-    elif st.session_state.active_view == "Gerenciamento do acervo":
-        render_documents_page(client, documents, api_available)
     else:
-        _render_about_page()
+        status_class = "status-dot" if api_available else "status-dot offline"
+        status_text = "Acervo conectado" if api_available else "Acervo indisponível"
+        st.markdown(
+            f'<div class="status-bar"><span class="{status_class}"></span>{status_text}</div>',
+            unsafe_allow_html=True,
+        )
+        if st.session_state.active_view == "Gerenciamento do acervo":
+            render_documents_page(client, documents, api_available)
+        else:
+            _render_about_page()
 
 
 def _render_about_page() -> None:
@@ -150,15 +138,31 @@ def _render_about_page() -> None:
         """
         <div class="hero-card">
             <div class="section-kicker">Sobre o projeto</div>
-            <h1>Consulta inteligente ao acervo de TCCs</h1>
-            <p>Esta experiência foi concebida para apresentar o acervo acadêmico com linguagem simples, confiança institucional e foco na pesquisa.</p>
+            <h1>Pesquisa acadêmica com fontes verificáveis</h1>
+            <p>O assistente conecta estudantes e pesquisadores aos TCCs da Licenciatura em Matemática do IFB Campus Estrutural.</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
-    st.info(
-        "O acesso público é orientado à consulta. O gerenciamento do acervo fica reservado à equipe institucional."
-    )
+    first, second = st.columns(2, gap="large")
+    with first.container(border=True, height="stretch"):
+        st.subheader(":material/auto_awesome: Como funciona")
+        st.write(
+            "As perguntas são comparadas aos trechos indexados do acervo. "
+            "O modelo recebe somente o contexto recuperado para elaborar a resposta."
+        )
+    with second.container(border=True, height="stretch"):
+        st.subheader(":material/fact_check: Compromisso com as fontes")
+        st.write(
+            "Cada resposta apresenta os trabalhos, páginas e seções usados. "
+            "Consulte o documento original antes de usar a informação academicamente."
+        )
+
+
+def _escape(value: str) -> str:
+    from html import escape
+
+    return escape(value)
 
 
 if __name__ == "__main__":

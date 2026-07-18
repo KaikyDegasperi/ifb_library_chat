@@ -20,142 +20,139 @@ def render_chat_page(
     api_available: bool,
 ) -> None:
     count = len(documents or [])
+    st.session_state.setdefault("chat_messages", [])
+    st.session_state.setdefault("selected_source", None)
 
-    st.markdown(
-        """
-        <div class="hero-card">
-            <div class="section-kicker">Consulta ao acervo</div>
-            <h1>Chatbot dos TCCs da Licenciatura em Matemática</h1>
-            <p>Consulte o acervo de Trabalhos de Conclusão de Curso com linguagem natural, recuperação semântica e fontes claras.</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    status_class = "chat-status-dot" if api_available else "chat-status-dot offline"
+    status_text = "Acervo conectado" if api_available else "Acervo indisponível"
+    suggested_question: str | None = None
 
-    summary_column, count_column = st.columns([2, 1], gap="large")
-    with summary_column:
-        st.markdown(
-            """
-            <div class="metric-card">
-                <div class="section-kicker">Acervo disponível</div>
-                <h2>Consulte o catálogo acadêmico com confiança</h2>
-                <p>As respostas são fundamentadas em trechos recuperados dos TCCs indexados e acompanhadas de fontes.</p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with count_column:
+    with st.container(border=True, key="chat_window"):
         st.markdown(
             f"""
-            <div class="metric-card">
-                <div class="section-kicker">TCCs indexados</div>
-                <h2>{count} disponíveis</h2>
-                <p>Volume consultável do acervo institucional.</p>
+            <div class="chat-window-header">
+                <div class="chat-window-identity">
+                    <div class="chat-window-mark">✦</div>
+                    <div>
+                        <strong>Assistente do acervo</strong>
+                        <small>TCCs da Licenciatura em Matemática</small>
+                    </div>
+                </div>
+                <div class="chat-window-status">
+                    <span class="{status_class}"></span>{status_text}
+                </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-    if not api_available:
-        st.warning("A consulta está temporariamente indisponível. Verifique o backend antes de continuar.")
-    elif not documents:
-        st.info("O acervo ainda não possui documentos indexados. A equipe pode complementar o catálogo em breve.")
+        history = st.container(
+            height=520,
+            border=False,
+            key="chat_history",
+            autoscroll=True,
+        )
+        with history:
+            if not api_available:
+                st.warning(
+                    "A consulta está temporariamente indisponível. Verifique o backend.",
+                    icon=":material/cloud_off:",
+                )
+            elif not documents:
+                st.info(
+                    "O acervo ainda não possui documentos indexados.",
+                    icon=":material/library_books:",
+                )
 
-    if "chat_messages" not in st.session_state:
-        st.session_state.chat_messages = []
-    if "selected_source" not in st.session_state:
-        st.session_state.selected_source = None
-
-    left_column, right_column = st.columns([2.1, 1], gap="large")
-    with left_column:
-        st.markdown("### Faça uma pergunta")
-        with st.form("consulta_form", clear_on_submit=True):
-            question = st.text_area(
-                "Pergunta",
-                placeholder="Faça uma pergunta sobre os TCCs...",
-                height=120,
-                label_visibility="collapsed",
-            )
-            submitted = st.form_submit_button(
-                "Enviar pergunta",
-                type="primary",
-                use_container_width=True,
-                disabled=not api_available or not documents,
-            )
-
-        if submitted and question.strip():
-            _submit_question(client, question.strip(), left_column)
-
-        for message in st.session_state.chat_messages:
-            if message["role"] == "user":
-                with st.chat_message("user"):
-                    st.markdown(message["content"])
+            if not st.session_state.chat_messages:
+                st.markdown(
+                    f"""
+                    <section class="welcome-shell isolated">
+                        <div class="ai-mark">✦</div>
+                        <div class="eyebrow">Assistente de pesquisa</div>
+                        <h1>O que você quer descobrir no acervo?</h1>
+                        <p class="intro">Faça perguntas aos TCCs de Matemática. As respostas são acompanhadas das fontes recuperadas.</p>
+                        <div class="collection-badge">● {count} TCCs indexados</div>
+                    </section>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                suggestions = [
+                    "Quais metodologias ativas aparecem nos TCCs?",
+                    "Encontre pesquisas sobre educação inclusiva",
+                    "Como os jogos são usados no ensino de matemática?",
+                ]
+                selected = st.pills(
+                    "Perguntas sugeridas",
+                    suggestions,
+                    label_visibility="collapsed",
+                    key="chat_suggestions",
+                )
+                if selected:
+                    suggested_question = selected
             else:
-                with st.chat_message("assistant"):
-                    st.markdown(message["content"])
-                    if message.get("sources"):
-                        render_sources(message.get("sources", []))
-                    _render_times(message)
+                _render_messages()
 
-    with right_column:
-        st.markdown(
-            """
-            <div class="hero-card">
-                <div class="section-kicker">Fonte principal</div>
-                <h3>Contexto recuperado para a resposta</h3>
-                <p>O painel à direita destaca a fonte principal utilizada pela resposta do chatbot.</p>
-            </div>
-            """,
-            unsafe_allow_html=True,
+        question = st.chat_input(
+            "Pergunte sobre os TCCs do acervo...",
+            key="isolated_chat_input",
+            disabled=not api_available or not documents,
+            submit_mode="disable",
         )
-        if st.session_state.selected_source:
-            _render_selected_source(st.session_state.selected_source)
+        st.caption(
+            "As respostas são geradas a partir dos documentos do acervo. "
+            "Confira sempre as fontes."
+        )
+
+    prompt = suggested_question or question
+    if prompt and prompt.strip():
+        _submit_question(client, prompt.strip(), history)
+
+
+def _render_messages() -> None:
+    for message in st.session_state.chat_messages:
+        if message["role"] == "user":
+            with st.chat_message("user", avatar=":material/person:"):
+                st.markdown(message["content"])
         else:
-            st.info("Aguarde uma resposta para visualizar a fonte principal associada ao trecho recuperado.")
+            with st.chat_message("assistant", avatar=":material/auto_awesome:"):
+                st.caption("RESPOSTA FUNDAMENTADA NO ACERVO")
+                st.markdown(message["content"])
+                if message.get("sources"):
+                    render_sources(message.get("sources", []))
+                _render_times(message)
 
 
-def _submit_question(client: APIClient, question: str, container: Any) -> None:
+def _submit_question(client: APIClient, question: str, history: Any) -> None:
     top_k = 5
+    recent = st.session_state.setdefault("recent_questions", [])
+    if question not in recent:
+        recent.insert(0, question)
     st.session_state.chat_messages.append({"role": "user", "content": question})
-    with st.chat_message("user"):
-        st.markdown(question)
-
-    with st.chat_message("assistant"):
+    with history:
         with st.spinner("Consultando o acervo e montando a resposta..."):
             try:
                 payload = client.chat(question, top_k=top_k)
             except APITimeoutError as exc:
                 _store_error(str(exc), "timeout")
-                st.error(str(exc))
-                return
+                st.rerun()
             except APIUnavailableError as exc:
                 _store_error(str(exc), "api")
-                st.error(str(exc))
-                return
+                st.rerun()
             except APIResponseError as exc:
-                _store_error(str(exc), "api")
-                st.error(f"A API não conseguiu responder: {exc}")
-                return
+                _store_error(f"A API não conseguiu responder: {exc}", "api")
+                st.rerun()
             except APIClientError as exc:
                 _store_error(str(exc), "api")
-                st.error(str(exc))
-                return
+                st.rerun()
 
         answer = str(payload.get("answer") or "").strip()
         sources = payload.get("sources") or []
         if not answer:
             answer = "A API não retornou uma resposta para esta pergunta."
-            st.warning(answer)
-        elif not sources:
-            st.warning(answer)
-        elif "não foi possível gerar" in answer.lower():
-            st.error(answer)
-        else:
-            st.markdown(answer)
 
         if sources:
             st.session_state.selected_source = sources[0]
-        render_sources(sources)
         message = {
             "role": "assistant",
             "content": answer,
@@ -164,7 +161,7 @@ def _submit_question(client: APIClient, question: str, container: Any) -> None:
             "generation_time_ms": payload.get("generation_time_ms", 0),
         }
         st.session_state.chat_messages.append(message)
-        _render_times(message)
+    st.rerun()
 
 
 def _store_error(message: str, kind: str) -> None:
@@ -183,28 +180,3 @@ def _render_times(message: dict[str, Any]) -> None:
     generation = message.get("generation_time_ms")
     if retrieval is not None and generation is not None:
         st.caption(f"Recuperação: {retrieval} ms · Geração: {generation} ms")
-
-
-def _render_selected_source(source: dict[str, Any]) -> None:
-    title = source.get("title") or "Título não identificado"
-    author = source.get("author") or "Autor não identificado"
-    year = source.get("year") or "Ano não informado"
-    excerpt = source.get("excerpt") or "Trecho recuperado indisponível no momento."
-    page = source.get("page_start")
-    chapter = source.get("section") or "Seção não informada"
-
-    st.markdown(
-        f"""
-        <div class="source-card">
-            <div class="section-kicker">Fonte destacada</div>
-            <h3>{title}</h3>
-            <p><strong>Autor:</strong> {author}</p>
-            <p><strong>Ano:</strong> {year}</p>
-            <p><strong>Trecho recuperado:</strong> {excerpt}</p>
-            <p><strong>Página:</strong> {page if page is not None else 'Não informada'}</p>
-            <p><strong>Capítulo:</strong> {chapter}</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    st.button("Abrir PDF", use_container_width=True, disabled=True)

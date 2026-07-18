@@ -31,7 +31,10 @@ def render_documents_page(
     )
 
     if not api_available:
-        st.error("A FastAPI está indisponível. O gerenciamento foi desativado.")
+        st.error(
+            "A FastAPI está indisponível. O gerenciamento foi desativado.",
+            icon=":material/cloud_off:",
+        )
         return
 
     summary = [
@@ -53,14 +56,14 @@ def render_documents_page(
                 unsafe_allow_html=True,
             )
 
-    st.divider()
+    st.space("medium")
     _render_upload(client, documents or [])
-    st.divider()
+    st.space("medium")
     _render_document_list(client, documents or [])
 
 
 def _render_upload(client: APIClient, documents: list[dict[str, Any]]) -> None:
-    st.subheader("Upload de novo PDF")
+    st.subheader(":material/upload_file: Upload de novo PDF")
     maximum_mb = int(os.getenv("MAX_UPLOAD_SIZE_MB", "25"))
     uploaded = st.file_uploader(
         "Selecione um arquivo PDF",
@@ -133,7 +136,7 @@ def _render_upload(client: APIClient, documents: list[dict[str, Any]]) -> None:
 
 
 def _render_document_list(client: APIClient, documents: list[dict[str, Any]]) -> None:
-    st.subheader("Documentos indexados")
+    st.subheader(":material/library_books: Documentos indexados")
     if not documents:
         st.info("O acervo ainda não possui documentos indexados.")
         return
