@@ -66,13 +66,21 @@ def structured_pieces(
     chunker: Any,
     chunk_size: int,
     overlap: int,
+    ignored_pages: set[int] | None = None,
 ) -> list[StructuredPiece]:
     pieces: list[StructuredPiece] = []
+    ignored_pages = ignored_pages or set()
     for base_chunk in chunker.chunk(dl_doc=document):
         text = clean_text(chunker.contextualize(base_chunk))
         headings = getattr(base_chunk.meta, "headings", None) or []
         section = " > ".join(clean_text(value) for value in headings) or None
         page_start, page_end = pages_from_items(base_chunk.meta.doc_items)
+        if (
+            page_start is not None
+            and page_end is not None
+            and set(range(page_start, page_end + 1)) <= ignored_pages
+        ):
+            continue
         for part in split_with_overlap(text, chunk_size, overlap):
             pieces.append(
                 StructuredPiece(

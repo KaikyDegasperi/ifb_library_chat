@@ -7,7 +7,11 @@ from pydantic import BaseModel
 
 class ChunkMetadata(BaseModel):
     document_id: str
-    title: str | None
+    title: str | None = None
+    author: str | None = None
+    advisor: str | None = None
+    coadvisor: str | None = None
+    year: int | None = None
     file_name: str
     file_path: str
     page_start: int | None

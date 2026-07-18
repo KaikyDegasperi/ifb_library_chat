@@ -8,13 +8,19 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from docling.chunking import HierarchicalChunker
+from docling.chunking import HybridChunker
 from docling.datamodel.accelerator_options import AcceleratorOptions
 from docling.datamodel.base_models import InputFormat
 from docling.datamodel.pipeline_options import HeadingHierarchyOptions, PdfPipelineOptions
 from docling.document_converter import DocumentConverter, PdfFormatOption
+from docling_core.transforms.chunker.tokenizer.huggingface import HuggingFaceTokenizer
+from transformers import AutoTokenizer
 
-from app.ingestion.chunking import clean_text, structured_pieces
+from app.ingestion.academic_metadata import (
+    administrative_pages,
+    extract_academic_metadata,
+)
+from app.ingestion.chunking import structured_pieces
 from app.ingestion.models import (
     Chunk,
     ChunkMetadata,
@@ -23,6 +29,8 @@ from app.ingestion.models import (
 )
 
 logger = logging.getLogger(__name__)
+PIPELINE_VERSION = 2
+DEFAULT_EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 
 
 class IngestionService:
@@ -32,6 +40,7 @@ class IngestionService:
         chunk_size: int = 500,
         chunk_overlap: int = 50,
         device: str = "auto",
+        embedding_model: str = DEFAULT_EMBEDDING_MODEL,
         converter: Any | None = None,
         chunker: Any | None = None,
     ) -> None:
@@ -43,6 +52,8 @@ class IngestionService:
         pipeline_options = PdfPipelineOptions(
             accelerator_options=AcceleratorOptions(device=device),
             heading_hierarchy_options=HeadingHierarchyOptions(enabled=True),
+            do_formula_enrichment=True,
+            do_picture_classification=True,
         )
         self.converter = converter or DocumentConverter(
             allowed_formats=[InputFormat.PDF],
@@ -50,10 +61,18 @@ class IngestionService:
                 InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
             },
         )
-        self.chunker = chunker or HierarchicalChunker(
-            always_emit_headings=True,
-            merge_list_items=True,
-        )
+        if chunker is not None:
+            self.chunker = chunker
+        else:
+            tokenizer = HuggingFaceTokenizer(
+                tokenizer=AutoTokenizer.from_pretrained(embedding_model),
+                max_tokens=chunk_size,
+            )
+            self.chunker = HybridChunker(
+                tokenizer=tokenizer,
+                merge_peers=True,
+                always_emit_headings=True,
+            )
 
     def ingest(self, input_path: Path | str) -> IngestionReport:
         started = time.perf_counter()
@@ -111,6 +130,7 @@ class IngestionService:
         previous = manifest.get("documents", {}).get(document_hash)
         if (
             previous
+            and previous.get("pipeline_version") == PIPELINE_VERSION
             and Path(previous["output_file"]).exists()
             and Path(previous["structured_document_file"]).exists()
         ):
@@ -128,19 +148,24 @@ class IngestionService:
         conversion = self.converter.convert(pdf_path, raises_on_error=True)
         document = conversion.document
         processed_at = datetime.now(UTC)
-        title = self._extract_title(document)
+        academic = extract_academic_metadata(document, pdf_path.name)
         pieces = structured_pieces(
             document=document,
             chunker=self.chunker,
             chunk_size=self.chunk_size,
             overlap=self.chunk_overlap,
+            ignored_pages=administrative_pages(document),
         )
         chunks = [
             Chunk(
                 text=piece.text,
                 metadata=ChunkMetadata(
                     document_id=document_id,
-                    title=title,
+                    title=academic.title,
+                    author=academic.author,
+                    advisor=academic.advisor,
+                    coadvisor=academic.coadvisor,
+                    year=academic.year,
                     file_name=pdf_path.name,
                     file_path=str(pdf_path.resolve()),
                     page_start=piece.page_start,
@@ -162,6 +187,7 @@ class IngestionService:
             {
                 "document_id": document_id,
                 "document_hash": document_hash,
+                "pipeline_version": PIPELINE_VERSION,
                 "chunks": [chunk.model_dump(mode="json") for chunk in chunks],
             },
         )
@@ -172,6 +198,7 @@ class IngestionService:
             "structured_document_file": str(structured_path.resolve()),
             "chunks": len(chunks),
             "processed_at": processed_at.isoformat(),
+            "pipeline_version": PIPELINE_VERSION,
         }
         logger.info("Documento processado: %s (%d chunks)", pdf_path, len(chunks))
         return DocumentResult(
@@ -199,15 +226,6 @@ class IngestionService:
             for block in iter(lambda: file.read(1024 * 1024), b""):
                 digest.update(block)
         return digest.hexdigest()
-
-    @staticmethod
-    def _extract_title(document: Any) -> str | None:
-        for item in getattr(document, "texts", []):
-            label = getattr(getattr(item, "label", None), "value", None)
-            if label == "title":
-                title = clean_text(getattr(item, "text", ""))
-                return title or None
-        return None
 
     @property
     def _manifest_path(self) -> Path:

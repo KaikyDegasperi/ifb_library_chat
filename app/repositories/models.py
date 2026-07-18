@@ -6,6 +6,10 @@ from pydantic import BaseModel
 class DocumentRecord(BaseModel):
     document_id: str
     title: str | None
+    author: str | None = None
+    advisor: str | None = None
+    coadvisor: str | None = None
+    year: int | None = None
     file_name: str
     file_path: str
     document_hash: str

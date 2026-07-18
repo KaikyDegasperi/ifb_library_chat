@@ -46,6 +46,7 @@ def _document_service() -> DocumentService:
             chunk_size=settings.ingest_chunk_size,
             chunk_overlap=settings.ingest_chunk_overlap,
             device=settings.ingest_device,
+            embedding_model=settings.embedding_model,
         ),
         indexer=vector_service,
         documents_dir=settings.documents_dir,

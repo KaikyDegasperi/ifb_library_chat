@@ -70,9 +70,20 @@ class ChromaDocumentRepository(DocumentRepository):
             if item.get("page_end") is not None
         ]
         title = next((item.get("title") for item in metadatas if item.get("title")), None)
+        author = next((item.get("author") for item in metadatas if item.get("author")), None)
+        advisor = next((item.get("advisor") for item in metadatas if item.get("advisor")), None)
+        coadvisor = next(
+            (item.get("coadvisor") for item in metadatas if item.get("coadvisor")),
+            None,
+        )
+        year = next((item.get("year") for item in metadatas if item.get("year")), None)
         return DocumentRecord(
             document_id=document_id,
             title=title,
+            author=author,
+            advisor=advisor,
+            coadvisor=coadvisor,
+            year=int(year) if year is not None else None,
             file_name=str(first.get("file_name", "")),
             file_path=str(first.get("file_path", "")),
             document_hash=str(first.get("document_hash", "")),

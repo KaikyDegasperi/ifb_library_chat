@@ -153,8 +153,8 @@ Ela oferece duas áreas:
 | `MAX_UPLOAD_SIZE_MB` | `25` | Tamanho máximo aceito no upload de PDF |
 | `DOCUMENTS_DIR` | `pdfs_ifb` | PDFs originais |
 | `PROCESSED_DIR` | `data/processed` | Artefatos processados |
-| `INGEST_CHUNK_SIZE` | `500` | Tamanho aproximado em palavras |
-| `INGEST_CHUNK_OVERLAP` | `50` | Sobreposição em palavras |
+| `INGEST_CHUNK_SIZE` | `500` | Limite aproximado de tokens por chunk |
+| `INGEST_CHUNK_OVERLAP` | `50` | Sobreposição em palavras no fallback final |
 | `INGEST_DEVICE` | `auto` | Dispositivo escolhido pelo Docling |
 | `CHROMA_DIR` | `data/chroma` | Persistência do ChromaDB |
 | `LOGS_DIR` | `logs` | Arquivos de log |
@@ -209,9 +209,21 @@ uv run python -m app.cli.ingest \
   --device auto
 ```
 
-O tamanho e a sobreposição são aproximados em palavras. O chunker preserva os
-limites estruturais produzidos pelo Docling e subdivide somente elementos que
-ultrapassam o limite configurado. A sobreposição nunca combina seções distintas.
+O tamanho é um limite aproximado de tokens, alinhado ao tokenizer do modelo de
+embeddings. O `HybridChunker` preserva a estrutura produzida pelo Docling, une
+blocos pequenos da mesma seção e subdivide os que ultrapassam o limite. A etapa
+final por palavras mantém a sobreposição configurada quando ainda for necessário
+dividir um bloco excepcionalmente grande.
+
+Durante a conversão, o pipeline também:
+
+- identifica título, autoria, orientação, coorientação e ano a partir da capa e da
+  ficha de aprovação;
+- enriquece fórmulas e classifica figuras;
+- remove do índice vetorial folhas administrativas do SUAP e fichas de aprovação,
+  depois de aproveitar seus metadados;
+- reprocessa automaticamente artefatos produzidos por uma versão antiga do
+  pipeline.
 
 Para cada documento são gravados:
 

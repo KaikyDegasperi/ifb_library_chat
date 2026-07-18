@@ -7,7 +7,11 @@ class DocumentResponse(BaseModel):
         json_schema_extra={
             "example": {
                 "document_id": "d497a407dea443a3",
-                "title": None,
+                "title": "Discalculia na realidade escolar",
+                "author": "Adan Cardoso Franco Viana",
+                "advisor": "Dra. Ana Maria Libório de Oliveira",
+                "coadvisor": None,
+                "year": 2022,
                 "file_name": "Adan_Viana_CEST.pdf",
                 "file_path": "/dados/Adan_Viana_CEST.pdf",
                 "document_hash": "d497a407dea443a3...",
@@ -21,6 +25,10 @@ class DocumentResponse(BaseModel):
 
     document_id: str
     title: str | None
+    author: str | None
+    advisor: str | None
+    coadvisor: str | None
+    year: int | None
     file_name: str
     file_path: str
     document_hash: str

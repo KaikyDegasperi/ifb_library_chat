@@ -25,6 +25,10 @@ def document() -> DocumentRecord:
     return DocumentRecord(
         document_id="doc-1",
         title="TCC de teste",
+        author="Autora de Teste",
+        advisor="Orientador de Teste",
+        coadvisor=None,
+        year=2026,
         file_name="teste.pdf",
         file_path="/documentos/teste.pdf",
         document_hash="hash-1",
@@ -237,6 +241,8 @@ def test_document_endpoints(api_services) -> None:
     assert listed.json()[0]["chunk_count"] == 2
     assert found.status_code == 200
     assert found.json()["file_name"] == "teste.pdf"
+    assert found.json()["author"] == "Autora de Teste"
+    assert found.json()["year"] == 2026
     assert deleted.status_code == 200
     assert deleted.json() == {"document_id": "doc-1", "deleted_chunks": 2}
     assert missing.status_code == 404

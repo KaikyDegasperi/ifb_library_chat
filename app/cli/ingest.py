@@ -31,6 +31,7 @@ def main() -> int:
             chunk_size=args.chunk_size,
             chunk_overlap=args.overlap,
             device=args.device,
+            embedding_model=settings.embedding_model,
         ).ingest(args.input)
     except (FileNotFoundError, ValueError, RuntimeError) as exc:
         logging.getLogger(__name__).error("%s", exc)

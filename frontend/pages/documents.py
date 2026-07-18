@@ -83,7 +83,7 @@ def _render_upload(client: APIClient, documents: list[dict[str, Any]]) -> None:
         "Processar e indexar PDF",
         type="primary",
         disabled=uploaded is None or not valid,
-        use_container_width=True,
+        width="stretch",
     ):
         return
 
@@ -144,6 +144,18 @@ def _render_document_list(client: APIClient, documents: list[dict[str, Any]]) ->
         title = document.get("title") or "Título não identificado"
         with st.container(border=True):
             st.markdown(f"#### {title}")
+            author = document.get("author")
+            if author:
+                st.markdown(f"**Autor(a):** {author}")
+            academic_details = []
+            if document.get("advisor"):
+                academic_details.append(f"Orientação: {document['advisor']}")
+            if document.get("coadvisor"):
+                academic_details.append(f"Coorientação: {document['coadvisor']}")
+            if document.get("year"):
+                academic_details.append(f"Ano: {document['year']}")
+            if academic_details:
+                st.caption(" · ".join(academic_details))
             st.markdown(f"**Arquivo:** `{document.get('file_name', '')}`")
             pages = _page_count(document)
             chunks = document.get("chunk_count", 0)
@@ -160,20 +172,20 @@ def _render_document_list(client: APIClient, documents: list[dict[str, Any]]) ->
                     "Confirmar exclusão",
                     key=f"confirm-{document_id}",
                     type="primary",
-                    use_container_width=True,
+                    width="stretch",
                 ):
                     _delete(client, document_id)
                 if cancel.button(
                     "Cancelar",
                     key=f"cancel-{document_id}",
-                    use_container_width=True,
+                    width="stretch",
                 ):
                     st.session_state.delete_pending = None
                     st.rerun()
             elif st.button(
                 "Excluir do acervo",
                 key=f"delete-{document_id}",
-                use_container_width=True,
+                width="stretch",
             ):
                 st.session_state.delete_pending = document_id
                 st.rerun()
