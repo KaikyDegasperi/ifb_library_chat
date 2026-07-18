@@ -12,7 +12,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from frontend.api_client import APIClient, APIClientError
 from frontend.pages.chat import render_chat_page
-from frontend.pages.documents import render_documents_page
+from frontend.pages.documents import render_catalog_page, render_documents_page
 from frontend.styles import apply_styles
 
 st.set_page_config(
@@ -82,7 +82,7 @@ def main() -> None:
         if st.button("Conversas", icon=":material/chat:", width="stretch"):
             st.session_state.active_view = "Consulta"
         if st.button("Explorar acervo", icon=":material/library_books:", width="stretch"):
-            st.session_state.active_view = "Gerenciamento do acervo"
+            st.session_state.active_view = "Explorar acervo"
         if st.button("Sobre o projeto", icon=":material/info:", width="stretch"):
             st.session_state.active_view = "Sobre o projeto"
 
@@ -127,7 +127,9 @@ def main() -> None:
             f'<div class="status-bar"><span class="{status_class}"></span>{status_text}</div>',
             unsafe_allow_html=True,
         )
-        if st.session_state.active_view == "Gerenciamento do acervo":
+        if st.session_state.active_view == "Explorar acervo":
+            render_catalog_page(documents, api_available)
+        elif st.session_state.active_view == "Gerenciamento do acervo":
             render_documents_page(client, documents, api_available)
         else:
             _render_about_page()

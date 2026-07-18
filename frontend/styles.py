@@ -29,10 +29,54 @@ header[data-testid="stHeader"] {
     border-bottom: 0;
 }
 
-[data-testid="stToolbar"],
+/* Reserva o cabeçalho somente quando o menu lateral estiver fechado. */
+header[data-testid="stHeader"]:has([data-testid="stExpandSidebarButton"]) {
+    height: 3.75rem;
+    min-height: 3.75rem;
+    overflow: visible;
+    pointer-events: none;
+}
+
 [data-testid="stHeaderActionElements"],
 [data-testid="stDecoration"] {
     display: none !important;
+}
+
+/* O botão de reabrir a lateral vive dentro da toolbar do Streamlit. */
+[data-testid="stToolbar"] {
+    display: flex !important;
+    height: 0;
+    min-height: 0;
+    overflow: visible;
+    pointer-events: none;
+}
+
+[data-testid="stToolbar"]:has([data-testid="stExpandSidebarButton"]) {
+    height: 3.75rem;
+    min-height: 3.75rem;
+    overflow: visible;
+}
+
+[data-testid="stExpandSidebarButton"] {
+    position: fixed !important;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 1000000;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: grid !important;
+    place-items: center;
+    pointer-events: auto;
+    border: 1px solid var(--ifb-line);
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(24, 55, 39, 0.12);
+}
+
+[data-testid="stExpandSidebarButton"]:hover {
+    color: var(--ifb-green-dark);
+    border-color: #b8c9bf;
+    background: #f5f8f6;
 }
 
 [data-testid="stSidebar"] {
@@ -369,6 +413,20 @@ p, label, [data-testid="stCaptionContainer"] {
     margin-bottom: 0;
 }
 
+.hero-card.compact {
+    margin-bottom: 1rem;
+    padding: 1rem 1.2rem;
+}
+
+.hero-card.compact h1 {
+    margin-top: 0.35rem;
+    font-size: clamp(1.75rem, 3vw, 2.35rem);
+}
+
+.hero-card.compact p {
+    margin-top: 0.3rem;
+}
+
 .metric-card {
     min-height: 112px;
 }
@@ -428,6 +486,34 @@ p, label, [data-testid="stCaptionContainer"] {
     border-radius: 10px;
     font-weight: 650;
     transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+/* Mantém texto e ícones legíveis nos botões verdes, inclusive desabilitados. */
+button[data-testid="stBaseButton-primary"],
+button[kind="primary"],
+button[data-testid="stBaseButton-primary"]:disabled,
+button[kind="primary"]:disabled {
+    color: #ffffff !important;
+}
+
+button[data-testid="stBaseButton-primary"] p,
+button[data-testid="stBaseButton-primary"] span,
+button[kind="primary"] p,
+button[kind="primary"] span {
+    color: #ffffff !important;
+}
+
+button[data-testid="stBaseButton-primary"] svg,
+button[kind="primary"] svg {
+    color: #ffffff !important;
+    fill: currentColor;
+}
+
+button[data-testid="stBaseButton-primary"]:disabled,
+button[kind="primary"]:disabled {
+    border-color: var(--ifb-green) !important;
+    background: var(--ifb-green) !important;
+    opacity: 1;
 }
 
 .stButton > button:hover,

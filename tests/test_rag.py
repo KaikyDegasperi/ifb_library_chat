@@ -153,6 +153,55 @@ def test_irrelevant_results_are_not_sent_to_llm() -> None:
     assert llm.calls == []
 
 
+def test_literal_topic_match_is_used_when_semantic_score_is_low() -> None:
+    llm = FakeLLM()
+    retriever = FakeRetriever(
+        results=[
+            result(
+                "A discalculia afeta a aprendizagem matemática.",
+                similarity=0.316,
+            ),
+            result(
+                "Trecho de outro trabalho sem relação com o tema.",
+                similarity=0.321,
+                chunk_id="irrelevante",
+            ),
+        ]
+    )
+
+    response = RAGService(
+        retriever,
+        llm,
+        min_similarity=0.35,
+    ).answer("Temos TCC sobre discalculia?")
+
+    assert response.answer == "Resposta fundamentada [Fonte 1]."
+    assert [source.chunk_id for source in response.sources] == ["chunk-1"]
+    assert response.sources[0].score == 0.316
+    assert len(llm.calls) == 1
+
+
+def test_plural_topic_matches_singular_word() -> None:
+    llm = FakeLLM()
+    retriever = FakeRetriever(
+        results=[
+            result(
+                "Este trabalho apresenta um simulado de matemática.",
+                similarity=0.3,
+            )
+        ]
+    )
+
+    response = RAGService(
+        retriever,
+        llm,
+        min_similarity=0.35,
+    ).answer("Existem TCCs sobre simulados?")
+
+    assert len(response.sources) == 1
+    assert len(llm.calls) == 1
+
+
 def test_near_duplicates_are_removed_and_context_is_limited() -> None:
     original = "A educação matemática promove aprendizagem significativa."
     duplicate = "A educação matemática promove aprendizagem significativa!"

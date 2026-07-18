@@ -15,6 +15,43 @@ from app.vectorstore.models import SearchResult
 
 logger = logging.getLogger(__name__)
 
+_QUERY_STOPWORDS = {
+    "a",
+    "algum",
+    "alguma",
+    "ao",
+    "as",
+    "como",
+    "da",
+    "das",
+    "de",
+    "do",
+    "dos",
+    "e",
+    "em",
+    "existe",
+    "existem",
+    "ha",
+    "no",
+    "nos",
+    "o",
+    "os",
+    "para",
+    "por",
+    "qual",
+    "quais",
+    "que",
+    "sobre",
+    "tem",
+    "temos",
+    "tcc",
+    "tccs",
+    "trabalho",
+    "trabalhos",
+    "um",
+    "uma",
+}
+
 NO_CONTEXT_ANSWER = (
     "Não encontrei informações suficientemente relevantes nos TCCs indexados "
     "para responder a essa pergunta."
@@ -100,7 +137,7 @@ class RAGService:
                 generation_time_ms=0,
             )
         retrieval_time = self._elapsed_ms(retrieval_started)
-        selected = self._select_results(retrieved)
+        selected = self._select_results(retrieved, question)
         context, selected = self._build_context(selected)
         if not selected:
             return RAGResponse(
@@ -132,11 +169,28 @@ class RAGService:
             generation_time_ms=self._elapsed_ms(generation_started),
         )
 
-    def _select_results(self, results: list[SearchResult]) -> list[SearchResult]:
+    def _select_results(
+        self,
+        results: list[SearchResult],
+        question: str,
+    ) -> list[SearchResult]:
         selected: list[SearchResult] = []
         normalized: list[str] = []
-        for item in results:
-            if item.similarity < self.min_similarity or not item.content.strip():
+        topic_terms = self._topic_terms(question)
+        ranked = sorted(
+            results,
+            key=lambda item: (
+                self._lexical_relevance(item, topic_terms),
+                item.similarity,
+            ),
+            reverse=True,
+        )
+        for item in ranked:
+            lexical_relevance = self._lexical_relevance(item, topic_terms)
+            if (
+                item.similarity < self.min_similarity
+                and lexical_relevance < 0.5
+            ) or not item.content.strip():
                 continue
             candidate = self._normalize(item.content)
             if not candidate:
@@ -150,6 +204,41 @@ class RAGService:
             selected.append(item)
             normalized.append(candidate)
         return selected
+
+    @classmethod
+    def _topic_terms(cls, question: str) -> set[str]:
+        words = cls._normalize(question).split()
+        return {
+            cls._singularize(word)
+            for word in words
+            if len(word) >= 3 and word not in _QUERY_STOPWORDS
+        }
+
+    @classmethod
+    def _lexical_relevance(
+        cls,
+        item: SearchResult,
+        topic_terms: set[str],
+    ) -> float:
+        if not topic_terms:
+            return 0.0
+        searchable = " ".join(
+            value
+            for value in (item.title, item.section, item.content)
+            if value
+        )
+        searchable_terms = {
+            cls._singularize(word)
+            for word in cls._normalize(searchable).split()
+            if len(word) >= 3
+        }
+        return len(topic_terms & searchable_terms) / len(topic_terms)
+
+    @staticmethod
+    def _singularize(word: str) -> str:
+        if len(word) > 4 and word.endswith("s"):
+            return word[:-1]
+        return word
 
     def _build_context(
         self,
