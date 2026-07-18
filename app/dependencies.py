@@ -1,6 +1,10 @@
 """Composição e injeção das dependências da API."""
 
+import secrets
 from functools import lru_cache
+
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.config import Settings, get_settings
 from app.ingestion.service import IngestionService
@@ -14,6 +18,37 @@ from app.vectorstore.service import VectorIndexService
 
 async def provide_settings() -> Settings:
     return get_settings()
+
+
+_admin_bearer = HTTPBearer(auto_error=False)
+
+
+async def require_admin(
+    settings: Settings = Depends(provide_settings),
+    credentials: HTTPAuthorizationCredentials | None = Depends(_admin_bearer),
+) -> None:
+    """Autoriza uma operação administrativa sem expor a credencial."""
+    expected = settings.admin_token_value
+    if expected is None:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "Operações administrativas estão desabilitadas",
+        )
+
+    provided = (
+        credentials.credentials
+        if credentials is not None and credentials.scheme.casefold() == "bearer"
+        else None
+    )
+    if provided is None or not secrets.compare_digest(
+        provided.encode("utf-8"),
+        expected.encode("utf-8"),
+    ):
+        raise HTTPException(
+            status.HTTP_401_UNAUTHORIZED,
+            "Credenciais administrativas inválidas",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
 
 @lru_cache
@@ -51,6 +86,7 @@ def _document_service() -> DocumentService:
         indexer=vector_service,
         documents_dir=settings.documents_dir,
         max_upload_size_bytes=settings.max_upload_size_bytes,
+        max_upload_filename_chars=settings.max_upload_filename_chars,
     )
 
 

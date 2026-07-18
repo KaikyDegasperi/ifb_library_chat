@@ -7,11 +7,12 @@ import unicodedata
 from difflib import SequenceMatcher
 from typing import Protocol
 
-from app.rag.exceptions import InvalidQuestionError
+from app.observability import current_request_id
+from app.rag.exceptions import InvalidQuestionError, LLMTimeoutError
 from app.rag.llm import LanguageModelProvider
-from app.rag.models import RAGResponse, RAGSource
+from app.rag.models import RAGObservation, RAGResponse, RAGSource, RAGTimings
 from app.rag.prompts import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE
-from app.vectorstore.models import SearchResult
+from app.vectorstore.models import SearchResult, SearchTimings
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +87,7 @@ class RAGService:
         max_question_chars: int = 2_000,
         duplicate_threshold: float = 0.92,
         llm_timeout_seconds: float = 30.0,
+        metrics_details_enabled: bool = False,
     ) -> None:
         if retrieval_top_k < 1 or max_context_chars < 1 or max_question_chars < 1:
             raise ValueError("Limites do RAG devem ser maiores que zero")
@@ -101,6 +103,7 @@ class RAGService:
         self.max_question_chars = max_question_chars
         self.duplicate_threshold = duplicate_threshold
         self.llm_timeout_seconds = llm_timeout_seconds
+        self.metrics_details_enabled = metrics_details_enabled
 
     def answer(
         self,
@@ -109,6 +112,7 @@ class RAGService:
         title: str | None = None,
         top_k: int | None = None,
     ) -> RAGResponse:
+        total_started = time.perf_counter()
         question = question.strip()
         if not question:
             raise InvalidQuestionError("A pergunta não pode ser vazia")
@@ -121,30 +125,55 @@ class RAGService:
             raise InvalidQuestionError("top_k deve ser maior que zero")
 
         retrieval_started = time.perf_counter()
+        search_timings = SearchTimings()
         try:
-            retrieved = self.retriever.search(
-                question,
-                top_k=effective_top_k,
-                document_id=document_id,
-                title=title,
-            )
-        except Exception:
-            logger.exception("Falha ao recuperar contexto para o RAG")
-            return RAGResponse(
+            timed_search = getattr(self.retriever, "search_with_timings", None)
+            if callable(timed_search):
+                retrieved, search_timings = timed_search(
+                    question,
+                    top_k=effective_top_k,
+                    document_id=document_id,
+                    title=title,
+                )
+            else:
+                retrieved = self.retriever.search(
+                    question,
+                    top_k=effective_top_k,
+                    document_id=document_id,
+                    title=title,
+                )
+        except Exception as exc:
+            error_type = type(exc).__name__
+            logger.error("Falha ao recuperar contexto para o RAG: %s", error_type)
+            return self._finish(
                 answer=RETRIEVAL_FAILURE_ANSWER,
                 sources=[],
                 retrieval_time_ms=self._elapsed_ms(retrieval_started),
                 generation_time_ms=0,
+                total_started=total_started,
+                search_timings=search_timings,
+                context_preparation_time_ms=0,
+                context_chars=0,
+                status="retrieval_error",
+                error_type=error_type,
             )
         retrieval_time = self._elapsed_ms(retrieval_started)
+
+        context_started = time.perf_counter()
         selected = self._select_results(retrieved, question)
         context, selected = self._build_context(selected)
         if not selected:
-            return RAGResponse(
+            context_preparation_time = self._elapsed_ms(context_started)
+            return self._finish(
                 answer=NO_CONTEXT_ANSWER,
                 sources=[],
                 retrieval_time_ms=retrieval_time,
                 generation_time_ms=0,
+                total_started=total_started,
+                search_timings=search_timings,
+                context_preparation_time_ms=context_preparation_time,
+                context_chars=0,
+                status="no_context",
             )
 
         sources = [self._source(item) for item in selected]
@@ -152,21 +181,84 @@ class RAGService:
             question=question,
             context=context,
         )
+        context_preparation_time = self._elapsed_ms(context_started)
         generation_started = time.perf_counter()
+        error_type: str | None = None
+        result_status = "ok"
         try:
             answer = self.llm_provider.generate(
                 system_prompt=SYSTEM_PROMPT,
                 user_prompt=user_prompt,
                 timeout_seconds=self.llm_timeout_seconds,
             )
-        except Exception:
-            logger.exception("Falha controlada na geração do RAG")
+        except Exception as exc:
+            error_type = type(exc).__name__
+            result_status = (
+                "llm_timeout" if isinstance(exc, LLMTimeoutError) else "llm_error"
+            )
+            logger.error("Falha controlada na geração do RAG: %s", error_type)
             answer = GENERATION_FAILURE_ANSWER
-        return RAGResponse(
+        generation_time = self._elapsed_ms(generation_started)
+        return self._finish(
             answer=answer,
             sources=sources,
             retrieval_time_ms=retrieval_time,
-            generation_time_ms=self._elapsed_ms(generation_started),
+            generation_time_ms=generation_time,
+            total_started=total_started,
+            search_timings=search_timings,
+            context_preparation_time_ms=context_preparation_time,
+            context_chars=len(context),
+            status=result_status,
+            error_type=error_type,
+        )
+
+    def _finish(
+        self,
+        *,
+        answer: str,
+        sources: list[RAGSource],
+        retrieval_time_ms: int,
+        generation_time_ms: int,
+        total_started: float,
+        search_timings: SearchTimings,
+        context_preparation_time_ms: int,
+        context_chars: int,
+        status: str,
+        error_type: str | None = None,
+    ) -> RAGResponse:
+        timings = RAGTimings(
+            embedding_time_ms=search_timings.embedding_time_ms,
+            vector_search_time_ms=search_timings.vector_search_time_ms,
+            context_preparation_time_ms=context_preparation_time_ms,
+            generation_time_ms=generation_time_ms,
+            total_time_ms=self._elapsed_ms(total_started),
+        )
+        observation = RAGObservation(
+            request_id=current_request_id(),
+            status=status,
+            source_count=len(sources),
+            context_chars=context_chars,
+            error_type=error_type,
+            timings=timings,
+        )
+        log_fields: dict[str, object] = {
+            "request_id": observation.request_id,
+            "endpoint": "/chat",
+            "status": status,
+            "duration_ms": timings.total_time_ms,
+            "source_count": observation.source_count,
+            "context_chars": context_chars,
+            "error_type": error_type or "none",
+        }
+        if self.metrics_details_enabled:
+            log_fields.update(timings.model_dump(exclude={"total_time_ms"}))
+        logger.info("rag_request_completed", extra=log_fields)
+        return RAGResponse(
+            answer=answer,
+            sources=sources,
+            retrieval_time_ms=retrieval_time_ms,
+            generation_time_ms=generation_time_ms,
+            observation=observation,
         )
 
     def _select_results(

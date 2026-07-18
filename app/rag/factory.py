@@ -58,4 +58,5 @@ def create_rag_service(settings: Settings) -> RAGService:
         max_question_chars=settings.rag_max_question_chars,
         duplicate_threshold=settings.rag_duplicate_threshold,
         llm_timeout_seconds=settings.llm_timeout_seconds,
+        metrics_details_enabled=settings.metrics_details_enabled,
     )

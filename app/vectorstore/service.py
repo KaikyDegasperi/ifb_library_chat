@@ -11,7 +11,12 @@ import chromadb
 
 from app.ingestion.models import Chunk
 from app.vectorstore.embeddings import EmbeddingProvider
-from app.vectorstore.models import IndexFileResult, IndexReport, SearchResult
+from app.vectorstore.models import (
+    IndexFileResult,
+    IndexReport,
+    SearchResult,
+    SearchTimings,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -78,6 +83,7 @@ class VectorIndexService:
         top_k: int = 5,
         document_id: str | None = None,
         title: str | None = None,
+        timings: SearchTimings | None = None,
     ) -> list[SearchResult]:
         if not query.strip():
             raise ValueError("A consulta não pode ser vazia")
@@ -97,12 +103,20 @@ class VectorIndexService:
         elif filters:
             where = {"$and": filters}
 
+        embedding_started = time.perf_counter()
+        query_embedding = self.embedding_provider.embed_query(query)
+        if timings is not None:
+            timings.embedding_time_ms = self._elapsed_ms(embedding_started)
+
+        search_started = time.perf_counter()
         response = self.collection.query(
-            query_embeddings=[self.embedding_provider.embed_query(query)],
+            query_embeddings=[query_embedding],
             n_results=min(top_k, self.collection.count()),
             where=where,
             include=["documents", "metadatas", "distances"],
         )
+        if timings is not None:
+            timings.vector_search_time_ms = self._elapsed_ms(search_started)
         ids = response["ids"][0]
         documents = (response["documents"] or [[]])[0]
         metadatas = (response["metadatas"] or [[]])[0]
@@ -113,6 +127,21 @@ class VectorIndexService:
                 ids, documents, metadatas, distances, strict=True
             )
         ]
+
+    def search_with_timings(
+        self,
+        query: str,
+        top_k: int = 5,
+        document_id: str | None = None,
+        title: str | None = None,
+    ) -> tuple[list[SearchResult], SearchTimings]:
+        timings = SearchTimings()
+        results = self.search(query, top_k, document_id, title, timings=timings)
+        return results, timings
+
+    @staticmethod
+    def _elapsed_ms(started: float) -> int:
+        return max(0, round((time.perf_counter() - started) * 1000))
 
     def _index_file(self, path: Path) -> IndexFileResult:
         payload = json.loads(path.read_text(encoding="utf-8"))

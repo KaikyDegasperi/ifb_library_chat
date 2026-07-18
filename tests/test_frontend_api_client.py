@@ -98,16 +98,23 @@ def test_chat_response_with_multiple_sources_is_preserved() -> None:
 
 
 def test_ingestion_sends_multipart_pdf() -> None:
+    admin_token = "session-only-admin-token"
+
     def handler(request: httpx.Request) -> httpx.Response:
         assert request.url.path == "/documents/ingest"
         assert request.method == "POST"
         assert "multipart/form-data" in request.headers["content-type"]
+        assert request.headers["authorization"] == f"Bearer {admin_token}"
         assert b"%PDF-1.4" in request.content
         return json_response({"document_id": "doc-1", "chunk_count": 2}, 201)
 
     client = APIClient(transport=httpx.MockTransport(handler))
 
-    response = client.ingest_document("teste.pdf", b"%PDF-1.4 fixture")
+    response = client.ingest_document(
+        "teste.pdf",
+        b"%PDF-1.4 fixture",
+        admin_token=admin_token,
+    )
 
     assert response["document_id"] == "doc-1"
 
@@ -123,17 +130,27 @@ def test_ingestion_error_uses_api_detail() -> None:
     )
 
     with pytest.raises(APIResponseError, match="assinatura PDF") as error:
-        client.ingest_document("invalido.pdf", b"invalido")
+        client.ingest_document(
+            "invalido.pdf",
+            b"invalido",
+            admin_token="admin-token",
+        )
 
     assert error.value.status_code == 400
 
 
 def test_delete_uses_document_endpoint() -> None:
+    admin_token = "session-only-admin-token"
+
     def handler(request: httpx.Request) -> httpx.Response:
         assert request.method == "DELETE"
         assert request.url.path == "/documents/doc-1"
+        assert request.headers["authorization"] == f"Bearer {admin_token}"
         return json_response({"document_id": "doc-1", "deleted_chunks": 12})
 
     client = APIClient(transport=httpx.MockTransport(handler))
 
-    assert client.delete_document("doc-1")["deleted_chunks"] == 12
+    assert client.delete_document(
+        "doc-1",
+        admin_token=admin_token,
+    )["deleted_chunks"] == 12

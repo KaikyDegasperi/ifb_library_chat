@@ -13,7 +13,6 @@ class DocumentResponse(BaseModel):
                 "coadvisor": None,
                 "year": 2022,
                 "file_name": "Adan_Viana_CEST.pdf",
-                "file_path": "/dados/Adan_Viana_CEST.pdf",
                 "document_hash": "d497a407dea443a3...",
                 "processed_at": "2026-07-11T20:29:43Z",
                 "chunk_count": 184,
@@ -30,7 +29,6 @@ class DocumentResponse(BaseModel):
     coadvisor: str | None
     year: int | None
     file_name: str
-    file_path: str
     document_hash: str
     processed_at: str
     chunk_count: int

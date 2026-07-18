@@ -62,16 +62,28 @@ class APIClient:
         file_name: str,
         content: bytes,
         content_type: str = "application/pdf",
+        *,
+        admin_token: str,
     ) -> dict[str, Any]:
         return self._request(
             "POST",
             "/documents/ingest",
             timeout=self.ingestion_timeout,
+            headers=self._admin_headers(admin_token),
             files={"file": (file_name, content, content_type)},
         )
 
-    def delete_document(self, document_id: str) -> dict[str, Any]:
-        return self._request("DELETE", f"/documents/{document_id}")
+    def delete_document(
+        self,
+        document_id: str,
+        *,
+        admin_token: str,
+    ) -> dict[str, Any]:
+        return self._request(
+            "DELETE",
+            f"/documents/{document_id}",
+            headers=self._admin_headers(admin_token),
+        )
 
     def chat(
         self,
@@ -151,3 +163,7 @@ class APIClient:
             if messages:
                 return "; ".join(messages)
         return f"A API retornou o erro HTTP {response.status_code}."
+
+    @staticmethod
+    def _admin_headers(admin_token: str) -> dict[str, str]:
+        return {"Authorization": f"Bearer {admin_token}"}

@@ -1,0 +1,90 @@
+name: ifb-library-chat
+
+services:
+  api:
+    image: ifb-library-chat:local
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    env_file:
+      - path: .env.docker
+        required: false
+    environment:
+      DOCUMENTS_DIR: /data/pdfs
+      PROCESSED_DIR: /data/processed
+      CHROMA_DIR: /data/chroma
+      LOGS_DIR: /data/logs
+      HOME: /home/appuser
+      XDG_CACHE_HOME: /home/appuser/.cache
+      HF_HOME: /home/appuser/.cache/huggingface
+    volumes:
+      - pdfs_data:/data/pdfs
+      - processed_data:/data/processed
+      - chroma_data:/data/chroma
+      - logs_data:/data/logs
+      - model_cache:/home/appuser/.cache
+    expose:
+      - "8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5).read()"
+      interval: 15s
+      timeout: 8s
+      retries: 5
+      start_period: 30s
+    init: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    stop_grace_period: 30s
+
+  frontend:
+    image: ifb-library-chat:local
+    command:
+      - streamlit
+      - run
+      - frontend/app.py
+      - --server.address=0.0.0.0
+      - --server.port=8501
+      - --server.headless=true
+    environment:
+      API_BASE_URL: http://api:8000
+      HOME: /home/appuser
+    depends_on:
+      api:
+        condition: service_healthy
+        restart: true
+    ports:
+      - "${STREAMLIT_BIND_ADDRESS:-127.0.0.1}:${STREAMLIT_PORT:-8501}:8501"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health', timeout=5).read()"
+      interval: 15s
+      timeout: 8s
+      retries: 5
+      start_period: 20s
+    init: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    stop_grace_period: 15s
+
+volumes:
+  pdfs_data:
+  processed_data:
+  chroma_data:
+  logs_data:
+  model_cache:

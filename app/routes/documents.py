@@ -3,19 +3,22 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 
 from app.config import Settings
-from app.dependencies import provide_document_service, provide_settings
+from app.dependencies import provide_document_service, provide_settings, require_admin
 from app.schemas.common import ErrorResponse
 from app.schemas.documents import DeleteDocumentResponse, DocumentResponse
 from app.services.documents import DocumentService, DocumentServiceError
 from app.routes.errors import document_http_error
 
 router = APIRouter(prefix="/documents", tags=["documentos"])
+admin_router = APIRouter(dependencies=[Depends(require_admin)])
 ERROR_RESPONSES = {
     400: {"model": ErrorResponse},
+    401: {"model": ErrorResponse},
     404: {"model": ErrorResponse},
     413: {"model": ErrorResponse},
     415: {"model": ErrorResponse},
     422: {"model": ErrorResponse},
+    503: {"model": ErrorResponse},
 }
 
 
@@ -48,7 +51,7 @@ async def get_document(
     return DocumentResponse.model_validate(document)
 
 
-@router.post(
+@admin_router.post(
     "/ingest",
     response_model=DocumentResponse,
     status_code=status.HTTP_201_CREATED,
@@ -78,7 +81,10 @@ async def ingest_document(
         )
     try:
         if file is not None:
-            content = await file.read(settings.max_upload_size_bytes + 1)
+            try:
+                content = await file.read(settings.max_upload_size_bytes + 1)
+            finally:
+                await file.close()
             document = service.ingest_upload(
                 file.filename or "", file.content_type, content
             )
@@ -89,10 +95,14 @@ async def ingest_document(
     return DocumentResponse.model_validate(document)
 
 
-@router.delete(
+@admin_router.delete(
     "/{document_id}",
     response_model=DeleteDocumentResponse,
-    responses={404: {"model": ErrorResponse}},
+    responses={
+        401: {"model": ErrorResponse},
+        404: {"model": ErrorResponse},
+        503: {"model": ErrorResponse},
+    },
     summary="Remove os vetores de um TCC",
 )
 async def delete_document(
@@ -104,3 +114,7 @@ async def delete_document(
     except DocumentServiceError as exc:
         raise document_http_error(exc) from exc
     return DeleteDocumentResponse(document_id=document_id, deleted_chunks=deleted)
+
+
+# Toda futura operação administrativa HTTP deve ser registrada neste sub-roteador.
+router.include_router(admin_router)

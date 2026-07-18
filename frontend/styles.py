@@ -14,6 +14,21 @@ APP_CSS = r"""
     --ifb-line: #e1e6e3;
     --ifb-paper: #fbfcfa;
     --ifb-sidebar: #f1f4f1;
+    --ifb-surface: #ffffff;
+    --ifb-surface-subtle: #f8faf8;
+    --ifb-surface-hover: #f5f8f6;
+    --ifb-surface-raised: #f3f7f4;
+    --ifb-profile-bg: #e6ebe7;
+    --ifb-user-message: #edf1ee;
+    --ifb-body-text: #26332d;
+    --ifb-border-strong: #d8e0db;
+    --ifb-input-border: #cfd8d2;
+    --ifb-success: #36a76f;
+    --ifb-success-ring: #dff2e8;
+    --ifb-danger: #c85d54;
+    --ifb-danger-ring: #f4dedb;
+    --ifb-shadow: rgba(24, 55, 39, 0.12);
+    --ifb-shadow-soft: rgba(24, 55, 39, 0.08);
 }
 
 .stApp {
@@ -37,9 +52,18 @@ header[data-testid="stHeader"]:has([data-testid="stExpandSidebarButton"]) {
     pointer-events: none;
 }
 
-[data-testid="stHeaderActionElements"],
 [data-testid="stDecoration"] {
     display: none !important;
+}
+
+/* Mantém o menu nativo acessível para a troca entre os temas claro e escuro. */
+[data-testid="stHeaderActionElements"] {
+    position: fixed !important;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 1000000;
+    display: flex !important;
+    pointer-events: auto;
 }
 
 /* O botão de reabrir a lateral vive dentro da toolbar do Streamlit. */
@@ -69,19 +93,19 @@ header[data-testid="stHeader"]:has([data-testid="stExpandSidebarButton"]) {
     pointer-events: auto;
     border: 1px solid var(--ifb-line);
     border-radius: 10px;
-    background: #ffffff;
-    box-shadow: 0 6px 18px rgba(24, 55, 39, 0.12);
+    background: var(--ifb-surface);
+    box-shadow: 0 6px 18px var(--ifb-shadow);
 }
 
 [data-testid="stExpandSidebarButton"]:hover {
     color: var(--ifb-green-dark);
-    border-color: #b8c9bf;
-    background: #f5f8f6;
+    border-color: var(--ifb-border-strong);
+    background: var(--ifb-surface-hover);
 }
 
 [data-testid="stSidebar"] {
     background: var(--ifb-sidebar);
-    border-right: 1px solid #dce2de;
+    border-right: 1px solid var(--ifb-line);
 }
 
 [data-testid="stSidebar"] [data-testid="stSidebarContent"] {
@@ -151,7 +175,7 @@ p, label, [data-testid="stCaptionContainer"] {
 }
 
 .sidebar-label {
-    color: #8a938e;
+    color: var(--ifb-muted);
     font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -160,11 +184,11 @@ p, label, [data-testid="stCaptionContainer"] {
 }
 
 .history-item {
-    color: #53605a;
+    color: var(--ifb-muted);
     font-size: 0.76rem;
     line-height: 1.35;
     padding: 0.42rem 0.3rem;
-    border-bottom: 1px solid rgba(220, 226, 222, 0.65);
+    border-bottom: 1px solid var(--ifb-line);
 }
 
 .ifb-profile {
@@ -174,7 +198,7 @@ p, label, [data-testid="stCaptionContainer"] {
     margin-top: 0.9rem;
     padding: 0.65rem;
     border-radius: 10px;
-    background: #e6ebe7;
+    background: var(--ifb-profile-bg);
 }
 
 .ifb-profile > span {
@@ -200,7 +224,7 @@ p, label, [data-testid="stCaptionContainer"] {
 }
 
 .ifb-profile small {
-    color: #7a857f;
+    color: var(--ifb-muted);
     font-size: 0.62rem;
     margin-top: 0.1rem;
 }
@@ -211,7 +235,7 @@ p, label, [data-testid="stCaptionContainer"] {
     align-items: center;
     gap: 0.45rem;
     min-height: 24px;
-    color: #7b857f;
+    color: var(--ifb-muted);
     font-size: 0.72rem;
 }
 
@@ -219,13 +243,13 @@ p, label, [data-testid="stCaptionContainer"] {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #36a76f;
-    box-shadow: 0 0 0 3px #dff2e8;
+    background: var(--ifb-success);
+    box-shadow: 0 0 0 3px var(--ifb-success-ring);
 }
 
 .status-dot.offline {
-    background: #c85d54;
-    box-shadow: 0 0 0 3px #f4dedb;
+    background: var(--ifb-danger);
+    box-shadow: 0 0 0 3px var(--ifb-danger-ring);
 }
 
 .welcome-shell {
@@ -239,10 +263,10 @@ p, label, [data-testid="stCaptionContainer"] {
     margin: 1rem auto 0;
     padding: 0 !important;
     overflow: hidden;
-    border: 1px solid #d8e0db !important;
+    border: 1px solid var(--ifb-border-strong) !important;
     border-radius: 18px !important;
-    background: #ffffff;
-    box-shadow: 0 18px 50px rgba(24, 55, 39, 0.08);
+    background: var(--ifb-surface);
+    box-shadow: 0 18px 50px var(--ifb-shadow-soft);
 }
 
 .chat-window-header {
@@ -252,7 +276,7 @@ p, label, [data-testid="stCaptionContainer"] {
     gap: 1rem;
     padding: 1rem 1.15rem;
     border-bottom: 1px solid var(--ifb-line);
-    background: #f8faf8;
+    background: var(--ifb-surface-subtle);
 }
 
 .chat-window-identity {
@@ -301,18 +325,18 @@ p, label, [data-testid="stCaptionContainer"] {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #36a76f;
-    box-shadow: 0 0 0 3px #dff2e8;
+    background: var(--ifb-success);
+    box-shadow: 0 0 0 3px var(--ifb-success-ring);
 }
 
 .chat-status-dot.offline {
-    background: #c85d54;
-    box-shadow: 0 0 0 3px #f4dedb;
+    background: var(--ifb-danger);
+    box-shadow: 0 0 0 3px var(--ifb-danger-ring);
 }
 
 .st-key-chat_history {
     padding: 0.35rem 1rem 0.75rem;
-    background: #ffffff;
+    background: var(--ifb-surface);
 }
 
 .st-key-chat_window [data-testid="stChatInput"] {
@@ -378,9 +402,9 @@ p, label, [data-testid="stCaptionContainer"] {
     gap: 0.4rem;
     margin-top: 1rem;
     padding: 0.35rem 0.65rem;
-    border: 1px solid #d5e2da;
+    border: 1px solid var(--ifb-border-strong);
     border-radius: 999px;
-    background: #f3f7f4;
+    background: var(--ifb-surface-raised);
     color: var(--ifb-green-dark);
     font-size: 0.7rem;
     font-weight: 650;
@@ -389,16 +413,16 @@ p, label, [data-testid="stCaptionContainer"] {
 .hero-card,
 .metric-card,
 .source-card {
-    background: #ffffff;
+    background: var(--ifb-surface);
     border: 1px solid var(--ifb-line);
     border-radius: 14px;
     padding: 1.25rem 1.35rem;
-    box-shadow: 0 8px 24px rgba(28, 62, 43, 0.04);
+    box-shadow: 0 8px 24px var(--ifb-shadow-soft);
 }
 
 .hero-card {
     margin: 1.25rem 0 1.5rem;
-    background: linear-gradient(135deg, #ffffff 0%, #f4f8f5 100%);
+    background: linear-gradient(135deg, var(--ifb-surface) 0%, var(--ifb-surface-raised) 100%);
 }
 
 .hero-card h1 {
@@ -460,19 +484,19 @@ p, label, [data-testid="stCaptionContainer"] {
 }
 
 [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
-    background: #edf1ee;
+    background: var(--ifb-user-message);
 }
 
 [data-testid="stChatMessage"] p {
-    color: #26332d;
+    color: var(--ifb-body-text);
     line-height: 1.7;
 }
 
 [data-testid="stChatInput"] {
-    border-color: #cfd8d2;
+    border-color: var(--ifb-input-border);
     border-radius: 15px;
-    background: #ffffff;
-    box-shadow: 0 10px 32px rgba(21, 52, 38, 0.08);
+    background: var(--ifb-surface);
+    box-shadow: 0 10px 32px var(--ifb-shadow-soft);
 }
 
 [data-testid="stChatInput"] textarea {
@@ -526,9 +550,9 @@ button[kind="primary"]:disabled {
 [data-testid="stTextInput"] input,
 [data-testid="stTextArea"] textarea,
 [data-testid="stFileUploaderDropzone"] {
-    border-color: #d9dfdb;
+    border-color: var(--ifb-input-border);
     border-radius: 10px;
-    background: #ffffff;
+    background: var(--ifb-surface);
 }
 
 [data-testid="stAlert"] {
@@ -558,7 +582,38 @@ button[kind="primary"]:disabled {
 </style>
 """
 
+DARK_MODE_CSS = r"""
+<style>
+:root {
+    --ifb-green: #2aa876;
+    --ifb-green-dark: #63d4a4;
+    --ifb-lime: #d9ef42;
+    --ifb-ink: #e7efea;
+    --ifb-muted: #a8b8af;
+    --ifb-line: #33443a;
+    --ifb-paper: #101713;
+    --ifb-sidebar: #131d18;
+    --ifb-surface: #18221d;
+    --ifb-surface-subtle: #1c2922;
+    --ifb-surface-hover: #24342b;
+    --ifb-surface-raised: #202e27;
+    --ifb-profile-bg: #1c2922;
+    --ifb-user-message: #223229;
+    --ifb-body-text: #dce7e0;
+    --ifb-border-strong: #405449;
+    --ifb-input-border: #405449;
+    --ifb-success: #47c792;
+    --ifb-success-ring: #173d2e;
+    --ifb-danger: #f08078;
+    --ifb-danger-ring: #492624;
+    --ifb-shadow: rgba(0, 0, 0, 0.32);
+    --ifb-shadow-soft: rgba(0, 0, 0, 0.24);
+}
+</style>
+"""
+
 
 def apply_styles() -> None:
     """Aplica os detalhes visuais que complementam o tema nativo."""
-    st.markdown(APP_CSS, unsafe_allow_html=True)
+    mode_css = DARK_MODE_CSS if st.context.theme.type == "dark" else ""
+    st.markdown(APP_CSS + mode_css, unsafe_allow_html=True)

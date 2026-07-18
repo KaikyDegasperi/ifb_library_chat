@@ -37,3 +37,10 @@ class SearchResult(BaseModel):
     chunk_index: int
     document_hash: str
     processed_at: str
+
+
+class SearchTimings(BaseModel):
+    """Tempos internos da recuperação, sem alterar o contrato da busca."""
+
+    embedding_time_ms: int = 0
+    vector_search_time_ms: int = 0

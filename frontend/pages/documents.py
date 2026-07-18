@@ -14,6 +14,9 @@ from frontend.api_client import (
     APIUnavailableError,
 )
 
+ADMIN_TOKEN_STATE_KEY = "admin_api_token"
+ADMIN_AUTH_ERROR_STATE_KEY = "admin_auth_error"
+
 
 def render_catalog_page(
     documents: list[dict[str, Any]] | None,
@@ -108,6 +111,10 @@ def render_documents_page(
         )
         return
 
+    admin_token = _admin_access()
+    if admin_token is None:
+        return
+
     section = st.segmented_control(
         "Seção de gerenciamento",
         ["Documentos", "Adicionar PDF", "Resumo"],
@@ -118,11 +125,63 @@ def render_documents_page(
     )
 
     if section == "Adicionar PDF":
-        _render_upload(client, documents or [])
+        _render_upload(client, documents or [], admin_token)
     elif section == "Resumo":
         _render_summary(documents or [])
     else:
-        _render_document_list(client, documents or [])
+        _render_document_list(client, documents or [], admin_token)
+
+
+def _admin_access() -> str | None:
+    error = st.session_state.pop(ADMIN_AUTH_ERROR_STATE_KEY, None)
+    if error:
+        st.error(str(error), icon=":material/lock:")
+
+    stored = st.session_state.get(ADMIN_TOKEN_STATE_KEY)
+    if isinstance(stored, str) and stored:
+        status, action = st.columns([4, 1], vertical_alignment="center")
+        with status:
+            st.success(
+                "Credencial administrativa carregada somente nesta sessão.",
+                icon=":material/verified_user:",
+            )
+        with action:
+            if st.button(
+                "Sair",
+                icon=":material/logout:",
+                width="stretch",
+                key="admin-logout",
+            ):
+                st.session_state.pop(ADMIN_TOKEN_STATE_KEY, None)
+                st.session_state.pop("delete_pending", None)
+                st.rerun()
+        return stored
+
+    st.info(
+        "Informe a credencial administrativa para enviar, reindexar ou excluir "
+        "documentos. A consulta pública continua disponível sem autenticação.",
+        icon=":material/admin_panel_settings:",
+    )
+    with st.form("admin-auth", clear_on_submit=True, border=True):
+        entered = st.text_input(
+            "Token administrativo",
+            type="password",
+            help="A credencial permanece somente nesta sessão do navegador.",
+        )
+        submitted = st.form_submit_button(
+            "Acessar gerenciamento",
+            type="primary",
+            icon=":material/login:",
+            width="stretch",
+        )
+    if submitted:
+        token = entered.strip()
+        if not token:
+            st.warning("Informe o token administrativo.")
+        else:
+            st.session_state[ADMIN_TOKEN_STATE_KEY] = token
+            st.rerun()
+    return None
 
 
 def _render_summary(documents: list[dict[str, Any]]) -> None:
@@ -147,7 +206,11 @@ def _render_summary(documents: list[dict[str, Any]]) -> None:
             )
 
 
-def _render_upload(client: APIClient, documents: list[dict[str, Any]]) -> None:
+def _render_upload(
+    client: APIClient,
+    documents: list[dict[str, Any]],
+    admin_token: str,
+) -> None:
     st.subheader(":material/upload_file: Upload de novo PDF")
     maximum_mb = int(os.getenv("MAX_UPLOAD_SIZE_MB", "25"))
     uploaded = st.file_uploader(
@@ -182,6 +245,7 @@ def _render_upload(client: APIClient, documents: list[dict[str, Any]]) -> None:
                 uploaded.name,
                 uploaded.getvalue(),
                 uploaded.type or "application/pdf",
+                admin_token=admin_token,
             )
         except APITimeoutError as exc:
             status.update(label="Tempo limite excedido", state="error")
@@ -192,7 +256,12 @@ def _render_upload(client: APIClient, documents: list[dict[str, Any]]) -> None:
             st.error(str(exc))
             return
         except APIResponseError as exc:
+            if exc.status_code in {401, 403}:
+                _deny_admin_access()
             status.update(label="Falha na ingestão", state="error")
+            if exc.status_code == 503:
+                st.error("As operações administrativas estão desabilitadas na API.")
+                return
             if exc.status_code in {400, 413, 415, 422}:
                 st.error(f"O PDF foi rejeitado: {exc}")
             else:
@@ -220,7 +289,11 @@ def _render_upload(client: APIClient, documents: list[dict[str, Any]]) -> None:
     st.rerun()
 
 
-def _render_document_list(client: APIClient, documents: list[dict[str, Any]]) -> None:
+def _render_document_list(
+    client: APIClient,
+    documents: list[dict[str, Any]],
+    admin_token: str,
+) -> None:
     st.subheader(":material/library_books: Documentos indexados")
     if not documents:
         st.info("O acervo ainda não possui documentos indexados.")
@@ -269,7 +342,7 @@ def _render_document_list(client: APIClient, documents: list[dict[str, Any]]) ->
                     type="primary",
                     width="stretch",
                 ):
-                    _delete(client, document_id)
+                    _delete(client, document_id, admin_token)
                 if cancel.button(
                     "Cancelar",
                     key=f"cancel-{document_id}",
@@ -346,17 +419,34 @@ def _normalize(value: str) -> str:
     return "".join(character for character in decomposed if not unicodedata.combining(character))
 
 
-def _delete(client: APIClient, document_id: str) -> None:
+def _delete(client: APIClient, document_id: str, admin_token: str) -> None:
     try:
-        result = client.delete_document(document_id)
+        result = client.delete_document(document_id, admin_token=admin_token)
     except APITimeoutError as exc:
         st.error(str(exc))
+        return
+    except APIResponseError as exc:
+        if exc.status_code in {401, 403}:
+            _deny_admin_access()
+        if exc.status_code == 503:
+            st.error("As operações administrativas estão desabilitadas na API.")
+        else:
+            st.error(f"Não foi possível excluir o documento: {exc}")
         return
     except APIClientError as exc:
         st.error(f"Não foi possível excluir o documento: {exc}")
         return
     st.session_state.delete_pending = None
     st.success(f"{result.get('deleted_chunks', 0)} chunks foram removidos.")
+    st.rerun()
+
+
+def _deny_admin_access() -> None:
+    st.session_state.pop(ADMIN_TOKEN_STATE_KEY, None)
+    st.session_state.pop("delete_pending", None)
+    st.session_state[ADMIN_AUTH_ERROR_STATE_KEY] = (
+        "Acesso administrativo negado. Confira o token e tente novamente."
+    )
     st.rerun()
 
 

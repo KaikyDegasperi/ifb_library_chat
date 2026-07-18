@@ -1,6 +1,7 @@
 import hashlib
 import json
 import math
+import time
 from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
@@ -156,6 +157,42 @@ def test_semantic_search_returns_sources_and_similarity(tmp_path: Path) -> None:
     assert results[0].file_name == "fontes.pdf"
     assert results[0].page_start == 1
     assert results[0].similarity > 0.9
+
+
+def test_search_measures_embedding_and_chroma_separately(tmp_path: Path) -> None:
+    source = tmp_path / "metricas.pdf"
+    service = make_service(tmp_path)
+    service.index(
+        write_chunks(
+            tmp_path / "metricas.chunks.json",
+            source,
+            hashlib.sha256(b"metricas").hexdigest(),
+            ["Matemática inclusiva"],
+        )
+    )
+    original_embed = service.embedding_provider.embed_query
+    original_collection = service.collection
+
+    def delayed_embed(text: str) -> list[float]:
+        time.sleep(0.003)
+        return original_embed(text)
+
+    class DelayedCollection:
+        def __getattr__(self, name: str):
+            return getattr(original_collection, name)
+
+        def query(self, **kwargs):
+            time.sleep(0.003)
+            return original_collection.query(**kwargs)
+
+    service.embedding_provider.embed_query = delayed_embed
+    service.collection = DelayedCollection()
+
+    results, timings = service.search_with_timings("inclusão", top_k=1)
+
+    assert len(results) == 1
+    assert timings.embedding_time_ms >= 2
+    assert timings.vector_search_time_ms >= 2
 
 
 def test_search_filters_by_document_and_title(tmp_path: Path) -> None:

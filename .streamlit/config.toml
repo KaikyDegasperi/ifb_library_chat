@@ -6,7 +6,16 @@ showSidebarNavigation = false
 toolbarMode = "minimal"
 
 [theme]
-base = "light"
+font = "sans-serif"
+headingFont = "serif"
+baseFontSize = 15
+baseRadius = "10px"
+buttonRadius = "10px"
+showWidgetBorder = true
+showSidebarBorder = true
+linkUnderline = false
+
+[theme.light]
 primaryColor = "#0B6B45"
 backgroundColor = "#FBFCFA"
 secondaryBackgroundColor = "#F1F4F1"
@@ -17,18 +26,29 @@ greenColor = "#0B6B45"
 greenBackgroundColor = "#DFF2E8"
 redColor = "#B6423A"
 orangeColor = "#A86712"
-font = "sans-serif"
-headingFont = "serif"
-baseFontSize = 15
-baseRadius = "10px"
-buttonRadius = "10px"
-showWidgetBorder = true
-showSidebarBorder = true
-linkUnderline = false
 
-[theme.sidebar]
+[theme.dark]
+primaryColor = "#2AA876"
+backgroundColor = "#101713"
+secondaryBackgroundColor = "#18221D"
+textColor = "#E7EFEA"
+linkColor = "#63D4A4"
+borderColor = "#33443A"
+greenColor = "#47C792"
+greenBackgroundColor = "#173D2E"
+redColor = "#F08078"
+orangeColor = "#E7AB5A"
+
+[theme.light.sidebar]
 backgroundColor = "#F1F4F1"
 secondaryBackgroundColor = "#E6EBE7"
 textColor = "#17201C"
 primaryColor = "#0B6B45"
 borderColor = "#DCE2DE"
+
+[theme.dark.sidebar]
+backgroundColor = "#131D18"
+secondaryBackgroundColor = "#1C2922"
+textColor = "#E7EFEA"
+primaryColor = "#47C792"
+borderColor = "#33443A"
