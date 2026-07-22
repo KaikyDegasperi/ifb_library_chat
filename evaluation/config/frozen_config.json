@@ -1,0 +1,4 @@
+{
+  "status": "not_frozen",
+  "message": "Execute python -m evaluation.freeze_config somente após concluir os ajustes com o split development."
+}
