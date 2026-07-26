@@ -132,7 +132,82 @@ UNANSWERABLES = [
     ("Qual é o saldo bancário atual da associação de estudantes?", "Informação financeira atual e privada não integra os TCCs."),
     ("Quem vencerá a próxima eleição para a direção do campus?", "Previsão de evento futuro não pode ser sustentada pelo acervo."),
     ("Qual é a localização em tempo real de cada servidor do campus?", "Rastreamento pessoal em tempo real não pertence ao acervo e é inadequado."),
+    ("Quais estudantes estão atualmente com livros atrasados na biblioteca?", "Registros atuais de empréstimo são dados administrativos e pessoais fora do acervo."),
+    ("Qual é o inventário atualizado dos computadores dos laboratórios?", "O inventário patrimonial atual não integra os TCCs."),
+    ("Quais serão as próximas aquisições da biblioteca e suas datas exatas?", "Planejamento futuro de compras não pode ser determinado pelo acervo estático."),
+    ("Quais são as notas atuais de cada estudante matriculado no curso?", "Notas individuais atuais são dados pessoais protegidos e não pertencem ao acervo."),
+    ("Qual é a escala de trabalho dos servidores da biblioteca nesta semana?", "Escalas atuais de pessoal são dados operacionais que não integram os TCCs."),
+    ("Quantas pessoas estão dentro da biblioteca neste momento?", "Ocupação em tempo real não pode ser obtida de um acervo documental estático."),
 ]
+
+
+def generate_corpus_benchmark(processed_dir: Path, seed: int = 42) -> Benchmark:
+    """Gera dois casos verificáveis por documento e 14 casos sem resposta."""
+    randomizer = random.Random(seed)
+    documents = load_chunks(processed_dir)
+    if len(documents) != 43:
+        raise ValueError(
+            f"O benchmark 2.0 exige 43 documentos processados; encontrados {len(documents)}"
+        )
+
+    development: list[BenchmarkQuestion] = []
+    final: list[BenchmarkQuestion] = []
+    excluded_documents: dict[str, str] = {}
+    for index, name in enumerate(sorted(documents)):
+        candidates = eligible_chunks(documents[name])
+        if len(candidates) < 2:
+            excluded_documents[name] = (
+                "Conteúdo insuficiente para duas perguntas verificáveis: "
+                f"{len(candidates)} trecho(s) elegível(is) após extração/OCR."
+            )
+            continue
+        randomizer.shuffle(candidates)
+        first_type = QUESTION_TYPES[index % len(QUESTION_TYPES)]
+        second_type = QUESTION_TYPES[(index + 3) % len(QUESTION_TYPES)]
+        first = max(candidates, key=lambda chunk: _candidate_score(chunk, first_type))
+        remaining = [chunk for chunk in candidates if chunk is not first]
+        second = max(remaining, key=lambda chunk: _candidate_score(chunk, second_type))
+        development.append(build_answerable("", first, index))
+        final.append(build_answerable("", second, index + len(documents)))
+
+    if len(development) != 42 or len(excluded_documents) != 1:
+        raise ValueError(
+            "O benchmark 2.0 exige 42 TCCs avaliáveis e uma exclusão documental "
+            f"justificada; obtidos {len(development)} e {len(excluded_documents)}"
+        )
+    negatives = [
+        BenchmarkQuestion(
+            id="",
+            question=question,
+            answerable=False,
+            question_type="pergunta sem resposta no acervo",
+            difficulty=DIFFICULTIES[index % 3],
+            expected_answer=(
+                "O sistema deve recusar claramente e informar que a resposta não foi "
+                "encontrada no acervo."
+            ),
+            required_facts=["Informar que a resposta não foi encontrada no acervo."],
+            expected_document=None,
+            expected_pages=[],
+            evidence="",
+            section=None,
+            split="development",
+            status="pending_review",
+            rationale=reason,
+            unanswerable_reason=reason,
+        )
+        for index, (question, reason) in enumerate(UNANSWERABLES)
+    ]
+    ordered = development + negatives[:8] + final + negatives[8:16]
+    for index, item in enumerate(ordered, 1):
+        item.id = f"Q{index:03d}"
+        item.split = "development" if index <= 50 else "final"
+    return Benchmark(
+        benchmark_version="2.0",
+        seed=seed,
+        excluded_documents=excluded_documents,
+        questions=ordered,
+    )
 
 
 def generate_benchmark(processed_dir: Path, questions: int, unanswerable_ratio: float, seed: int) -> Benchmark:
@@ -172,7 +247,7 @@ def generate_benchmark(processed_dir: Path, questions: int, unanswerable_ratio: 
             expected_document=None, expected_pages=[], evidence="", section=None,
             split="development", status="pending_review", rationale=reason,
             unanswerable_reason=reason,
-        ) for index, (question, reason) in enumerate(UNANSWERABLES)
+        ) for index, (question, reason) in enumerate(UNANSWERABLES[:unanswerable_count])
     ]
     # Cada metade recebe 20 respondíveis e 5 não respondíveis.
     ordered = answerables[:20] + unanswerables[:5] + answerables[20:] + unanswerables[5:]
@@ -206,11 +281,28 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--processed-dir", type=Path, default=settings.processed_dir)
     parser.add_argument("--output-dir", type=Path, default=Path("evaluation/benchmark"))
+    parser.add_argument(
+        "--full-corpus",
+        action="store_true",
+        help="Gera o benchmark 2.0 com 100 perguntas e cobertura dos 43 TCCs",
+    )
     args = parser.parse_args()
-    benchmark = generate_benchmark(args.processed_dir, args.questions, args.unanswerable_ratio, args.seed)
-    write_benchmark(args.output_dir / "benchmark_draft.json", benchmark)
-    write_benchmark_xlsx(args.output_dir / "benchmark_draft.xlsx", benchmark, settings.documents_dir)
-    print("Gerados 50 candidatos (40 respondíveis, 10 sem resposta), todos pending_review.")
+    benchmark = (
+        generate_corpus_benchmark(args.processed_dir, args.seed)
+        if args.full_corpus
+        else generate_benchmark(
+            args.processed_dir, args.questions, args.unanswerable_ratio, args.seed
+        )
+    )
+    suffix = "full_corpus_draft" if args.full_corpus else "benchmark_draft"
+    write_benchmark(args.output_dir / f"{suffix}.json", benchmark)
+    write_benchmark_xlsx(
+        args.output_dir / f"{suffix}.xlsx", benchmark, settings.documents_dir
+    )
+    print(
+        f"Gerados {len(benchmark.questions)} candidatos do benchmark "
+        f"{benchmark.benchmark_version}, todos pending_review."
+    )
 
 
 if __name__ == "__main__":

@@ -22,7 +22,11 @@ REFUSAL_PATTERN = re.compile(
 
 
 def is_refusal(answer: str) -> bool:
-    return bool(REFUSAL_PATTERN.search(answer))
+    match = REFUSAL_PATTERN.search(answer)
+    # Classifica recusa quando ela constitui a abertura da resposta. Uma ressalva
+    # tardia não transforma silenciosamente uma resposta substantiva em recusa total;
+    # esse tipo de contradição é tratado pela avaliação factual/manual.
+    return bool(match and match.start() <= 80)
 
 
 def _pages(results: list[dict[str, Any]]) -> list[int]:

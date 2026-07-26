@@ -67,6 +67,34 @@ def test_upload_does_not_overwrite_existing_file(tmp_path: Path) -> None:
     assert existing.read_bytes() == b"%PDF-1.4\noriginal"
 
 
+def test_identical_upload_reuses_existing_file_for_processing(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    service = make_service(tmp_path)
+    service.documents_dir.mkdir()
+    existing = service.documents_dir / "trabalho.pdf"
+    content = "%PDF-1.4\nconteúdo idêntico".encode()
+    existing.write_bytes(content)
+    processed: list[Path] = []
+
+    def process(path: Path) -> Path:
+        processed.append(path)
+        return path
+
+    monkeypatch.setattr(service, "_process", process)
+
+    result = service.ingest_upload(
+        "trabalho.pdf",
+        "application/pdf",
+        content,
+    )
+
+    assert result == existing
+    assert processed == [existing]
+    assert existing.read_bytes() == content
+
+
 def test_upload_rejects_duplicate_content_under_another_name(tmp_path: Path) -> None:
     service = make_service(tmp_path)
     service.documents_dir.mkdir()

@@ -40,6 +40,7 @@ class BenchmarkQuestion(BaseModel):
 class Benchmark(BaseModel):
     benchmark_version: str = "1.0"
     seed: int = 42
+    excluded_documents: dict[str, str] = Field(default_factory=dict)
     questions: list[BenchmarkQuestion]
 
 

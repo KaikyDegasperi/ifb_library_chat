@@ -30,6 +30,7 @@ def safe_settings(settings: Settings) -> dict[str, Any]:
         "chunk_size": settings.ingest_chunk_size,
         "chunk_overlap": settings.ingest_chunk_overlap,
         "top_k": settings.rag_retrieval_top_k,
+        "candidate_pool_size": settings.rag_candidate_pool_size,
         "similarity_threshold": settings.rag_min_similarity,
         "embedding_model": settings.embedding_model,
         "generator_model": settings.llm_model or f"provider:{settings.llm_provider}",

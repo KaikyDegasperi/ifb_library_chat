@@ -1,0 +1,2396 @@
+{
+  "benchmark_version": "2.0",
+  "seed": 42,
+  "excluded_documents": {
+    "Gabriela_Pinto_CEST.pdf": "Conteúdo insuficiente para duas perguntas verificáveis: 1 trecho(s) elegível(is) após extração/OCR."
+  },
+  "questions": [
+    {
+      "id": "Q001",
+      "question": "Qual informação o trabalho “DISCALCULIA NA REALIDADE ESCOLAR: A Percepção do Docente na Identificação dessa Dificuldade de Aprendizagem na Educação Básica” apresenta sobre ensino, primeira, parte?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "facil",
+      "expected_answer": "Na primeira parte, que corresponde ao perfil do respondente, destaca-se a participação de professores com idade entre 37 e 50 anos, que lecionam do 6º ao 9º ano do Ensino Fundamental. Sendo assim, três dos participantes possuem ensino superior completo, enquanto um possui pós-graduação.",
+      "required_facts": [
+        "Na primeira parte, que corresponde ao perfil do respondente, destaca-se a participação de professores com idade entre 37 e 50 anos, que lecionam do 6º ao 9º ano do Ensino Fundamental.",
+        "Sendo assim, três dos participantes possuem ensino superior completo, enquanto um possui pós-graduação."
+      ],
+      "expected_document": "Adan_Viana_CEST.pdf",
+      "expected_pages": [
+        8,
+        9
+      ],
+      "printed_pages": [],
+      "evidence": "Na primeira parte, que corresponde ao perfil do respondente, destaca-se a participação de professores com idade entre 37 e 50 anos, que lecionam do 6º ao 9º ano do Ensino Fundamental. Sendo assim, três dos participantes possuem ensino superior completo, enquanto um possui pós-graduação.",
+      "section": "4 ANÁLISE DE RESULTADOS",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q002",
+      "question": "Qual objetivo ou propósito o trabalho “APLICAÇÃO DE METODOLOGIAS ATIVAS NO ENSINO DA MATEMÁTICA: POSSIBILIDADES PARA O ENSINO DE TRIGONOMETRIA” associa a metodologias, alunos, precisam?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "media",
+      "expected_answer": "As metodologias precisam acompanhar os objetivos pretendidos. Se queremos que os alunos sejam proativos, precisamos adotar metodologias em que os alunos se envolvam em atividades cada vez mais complexas, em que tenham que tomar decisões e avaliar os resultados, com apoio de materiais relevantes.",
+      "required_facts": [
+        "As metodologias precisam acompanhar os objetivos pretendidos.",
+        "Se queremos que os alunos sejam proativos, precisamos adotar metodologias em que os alunos se envolvam em atividades cada vez mais complexas, em que tenham que tomar decisões e avaliar os resultados, com apoio de materiais relevantes."
+      ],
+      "expected_document": "Adrienne_Moraes_CEST.pdf",
+      "expected_pages": [
+        7,
+        8
+      ],
+      "printed_pages": [],
+      "evidence": "As metodologias precisam acompanhar os objetivos pretendidos. Se queremos que os alunos sejam proativos, precisamos adotar metodologias em que os alunos se envolvam em atividades cada vez mais complexas, em que tenham que tomar decisões e avaliar os resultados, com apoio de materiais relevantes.",
+      "section": "INTRODUÇÃO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q003",
+      "question": "Como o trabalho “TAXONOMIA DE BLOOM REVISADA COMO INSTRUMENTO DE ANÁLISE PANORÂMICA DAS HABILIDADES DE ESTATÍSTICA NA BNCC DOS ANOS FINAIS DO ENSINO FUNDAMENTAL” investigou capitulo, objetivo, apresentar?",
+      "answerable": true,
+      "question_type": "metodologia",
+      "difficulty": "dificil",
+      "expected_answer": "Este capítulo tem como objetivo apresentar os materiais e métodos utilizados para alcançar os resultados desejados do trabalho em questão. Inicialmente, abordando a Taxonomia de Bloom e sua revisão, destacando como ela se enquadra como um instrumento no planejamento docente.",
+      "required_facts": [
+        "Este capítulo tem como objetivo apresentar os materiais e métodos utilizados para alcançar os resultados desejados do trabalho em questão.",
+        "Inicialmente, abordando a Taxonomia de Bloom e sua revisão, destacando como ela se enquadra como um instrumento no planejamento docente."
+      ],
+      "expected_document": "Alice_Santos_CEST.pdf",
+      "expected_pages": [
+        14
+      ],
+      "printed_pages": [],
+      "evidence": "Este capítulo tem como objetivo apresentar os materiais e métodos utilizados para alcançar os resultados desejados do trabalho em questão. Inicialmente, abordando a Taxonomia de Bloom e sua revisão, destacando como ela se enquadra como um instrumento no planejamento docente.",
+      "section": "2 MATERIAIS E MÉTODOS",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q004",
+      "question": "Que resultado ou conclusão o trabalho “USO DE CONCEITOS DE PROBABILIDADE GEOMÉTRICA E ESTATÍSTICA A PARTIR DO PROBLEMA DAS AGULHAS DE BUFFON” apresenta sobre estudo, aula, presente?",
+      "answerable": true,
+      "question_type": "resultado ou conclusão",
+      "difficulty": "facil",
+      "expected_answer": "No presente estudo, foi concluída a fase de desenvolvimento dos Planos de Aula, os quais foram elaborados de forma adequada para a aplicação em sala de aula. O enfoque do estudo foi a probabilidade geométrica, com ênfase no problema das agulhas de Buffon.",
+      "required_facts": [
+        "No presente estudo, foi concluída a fase de desenvolvimento dos Planos de Aula, os quais foram elaborados de forma adequada para a aplicação em sala de aula.",
+        "O enfoque do estudo foi a probabilidade geométrica, com ênfase no problema das agulhas de Buffon."
+      ],
+      "expected_document": "António_Araújo_CEST.pdf",
+      "expected_pages": [
+        19
+      ],
+      "printed_pages": [],
+      "evidence": "No presente estudo, foi concluída a fase de desenvolvimento dos Planos de Aula, os quais foram elaborados de forma adequada para a aplicação em sala de aula. O enfoque do estudo foi a probabilidade geométrica, com ênfase no problema das agulhas de Buffon.",
+      "section": "Considerações Finais",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q005",
+      "question": "Como o trabalho “DESENVOLVIMENTO DE UM LABORATÓRIO DE MATEMÁTICA MÓVEL E SUSTENTÁVEL PARA O ENSINO FUNDAMENTAL II” caracteriza matematica, artigo, apresentado?",
+      "answerable": true,
+      "question_type": "definição conceitual",
+      "difficulty": "media",
+      "expected_answer": "Artigo apresentado ao Curso de Licenciatura em Matemática do Campus Estrutural do Instituto Federal de Brasília como requisito necessário para obtenção do grau de Licenciada em Matemática.",
+      "required_facts": [
+        "Artigo apresentado ao Curso de Licenciatura em Matemática do Campus Estrutural do Instituto Federal de Brasília como requisito necessário para obtenção do grau de Licenciada em Matemática."
+      ],
+      "expected_document": "Bruna_Oliveira_CEST.pdf",
+      "expected_pages": [
+        2
+      ],
+      "printed_pages": [],
+      "evidence": "Artigo apresentado ao Curso de Licenciatura em Matemática do Campus Estrutural do Instituto Federal de Brasília como requisito necessário para obtenção do grau de Licenciada em Matemática.",
+      "section": "DESENVOLVIMENTO DE UM LABORATÓRIO DE MATEMÁTICA MÓVEL E SUSTENTÁVEL PARA O ENSINO FUNDAMENTAL II",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q006",
+      "question": "Que relação ou contraste o trabalho “O USO DA PLATAFORMA GEOGEBRA PARA O ESTUDO DO CONCEITO PRIMITIVO E GEOMÉTRICO DE LIMITE” estabelece ao discutir calculo, newton, leibniz?",
+      "answerable": true,
+      "question_type": "comparação",
+      "difficulty": "dificil",
+      "expected_answer": "O cálculo moderno foi introduzido como o cálculo de infinitesimais, de forma independente, em diferentes locais e anos do século XVII por dois dos matemáticos mais famosos da história, Sir Isaac Newton e o matemático e filósofo Gottfried Leibniz. Enquanto Leibniz considerava o cálculo algo mais analítico, para Newton, o cálculo tinha natureza geométrica, em suas pesquisas ambos forneceram métodos minuciosos, fazendo uso de notações, regras definidas e por fim, notaram que os processos de diferenciar e integrar eram mutuamente inversos.",
+      "required_facts": [
+        "O cálculo moderno foi introduzido como o cálculo de infinitesimais, de forma independente, em diferentes locais e anos do século XVII por dois dos matemáticos mais famosos da história, Sir Isaac Newton e o matemático e filósofo Gottfried Leibniz.",
+        "Enquanto Leibniz considerava o cálculo algo mais analítico, para Newton, o cálculo tinha natureza geométrica, em suas pesquisas ambos forneceram métodos minuciosos, fazendo uso de notações, regras definidas e por fim, notaram que os processos de diferenciar e integrar eram mutuamente inversos."
+      ],
+      "expected_document": "Caio_Marques_CEST.pdf",
+      "expected_pages": [
+        6
+      ],
+      "printed_pages": [],
+      "evidence": "O cálculo moderno foi introduzido como o cálculo de infinitesimais, de forma independente, em diferentes locais e anos do século XVII por dois dos matemáticos mais famosos da história, Sir Isaac Newton e o matemático e filósofo Gottfried Leibniz. Enquanto Leibniz considerava o cálculo algo mais analítico, para Newton, o cálculo tinha natureza geométrica, em suas pesquisas ambos forneceram métodos minuciosos, fazendo uso de notações, regras definidas e por fim, notaram que os processos de diferenciar e integrar eram mutuamente inversos.",
+      "section": "1. INTRODUÇÃO E JUSTIFICATIVA",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q007",
+      "question": "Segundo apenas o trabalho “APLICAÇÃO DA SEQUÊNCIA DE FIBONACCI EM ANÁLISE TÉCNICA DE GRÁFICOS DE AÇÕES”, como pode ser sintetizada a discussão sobre educacao, financeira, ainda?",
+      "answerable": true,
+      "question_type": "síntese limitada a um documento",
+      "difficulty": "facil",
+      "expected_answer": "A educação financeira é, ainda, um tema pouco tratado nos espaços escolares. Este ponto obteve nossa atenção e se intensificou sobre o fato de que o ensino a cerca de investimentos é quase inexistente.",
+      "required_facts": [
+        "A educação financeira é, ainda, um tema pouco tratado nos espaços escolares.",
+        "Este ponto obteve nossa atenção e se intensificou sobre o fato de que o ensino a cerca de investimentos é quase inexistente."
+      ],
+      "expected_document": "Carla_Santos_CEST.pdf",
+      "expected_pages": [
+        62
+      ],
+      "printed_pages": [],
+      "evidence": "A educação financeira é, ainda, um tema pouco tratado nos espaços escolares. Este ponto obteve nossa atenção e se intensificou sobre o fato de que o ensino a cerca de investimentos é quase inexistente.",
+      "section": "6 Considerações finais",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q008",
+      "question": "Qual informação o trabalho “Relações entre a criatividade em matemática e o desempenho escolar de estudantes do 2º ano do ensino médio” apresenta sobre analise, questionario, realizada?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "media",
+      "expected_answer": "A análise do questionário foi realizada por escola (unidade escolar). Desta forma, todas as notas foram consideradas.",
+      "required_facts": [
+        "A análise do questionário foi realizada por escola (unidade escolar).",
+        "Desta forma, todas as notas foram consideradas."
+      ],
+      "expected_document": "Carlos_Rodrigues Júnior_CEST.pdf",
+      "expected_pages": [
+        21,
+        22,
+        23
+      ],
+      "printed_pages": [],
+      "evidence": "A análise do questionário foi realizada por escola (unidade escolar). Desta forma, todas as notas foram consideradas.",
+      "section": "4 RESULTADOS E DISCUSSÃO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q009",
+      "question": "Qual objetivo ou propósito o trabalho “A PERCEPÇÃO DOS ESTUDANTES DO ENSINO MÉDIO SOBRE O ENSINO DA GEOMETRIA” associa a ensino, geometria, diante?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "dificil",
+      "expected_answer": "Diante do exposto, o presente Trabalho de Conclusão de Curso (TCC) tem como objetivo investigar a percepção dos estudantes do ensino médio em relação ao estudo da Geometria, buscando compreender suas atitudes, opiniões e desafios enfrentados nesse tema. Por meio dessa pesquisa, busca-se fornecer subsídios para a reflexão e aprimoramento das práticas de ensino da Geometria, bem como para o desenvolvimento de recursos didáticos mais adequados e eficazes.",
+      "required_facts": [
+        "Diante do exposto, o presente Trabalho de Conclusão de Curso (TCC) tem como objetivo investigar a percepção dos estudantes do ensino médio em relação ao estudo da Geometria, buscando compreender suas atitudes, opiniões e desafios enfrentados nesse tema.",
+        "Por meio dessa pesquisa, busca-se fornecer subsídios para a reflexão e aprimoramento das práticas de ensino da Geometria, bem como para o desenvolvimento de recursos didáticos mais adequados e eficazes."
+      ],
+      "expected_document": "César_Rosa_CEST.pdf",
+      "expected_pages": [
+        8,
+        9
+      ],
+      "printed_pages": [],
+      "evidence": "Diante do exposto, o presente Trabalho de Conclusão de Curso (TCC) tem como objetivo investigar a percepção dos estudantes do ensino médio em relação ao estudo da Geometria, buscando compreender suas atitudes, opiniões e desafios enfrentados nesse tema. Por meio dessa pesquisa, busca-se fornecer subsídios para a reflexão e aprimoramento das práticas de ensino da Geometria, bem como para o desenvolvimento de recursos didáticos mais adequados e eficazes.",
+      "section": "1 INTRODUÇÃO E JUSTIFICATIVA",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q010",
+      "question": "Como o trabalho “FATORES SOCIOECONÔMICOS ASSOCIADOS AO DESEMPENHO DOS ESTUDANTES NA PROVA DE MATEMÁTICA DO EXAME NACIONAL DO ENSINO MÉDIO” investigou analise, correspondencia, multipla?",
+      "answerable": true,
+      "question_type": "metodologia",
+      "difficulty": "facil",
+      "expected_answer": "5.2 Métodos 5.2.1 Análise de Correspondência Múltipla A análise de correspondência múltipla (ACM) é utilizada para explorar as relações entre duas ou mais variáveis qualitativas. Segundo (PRADO, 2012, p. 18), 'Na análise de correspondência múltipla, os dados são apresentados por meio de duas ou mais variáveis categóricas, onde a dimensionalidade está ligada às categorias de cada variável.' E em sua aplicação a ACM, os dados devem estar distribuídos em uma tabela de contingência multidimensional que são ajustados na forma de uma matriz retangular, onde as linhas apresentam os objetos de estudo e as colunas as categorias de todas as variáveis.",
+      "required_facts": [
+        "5.2 Métodos 5.2.1 Análise de Correspondência Múltipla A análise de correspondência múltipla (ACM) é utilizada para explorar as relações entre duas ou mais variáveis qualitativas.",
+        "Segundo (PRADO, 2012, p. 18), 'Na análise de correspondência múltipla, os dados são apresentados por meio de duas ou mais variáveis categóricas, onde a dimensionalidade está ligada às categorias de cada variável.' E em sua aplicação a ACM, os dados devem estar distribuídos em uma tabela de contingência multidimensional que são ajustados na forma de uma matriz retangular, onde as linhas apresentam os objetos de estudo e as colunas as categorias de todas as variáveis."
+      ],
+      "expected_document": "Evandro_Magalhães Júnior_CEST.pdf",
+      "expected_pages": [
+        22
+      ],
+      "printed_pages": [],
+      "evidence": "5.2 Métodos 5.2.1 Análise de Correspondência Múltipla A análise de correspondência múltipla (ACM) é utilizada para explorar as relações entre duas ou mais variáveis qualitativas. Segundo (PRADO, 2012, p. 18), 'Na análise de correspondência múltipla, os dados são apresentados por meio de duas ou mais variáveis categóricas, onde a dimensionalidade está ligada às categorias de cada variável.' E em sua aplicação a ACM, os dados devem estar distribuídos em uma tabela de contingência multidimensional que são ajustados na forma de uma matriz retangular, onde as linhas apresentam os objetos de estudo e as colunas as categorias de todas as variáveis.",
+      "section": "5.2 Métodos > 5.2.1 Análise de Correspondência Múltipla",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q011",
+      "question": "Que resultado ou conclusão o trabalho “ANÁLISE COMPARATIVA ENTRE A MATRIZ DO ENEM E DA BNCC NA ÁREA DE CONHECIMENTO DE MATEMÁTICA” apresenta sobre inequivoco, conjunto, diferente?",
+      "answerable": true,
+      "question_type": "resultado ou conclusão",
+      "difficulty": "media",
+      "expected_answer": "É inequívoco que um conjunto diferente de técnicas poderia trazer mais informações e enriquecer tal análise, e aqui fica essa observação como forma de motivar possíveis trabalhos frente a esse tema.",
+      "required_facts": [
+        "É inequívoco que um conjunto diferente de técnicas poderia trazer mais informações e enriquecer tal análise, e aqui fica essa observação como forma de motivar possíveis trabalhos frente a esse tema."
+      ],
+      "expected_document": "Filipe_Garcia_CEST.pdf",
+      "expected_pages": [
+        28
+      ],
+      "printed_pages": [],
+      "evidence": "É inequívoco que um conjunto diferente de técnicas poderia trazer mais informações e enriquecer tal análise, e aqui fica essa observação como forma de motivar possíveis trabalhos frente a esse tema.",
+      "section": "6. CONSIDERAÇÕES FINAIS",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q012",
+      "question": "Como o trabalho “UMA PROPOSTA DE INTRODUÇÃO AO CÁLCULO UTILIZANDO AS IDEIAS ORIGINAIS DE FERMAT E LEIBNIZ” caracteriza disciplina, calculo, consideracoes?",
+      "answerable": true,
+      "question_type": "definição conceitual",
+      "difficulty": "dificil",
+      "expected_answer": "8 CONSIDERAÇÕES FINAIS A disciplina de cálculo apresenta elevados índices de reprovação, e a anos faculdades buscam solucionar esse problema, seja adicionando disciplinas extras, ou até mudando o foco da disciplina. Este trabalho teve como objetivo propor uma forma introduzir os conceitos iniciais cálculo baseado nas ideias originais de Fermat e Leibniz.",
+      "required_facts": [
+        "8 CONSIDERAÇÕES FINAIS A disciplina de cálculo apresenta elevados índices de reprovação, e a anos faculdades buscam solucionar esse problema, seja adicionando disciplinas extras, ou até mudando o foco da disciplina.",
+        "Este trabalho teve como objetivo propor uma forma introduzir os conceitos iniciais cálculo baseado nas ideias originais de Fermat e Leibniz."
+      ],
+      "expected_document": "Francisco_Jorge_CEST.pdf",
+      "expected_pages": [
+        51
+      ],
+      "printed_pages": [],
+      "evidence": "8 CONSIDERAÇÕES FINAIS A disciplina de cálculo apresenta elevados índices de reprovação, e a anos faculdades buscam solucionar esse problema, seja adicionando disciplinas extras, ou até mudando o foco da disciplina. Este trabalho teve como objetivo propor uma forma introduzir os conceitos iniciais cálculo baseado nas ideias originais de Fermat e Leibniz.",
+      "section": "8  CONSIDERAÇÕES FINAIS",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q013",
+      "question": "Segundo apenas o trabalho “CRIPTOGRAFIA RSA”, como pode ser sintetizada a discussão sobre criptografia, oestudo, enfoque?",
+      "answerable": true,
+      "question_type": "síntese limitada a um documento",
+      "difficulty": "media",
+      "expected_answer": "Oestudo da criptografia, com enfoque no método de criptografia RSA, faz com que fiquemos menos alheios à realidade que nos cerca, permitindo-nos entender os detalhes de processos tão presentes em nosso dia a dia. Além disso, permite que se crie um campo fértil de desenvolvimento do pensamento computacional - recurso tão necessário para o ensino da matemática na formação de professores, em concomitância com a resolução de problemas.",
+      "required_facts": [
+        "Oestudo da criptografia, com enfoque no método de criptografia RSA, faz com que fiquemos menos alheios à realidade que nos cerca, permitindo-nos entender os detalhes de processos tão presentes em nosso dia a dia.",
+        "Além disso, permite que se crie um campo fértil de desenvolvimento do pensamento computacional - recurso tão necessário para o ensino da matemática na formação de professores, em concomitância com a resolução de problemas."
+      ],
+      "expected_document": "Guilherme _Miranda_CEST.pdf",
+      "expected_pages": [
+        60
+      ],
+      "printed_pages": [],
+      "evidence": "Oestudo da criptografia, com enfoque no método de criptografia RSA, faz com que fiquemos menos alheios à realidade que nos cerca, permitindo-nos entender os detalhes de processos tão presentes em nosso dia a dia. Além disso, permite que se crie um campo fértil de desenvolvimento do pensamento computacional - recurso tão necessário para o ensino da matemática na formação de professores, em concomitância com a resolução de problemas.",
+      "section": "Considerações Finais",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q014",
+      "question": "Qual informação o trabalho “Raciocínio Combinatório: Aplicação e Validação do Jogo da senha no Ensino Médio” apresenta sobre formulas, raciocinio, ensino?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "dificil",
+      "expected_answer": "O ensino tradicional da combinatória muitas vezes se baseia na memorização de fórmulas sem uma compreensão aprofundada do raciocínio por trás delas, o que pode gerar dificuldades tanto para os professores quanto para os estudantes. É essencial que as fórmulas sejam consequência do desenvolvimento do raciocínio combinatório ao resolver problemas.",
+      "required_facts": [
+        "O ensino tradicional da combinatória muitas vezes se baseia na memorização de fórmulas sem uma compreensão aprofundada do raciocínio por trás delas, o que pode gerar dificuldades tanto para os professores quanto para os estudantes.",
+        "É essencial que as fórmulas sejam consequência do desenvolvimento do raciocínio combinatório ao resolver problemas."
+      ],
+      "expected_document": "Gustavo_Silva_CEST.pdf",
+      "expected_pages": [
+        4
+      ],
+      "printed_pages": [],
+      "evidence": "O ensino tradicional da combinatória muitas vezes se baseia na memorização de fórmulas sem uma compreensão aprofundada do raciocínio por trás delas, o que pode gerar dificuldades tanto para os professores quanto para os estudantes. É essencial que as fórmulas sejam consequência do desenvolvimento do raciocínio combinatório ao resolver problemas.",
+      "section": "RESUMO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q015",
+      "question": "Qual objetivo ou propósito o trabalho “Educação Financeira em sala de aula: uma adaptação do Cashflow como recurso didático para o Ensino Médio” associa a aumento, consumo, populacao?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "facil",
+      "expected_answer": "O aumento do consumo da população nas últimas décadas no Brasil resultou em problemas financeiros, especialmente entre os jovens, devido à falta de informação e formação financeira. Cartões de crédito estão no topo da lista quando se fala em inadimplência.",
+      "required_facts": [
+        "O aumento do consumo da população nas últimas décadas no Brasil resultou em problemas financeiros, especialmente entre os jovens, devido à falta de informação e formação financeira.",
+        "Cartões de crédito estão no topo da lista quando se fala em inadimplência."
+      ],
+      "expected_document": "Hyago_Lima.pdf",
+      "expected_pages": [
+        4
+      ],
+      "printed_pages": [],
+      "evidence": "O aumento do consumo da população nas últimas décadas no Brasil resultou em problemas financeiros, especialmente entre os jovens, devido à falta de informação e formação financeira. Cartões de crédito estão no topo da lista quando se fala em inadimplência.",
+      "section": "RESUMO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q016",
+      "question": "Como o trabalho “EXPLORANDO O GEOGEBRA NOS PROCESSOS DE ENSINO E APRENDIZAGEM DE LIMITES E CONTINUIDADES NO CÁLCULO 1: Uma proposta de material didático” investigou conhecimento, tipo, foram?",
+      "answerable": true,
+      "question_type": "metodologia",
+      "difficulty": "media",
+      "expected_answer": "foram combinados o tipo de conhecimento a ser adquirido e o processo utilizado para a aquisição desse conhecimento (ANDERSON e KRATHWOHL, 2001, apud TREVISAN e AMARAL, 2016, p.454). O tipo de conhecimento passou a ser designado por substantivos e os processos para atingi-los passaram a ser descritos por verbos.",
+      "required_facts": [
+        "foram combinados o tipo de conhecimento a ser adquirido e o processo utilizado para a aquisição desse conhecimento (ANDERSON e KRATHWOHL, 2001, apud TREVISAN e AMARAL, 2016, p.454).",
+        "O tipo de conhecimento passou a ser designado por substantivos e os processos para atingi-los passaram a ser descritos por verbos."
+      ],
+      "expected_document": "Igor_Castro_CEST.pdf",
+      "expected_pages": [
+        16,
+        17
+      ],
+      "printed_pages": [],
+      "evidence": "foram combinados o tipo de conhecimento a ser adquirido e o processo utilizado para a aquisição desse conhecimento (ANDERSON e KRATHWOHL, 2001, apud TREVISAN e AMARAL, 2016, p.454). O tipo de conhecimento passou a ser designado por substantivos e os processos para atingi-los passaram a ser descritos por verbos.",
+      "section": "2 METODOLOGIA",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q017",
+      "question": "Que resultado ou conclusão o trabalho “Etnomatemática e ensino da matemática para grupos profissionais: um estudo de caso em cooperativas de reciclagem da Cidade Estrutural-DF” apresenta sobre cultura, galpoes, conforme?",
+      "answerable": true,
+      "question_type": "resultado ou conclusão",
+      "difficulty": "dificil",
+      "expected_answer": "Conforme antecipado nos debates teóricos da área da Etnomatemática, foi possível identificar uma série de saberes, cálculos e técnicas no cotidiano de trabalho de cooperativas de catadores e catadoras da CENTCOOP na Estrutural que nos permitem concluir que há ali uma cultura matemática. Essa cultura está presente nos galpões desde a chegada dos resíduos sólidos urbanos aos galpões de triagem até o momento de sua comercialização.",
+      "required_facts": [
+        "Conforme antecipado nos debates teóricos da área da Etnomatemática, foi possível identificar uma série de saberes, cálculos e técnicas no cotidiano de trabalho de cooperativas de catadores e catadoras da CENTCOOP na Estrutural que nos permitem concluir que há ali uma cultura matemática.",
+        "Essa cultura está presente nos galpões desde a chegada dos resíduos sólidos urbanos aos galpões de triagem até o momento de sua comercialização."
+      ],
+      "expected_document": "Jaqueline_Rocha_CEST.pdf",
+      "expected_pages": [
+        47
+      ],
+      "printed_pages": [],
+      "evidence": "Conforme antecipado nos debates teóricos da área da Etnomatemática, foi possível identificar uma série de saberes, cálculos e técnicas no cotidiano de trabalho de cooperativas de catadores e catadoras da CENTCOOP na Estrutural que nos permitem concluir que há ali uma cultura matemática. Essa cultura está presente nos galpões desde a chegada dos resíduos sólidos urbanos aos galpões de triagem até o momento de sua comercialização.",
+      "section": "5. CONSIDERAÇÕES FINAIS",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q018",
+      "question": "Como o trabalho “' O USO DE METODOLOGIAS ATIVAS EM UMA LICENCIATURA EM MATEMÁTICA DO IFB: uma perspectiva antes, durante e depois do período de ensino remoto.'” caracteriza periodo, ensino, despeito?",
+      "answerable": true,
+      "question_type": "definição conceitual",
+      "difficulty": "facil",
+      "expected_answer": "A despeito do fracasso escolar vivenciado durante o período de enfrentamento do isolamento social em função da pandemia da Covid-19 - fato esse amplamente comentado pelas mídias sociais e pelo próprio Ministério da Educaçãonos últimos dois anos, o período de ensino remoto também pode ser visto como uma experiência que, de certa forma, não deixou de alavancar a implementação e o uso das chamadas metodologias ativas nas práticas pedagógicas. Esse período desafiador, por impor, em muitos casos, uma nova configuração do processo de ensino-aprendizagem, na qual professores e alunos estiveram mais distanciados do que em quaisquer outras experiências até então vivenciadas, apresentou-se como um ter",
+      "required_facts": [
+        "A despeito do fracasso escolar vivenciado durante o período de enfrentamento do isolamento social em função da pandemia da Covid-19 - fato esse amplamente comentado pelas mídias sociais e pelo próprio Ministério da Educaçãonos últimos dois anos, o período de ensino remoto também pode ser visto como uma experiência que, de certa forma, não deixou de alavancar a implementação e o uso das chamadas metodologias ativas nas práticas pedagógicas.",
+        "Esse período desafiador, por impor, em muitos casos, uma nova configuração do processo de ensino-aprendizagem, na qual professores e alunos estiveram mais distanciados do que em quaisquer outras experiências até então vivenciadas, apresentou-se como um terreno fértil para o uso dessas metodologias, que solicitam um maior engajamento e participação ativa dos alunos, além de uma maior autonomia no processo de aprendizagem."
+      ],
+      "expected_document": "Jeans_Santos_CEST.pdf",
+      "expected_pages": [
+        16
+      ],
+      "printed_pages": [],
+      "evidence": "A despeito do fracasso escolar vivenciado durante o período de enfrentamento do isolamento social em função da pandemia da Covid-19 - fato esse amplamente comentado pelas mídias sociais e pelo próprio Ministério da Educaçãonos últimos dois anos, o período de ensino remoto também pode ser visto como uma experiência que, de certa forma, não deixou de alavancar a implementação e o uso das chamadas metodologias ativas nas práticas pedagógicas. Esse período desafiador, por impor, em muitos casos, uma nova configuração do processo de ensino-aprendizagem, na qual professores e alunos estiveram mais distanciados do que em quaisquer outras experiências até então vivenciadas, apresentou-se como um ter",
+      "section": "6 CONSIDERAÇÕES FINAIS",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q019",
+      "question": "Que relação ou contraste o trabalho “JOGOS AFRICANOS NA EDUCAÇÃO MATEMÁTICA: PROMOVENDO A LEI 10.639/03 Instituto Federal de Brasília Campus Estrutural” estabelece ao discutir aplicacao, jogo, senet?",
+      "answerable": true,
+      "question_type": "comparação",
+      "difficulty": "media",
+      "expected_answer": "5.1 Aplicação do jogo Senet 5.1.2 Análise da aplicação 5.1.2.1 Análise Geral Ao longo do estudo, uma série de reflexões analíticas surgiu, destacando temas emergentes e associações reveladoras. Notavelmente, as diferenças marcantes nas dinâmicas entre as turmas do CEMTN e do IFB durante a aplicação do jogo Senet se destacaram.",
+      "required_facts": [
+        "5.1 Aplicação do jogo Senet 5.1.2 Análise da aplicação 5.1.2.1 Análise Geral Ao longo do estudo, uma série de reflexões analíticas surgiu, destacando temas emergentes e associações reveladoras.",
+        "Notavelmente, as diferenças marcantes nas dinâmicas entre as turmas do CEMTN e do IFB durante a aplicação do jogo Senet se destacaram."
+      ],
+      "expected_document": "João_Almeida_CEST.pdf",
+      "expected_pages": [
+        16
+      ],
+      "printed_pages": [],
+      "evidence": "5.1 Aplicação do jogo Senet 5.1.2 Análise da aplicação 5.1.2.1 Análise Geral Ao longo do estudo, uma série de reflexões analíticas surgiu, destacando temas emergentes e associações reveladoras. Notavelmente, as diferenças marcantes nas dinâmicas entre as turmas do CEMTN e do IFB durante a aplicação do jogo Senet se destacaram.",
+      "section": "5.1  Aplicação do jogo Senet > 5.1.2  Análise da aplicação > 5.1.2.1  Análise Geral",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q020",
+      "question": "Segundo apenas o trabalho “USO DA ANÁLISE DE CLUSTER EM AVALIAÇÃO DIAGNÓSTICA PARA MAPEAMENTO DE DEFASAGEM ESCOLAR”, como pode ser sintetizada a discussão sobre avaliacao, pode, proposicao?",
+      "answerable": true,
+      "question_type": "síntese limitada a um documento",
+      "difficulty": "dificil",
+      "expected_answer": "Como proposição de pesquisa, esse trabalho irá apresentar uma possibilidade para mensurar e identificar por meio de avaliação diagnóstica, conhecimentos de matemática que estão em defasagem. Considerando que avaliação pode ser usada como leitura de prérequisitos que os estudantes possuem, propomos um diagnóstico que pode ser aplicado em larga escala, sem perder o foco no atendimento de grupos menores e/ou individuais.",
+      "required_facts": [
+        "Como proposição de pesquisa, esse trabalho irá apresentar uma possibilidade para mensurar e identificar por meio de avaliação diagnóstica, conhecimentos de matemática que estão em defasagem.",
+        "Considerando que avaliação pode ser usada como leitura de prérequisitos que os estudantes possuem, propomos um diagnóstico que pode ser aplicado em larga escala, sem perder o foco no atendimento de grupos menores e/ou individuais."
+      ],
+      "expected_document": "Juliana_Nascimento_CEST.pdf",
+      "expected_pages": [
+        6
+      ],
+      "printed_pages": [],
+      "evidence": "Como proposição de pesquisa, esse trabalho irá apresentar uma possibilidade para mensurar e identificar por meio de avaliação diagnóstica, conhecimentos de matemática que estão em defasagem. Considerando que avaliação pode ser usada como leitura de prérequisitos que os estudantes possuem, propomos um diagnóstico que pode ser aplicado em larga escala, sem perder o foco no atendimento de grupos menores e/ou individuais.",
+      "section": "Resumo",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q021",
+      "question": "Qual informação o trabalho “GÊNERO E DESEMPENHO MATEMÁTICO: um estudo de caso no IFB Campus Estrutural” apresenta sobre artigo, objetivo, apresentar?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "facil",
+      "expected_answer": "Este artigo tem como objetivo apresentar alguns fatores socioculturais que influenciam no desempenho em matemática de meninas. Para isso realizamos um questionário e dois grupos focais com estudantes do 3ª ano do ensino médio do Instituto Federal de Educação de Brasília - Campus Estrutural.",
+      "required_facts": [
+        "Este artigo tem como objetivo apresentar alguns fatores socioculturais que influenciam no desempenho em matemática de meninas.",
+        "Para isso realizamos um questionário e dois grupos focais com estudantes do 3ª ano do ensino médio do Instituto Federal de Educação de Brasília - Campus Estrutural."
+      ],
+      "expected_document": "Kamila_Celestino_CEST.pdf",
+      "expected_pages": [
+        5
+      ],
+      "printed_pages": [],
+      "evidence": "Este artigo tem como objetivo apresentar alguns fatores socioculturais que influenciam no desempenho em matemática de meninas. Para isso realizamos um questionário e dois grupos focais com estudantes do 3ª ano do ensino médio do Instituto Federal de Educação de Brasília - Campus Estrutural.",
+      "section": "RESUMO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q022",
+      "question": "Qual objetivo ou propósito o trabalho “BNCC E TAXONOMIA DE BLOOM: como as habilidades em probabilidade progridem ao longo do Ensino Fundamental” associa a probabilidade, santos, gomide?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "media",
+      "expected_answer": "Um dos motivos que mobilizaram a escolha desse tema é o fato de a probabilidade ser, ainda, um assunto de difícil assimilação para os estudantes da educação básica. Segundo Santos e Gomide (2011), os educadores tentam reverter essa situação, uma vez que compreendem que o ensino de probabilidade é de suma importância para sociedade atual, posto que, 'suas implicações se refletem diretamente na interpretação das informações, nas tomadas de decisões profissionais e pessoais, nas questões éticas, na postura crítica diante das situações do dia a dia.' (SANTOS e GOMIDE, 2011, p. 02).",
+      "required_facts": [
+        "Um dos motivos que mobilizaram a escolha desse tema é o fato de a probabilidade ser, ainda, um assunto de difícil assimilação para os estudantes da educação básica.",
+        "Segundo Santos e Gomide (2011), os educadores tentam reverter essa situação, uma vez que compreendem que o ensino de probabilidade é de suma importância para sociedade atual, posto que, 'suas implicações se refletem diretamente na interpretação das informações, nas tomadas de decisões profissionais e pessoais, nas questões éticas, na postura crítica diante das situações do dia a dia.' (SANTOS e GOMIDE, 2011, p. 02)."
+      ],
+      "expected_document": "Laís_Silva_CEST.pdf",
+      "expected_pages": [
+        10,
+        11
+      ],
+      "printed_pages": [],
+      "evidence": "Um dos motivos que mobilizaram a escolha desse tema é o fato de a probabilidade ser, ainda, um assunto de difícil assimilação para os estudantes da educação básica. Segundo Santos e Gomide (2011), os educadores tentam reverter essa situação, uma vez que compreendem que o ensino de probabilidade é de suma importância para sociedade atual, posto que, 'suas implicações se refletem diretamente na interpretação das informações, nas tomadas de decisões profissionais e pessoais, nas questões éticas, na postura crítica diante das situações do dia a dia.' (SANTOS e GOMIDE, 2011, p. 02).",
+      "section": "1 INTRODUÇÃO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q023",
+      "question": "Como o trabalho “INTERVENÇÃO DOCENTE COMO FORMA DE ESTÍMULO À CRIATIVIDADE EM MATEMÁTICA” investigou pesquisa, metodologia, proposta?",
+      "answerable": true,
+      "question_type": "metodologia",
+      "difficulty": "dificil",
+      "expected_answer": "METODOLOGIA A pesquisa proposta se configurou como uma pesquisa aplicada, visto que teve por finalidade uma investigação dedicada a uma situação específica e presente no cotidiano escolar. Além disso, tratou-se de uma pesquisa de caráter exploratória, isso porque se aproxima de temática ainda não comumente estudada (MARGARIDA, 2010).",
+      "required_facts": [
+        "METODOLOGIA A pesquisa proposta se configurou como uma pesquisa aplicada, visto que teve por finalidade uma investigação dedicada a uma situação específica e presente no cotidiano escolar.",
+        "Além disso, tratou-se de uma pesquisa de caráter exploratória, isso porque se aproxima de temática ainda não comumente estudada (MARGARIDA, 2010)."
+      ],
+      "expected_document": "Leandro_Pires_CEST.pdf",
+      "expected_pages": [
+        12,
+        13
+      ],
+      "printed_pages": [],
+      "evidence": "METODOLOGIA A pesquisa proposta se configurou como uma pesquisa aplicada, visto que teve por finalidade uma investigação dedicada a uma situação específica e presente no cotidiano escolar. Além disso, tratou-se de uma pesquisa de caráter exploratória, isso porque se aproxima de temática ainda não comumente estudada (MARGARIDA, 2010).",
+      "section": "3.  METODOLOGIA",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q024",
+      "question": "Que resultado ou conclusão o trabalho “ANÁLISE CURRICULAR DE PRÉ-CÁLCULO: uma nova proposta formativa” apresenta sobre disciplina, objetivo, deve?",
+      "answerable": true,
+      "question_type": "resultado ou conclusão",
+      "difficulty": "facil",
+      "expected_answer": "O plano de conteúdos proposto é uma maneira de dar base para a construção de PC nos IFs, visto que essa disciplina dispõe de diversas visões sobre o seu respectivo papel e objetivo. Contudo, deve-se salientar que se trata de uma disciplina preparatória ao CDI e, sendo assim, deve ser elaborada com o objetivo de preparar os estudantes para o CDI.",
+      "required_facts": [
+        "O plano de conteúdos proposto é uma maneira de dar base para a construção de PC nos IFs, visto que essa disciplina dispõe de diversas visões sobre o seu respectivo papel e objetivo.",
+        "Contudo, deve-se salientar que se trata de uma disciplina preparatória ao CDI e, sendo assim, deve ser elaborada com o objetivo de preparar os estudantes para o CDI."
+      ],
+      "expected_document": "Lucas_Oliveira_CEST.pdf",
+      "expected_pages": [
+        16
+      ],
+      "printed_pages": [],
+      "evidence": "O plano de conteúdos proposto é uma maneira de dar base para a construção de PC nos IFs, visto que essa disciplina dispõe de diversas visões sobre o seu respectivo papel e objetivo. Contudo, deve-se salientar que se trata de uma disciplina preparatória ao CDI e, sendo assim, deve ser elaborada com o objetivo de preparar os estudantes para o CDI.",
+      "section": "3 CONSIDERAÇÕES FINAIS",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q025",
+      "question": "Como o trabalho “RELAÇÕES ENTRE ANSIEDADE EM MATEMÁTICA E CRIATIVIDADE EM MATEMÁTICA DE ESTUDANTES DO ENSINO MÉDIO” caracteriza matematica, nivel, contribuir?",
+      "answerable": true,
+      "question_type": "definição conceitual",
+      "difficulty": "media",
+      "expected_answer": "Inclui raciocinar matematicamente e usar conceitos matemáticos, procedimentos, fatos e ferramentas para descrever, explicar e prever fenômenos. Desta forma, considerando os indicadores tanto a nível nacional quanto a nível internacional, urge a necessidade da produção de pesquisa em educação matemática, em especial no que tange a pesquisar maneiras diferenciadas de ensinar matemática ou mesmo de contribuir para o entendimento de fatores que podem contribuir para isso, como pode ser o caso da ansiedade em matemática.",
+      "required_facts": [
+        "Inclui raciocinar matematicamente e usar conceitos matemáticos, procedimentos, fatos e ferramentas para descrever, explicar e prever fenômenos.",
+        "Desta forma, considerando os indicadores tanto a nível nacional quanto a nível internacional, urge a necessidade da produção de pesquisa em educação matemática, em especial no que tange a pesquisar maneiras diferenciadas de ensinar matemática ou mesmo de contribuir para o entendimento de fatores que podem contribuir para isso, como pode ser o caso da ansiedade em matemática."
+      ],
+      "expected_document": "Lucas_Pereira_CEST.pdf",
+      "expected_pages": [
+        6
+      ],
+      "printed_pages": [],
+      "evidence": "Inclui raciocinar matematicamente e usar conceitos matemáticos, procedimentos, fatos e ferramentas para descrever, explicar e prever fenômenos. Desta forma, considerando os indicadores tanto a nível nacional quanto a nível internacional, urge a necessidade da produção de pesquisa em educação matemática, em especial no que tange a pesquisar maneiras diferenciadas de ensinar matemática ou mesmo de contribuir para o entendimento de fatores que podem contribuir para isso, como pode ser o caso da ansiedade em matemática.",
+      "section": "1 INTRODUÇÃO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q026",
+      "question": "Que relação ou contraste o trabalho “DISTRIBUIÇÕES EXTREMAIS MAXIMAIS: UMA PROPOSTA DE TRANSPOSIÇÃO DIDÁTICA PARA O ENSINO MÉDIO” estabelece ao discutir probabilidade, entre, corpos?",
+      "answerable": true,
+      "question_type": "comparação",
+      "difficulty": "dificil",
+      "expected_answer": "A Probabilidade está entre os corpos de conhecimento mais usados na vida diária. Embora ela tenha grande importância na tomada de decisões, entender a teoria de probabilidade não é tão fácil para todos.",
+      "required_facts": [
+        "A Probabilidade está entre os corpos de conhecimento mais usados na vida diária.",
+        "Embora ela tenha grande importância na tomada de decisões, entender a teoria de probabilidade não é tão fácil para todos."
+      ],
+      "expected_document": "Lucas_Souza_CEST.pdf",
+      "expected_pages": [
+        7
+      ],
+      "printed_pages": [],
+      "evidence": "A Probabilidade está entre os corpos de conhecimento mais usados na vida diária. Embora ela tenha grande importância na tomada de decisões, entender a teoria de probabilidade não é tão fácil para todos.",
+      "section": "1 INTRODUÇÃO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q027",
+      "question": "Segundo apenas o trabalho “PARTICIPAÇÃO FAMILIAR NO DESENVOLVIMENTO DO ENSINOAPRENDIZAGEM NA MATEMÁTICA: O CASO DOS ALUNOS DO 7º ANO (Trabalho de Conclusão de Curso) aprovado em: 19/01/2023. Brasília - DF,19 de janeiro de 2023. Banca Examinadora”, como pode ser sintetizada a discussão sobre trabalho, escola, pais?",
+      "answerable": true,
+      "question_type": "síntese limitada a um documento",
+      "difficulty": "facil",
+      "expected_answer": "Ao final deste trabalho, podemos concluir a partir da presente pesquisa e dos dados analisados que, de fato, a participação familiar é importante e possui impactos no desenvolvimento do ensino-aprendizagem da matemática dos alunos e que a escola, no que lhe concerne, em parceria com o Estado, deve promover a presença da família no ambiente escolar através de outros métodos fora da usual reunião de pais, como a promoção de eventos e uma comunicação mais prática de forma que os pais consigam informações sobre a escola sem a necessidade de ir até ela, com a utilização de alguma rede social ou meio de comunicação eletrônico. Ademais, neste trabalho, surgiram outras questões e propostas que podem",
+      "required_facts": [
+        "Ao final deste trabalho, podemos concluir a partir da presente pesquisa e dos dados analisados que, de fato, a participação familiar é importante e possui impactos no desenvolvimento do ensino-aprendizagem da matemática dos alunos e que a escola, no que lhe concerne, em parceria com o Estado, deve promover a presença da família no ambiente escolar através de outros métodos fora da usual reunião de pais, como a promoção de eventos e uma comunicação mais prática de forma que os pais consigam informações sobre a escola sem a necessidade de ir até ela, com a utilização de alguma rede social ou meio de comunicação eletrônico. Ademais, neste trabalho, surgiram outras questões e propostas que podem"
+      ],
+      "expected_document": "Luiz_Silva_CEST.pdf",
+      "expected_pages": [
+        13
+      ],
+      "printed_pages": [],
+      "evidence": "Ao final deste trabalho, podemos concluir a partir da presente pesquisa e dos dados analisados que, de fato, a participação familiar é importante e possui impactos no desenvolvimento do ensino-aprendizagem da matemática dos alunos e que a escola, no que lhe concerne, em parceria com o Estado, deve promover a presença da família no ambiente escolar através de outros métodos fora da usual reunião de pais, como a promoção de eventos e uma comunicação mais prática de forma que os pais consigam informações sobre a escola sem a necessidade de ir até ela, com a utilização de alguma rede social ou meio de comunicação eletrônico. Ademais, neste trabalho, surgiram outras questões e propostas que podem",
+      "section": "CONSIDERAÇÕES FINAIS",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q028",
+      "question": "Qual informação o trabalho “UM ESTUDO SOBRE AS RELAÇÕES EXISTENTES ENTRE O JOGO DE XADREZ E A MATEMÁTICA COM UM OLHAR PEDAGÓGICO” apresenta sobre entre, xadrez, matematica?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "media",
+      "expected_answer": "Este trabalho apresenta a relação entre o jogo de xadrez e a matemática, destacando como a combinação desses dois elementos pode trazer benefícios para os praticantes. O objetivo principal da pesquisa foi promover o xadrez como uma ferramenta complementar no ensino da matemática, enfatizando a importância de compreender as conexões existentes entre ambos.",
+      "required_facts": [
+        "Este trabalho apresenta a relação entre o jogo de xadrez e a matemática, destacando como a combinação desses dois elementos pode trazer benefícios para os praticantes.",
+        "O objetivo principal da pesquisa foi promover o xadrez como uma ferramenta complementar no ensino da matemática, enfatizando a importância de compreender as conexões existentes entre ambos."
+      ],
+      "expected_document": "Marcelo_Alves_CEST.pdf",
+      "expected_pages": [
+        4
+      ],
+      "printed_pages": [],
+      "evidence": "Este trabalho apresenta a relação entre o jogo de xadrez e a matemática, destacando como a combinação desses dois elementos pode trazer benefícios para os praticantes. O objetivo principal da pesquisa foi promover o xadrez como uma ferramenta complementar no ensino da matemática, enfatizando a importância de compreender as conexões existentes entre ambos.",
+      "section": "RESUMO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q029",
+      "question": "Qual objetivo ou propósito o trabalho “Função Matemática: Uma Sequência Didática para o Ensino Médio Técnico” associa a pela, citado, anteriormente?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "dificil",
+      "expected_answer": "Como citado anteriormente, o intuito do trabalho foi explorar metodologias ativas que possam abranger os objetivos de aprendizagem ditados pela BNCC e pela reforma do Ensino Médio. Optou-se, como instrumento de execução, a Sequência Didática.",
+      "required_facts": [
+        "Como citado anteriormente, o intuito do trabalho foi explorar metodologias ativas que possam abranger os objetivos de aprendizagem ditados pela BNCC e pela reforma do Ensino Médio.",
+        "Optou-se, como instrumento de execução, a Sequência Didática."
+      ],
+      "expected_document": "Mariana_Viana_CEST.pdf",
+      "expected_pages": [
+        7
+      ],
+      "printed_pages": [],
+      "evidence": "Como citado anteriormente, o intuito do trabalho foi explorar metodologias ativas que possam abranger os objetivos de aprendizagem ditados pela BNCC e pela reforma do Ensino Médio. Optou-se, como instrumento de execução, a Sequência Didática.",
+      "section": "1. INTRODUÇÃO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q030",
+      "question": "Como o trabalho “OFICINAS AUTOINSTRUTIVAS NO AMBIENTE VIRTUAL GEOGEBRA: Um Relato de Experiência de Participação do Projeto PIPA” investigou oficinas, foram, realizadas?",
+      "answerable": true,
+      "question_type": "metodologia",
+      "difficulty": "facil",
+      "expected_answer": "3 RELATO DE EXPERIÊNCIA 3.2 Metodologia das Oficinas Foram realizadas oficinas, todas as oficinas que foram utilizadas no projeto PIPA podem ser visualizadas nos anexos deste trabalho, com carga horária de 2 (horas aula) em encontro único em laboratórios de informática. Nestes encontros foram trabalhados conteúdos de Geometria com o auxílio do GeoGebra, obedecendo a seguinte organização: As oficinas previstas foram realizadas conforme a Tabela 2.",
+      "required_facts": [
+        "3 RELATO DE EXPERIÊNCIA 3.2 Metodologia das Oficinas Foram realizadas oficinas, todas as oficinas que foram utilizadas no projeto PIPA podem ser visualizadas nos anexos deste trabalho, com carga horária de 2 (horas aula) em encontro único em laboratórios de informática.",
+        "Nestes encontros foram trabalhados conteúdos de Geometria com o auxílio do GeoGebra, obedecendo a seguinte organização: As oficinas previstas foram realizadas conforme a Tabela 2."
+      ],
+      "expected_document": "Mateus_Mota_CEST.pdf",
+      "expected_pages": [
+        23,
+        24
+      ],
+      "printed_pages": [],
+      "evidence": "3 RELATO DE EXPERIÊNCIA 3.2 Metodologia das Oficinas Foram realizadas oficinas, todas as oficinas que foram utilizadas no projeto PIPA podem ser visualizadas nos anexos deste trabalho, com carga horária de 2 (horas aula) em encontro único em laboratórios de informática. Nestes encontros foram trabalhados conteúdos de Geometria com o auxílio do GeoGebra, obedecendo a seguinte organização: As oficinas previstas foram realizadas conforme a Tabela 2.",
+      "section": "3 RELATO DE EXPERIÊNCIA > 3.2  Metodologia das Oficinas",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q031",
+      "question": "Que resultado ou conclusão o trabalho “\"OS SENTIDOS SUBJETIVOS DE UMA PROFESSORA DE BIOLOGIA DISCALCÚLICA\"” apresenta sobre ensino, pessoas, vivenciados?",
+      "answerable": true,
+      "question_type": "resultado ou conclusão",
+      "difficulty": "media",
+      "expected_answer": "Ao longo dessa exposição, com base nos sentidos subjetivos vivenciados por uma professora de biologia discalcúlica experienciados em sua formação, desde o ensino básico até o ensino superior, procurou-se apresentar reflexões sobre os processos de ensino-aparendizagem que podem ser vivenciados por pessoas que apresentam discalculia, de uma forma particular, e por pessoas diagnosticadas com outros transtornos funcionais, de um modo geral. Conforme ressaltado, em diversas etapas desta investigação, as pessoas que apresentam a chamada Perturbação Específica do Cálculo têm dificuldades significativas para identificar sinais matemáticos, montar operações a partir de um problema, classificar número",
+      "required_facts": [
+        "Ao longo dessa exposição, com base nos sentidos subjetivos vivenciados por uma professora de biologia discalcúlica experienciados em sua formação, desde o ensino básico até o ensino superior, procurou-se apresentar reflexões sobre os processos de ensino-aparendizagem que podem ser vivenciados por pessoas que apresentam discalculia, de uma forma particular, e por pessoas diagnosticadas com outros transtornos funcionais, de um modo geral.",
+        "Conforme ressaltado, em diversas etapas desta investigação, as pessoas que apresentam a chamada Perturbação Específica do Cálculo têm dificuldades significativas para identificar sinais matemáticos, montar operações a partir de um problema, classificar números, independentemente de sua grandeza, entender princípios de medidas, compreender e seguir uma sequência, relacionar o valor de moedas entre outros."
+      ],
+      "expected_document": "Mateus_Sampaio_CEST.pdf",
+      "expected_pages": [
+        38
+      ],
+      "printed_pages": [],
+      "evidence": "Ao longo dessa exposição, com base nos sentidos subjetivos vivenciados por uma professora de biologia discalcúlica experienciados em sua formação, desde o ensino básico até o ensino superior, procurou-se apresentar reflexões sobre os processos de ensino-aparendizagem que podem ser vivenciados por pessoas que apresentam discalculia, de uma forma particular, e por pessoas diagnosticadas com outros transtornos funcionais, de um modo geral. Conforme ressaltado, em diversas etapas desta investigação, as pessoas que apresentam a chamada Perturbação Específica do Cálculo têm dificuldades significativas para identificar sinais matemáticos, montar operações a partir de um problema, classificar número",
+      "section": "6. CONSIDERAÇÕES FINAIS",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q032",
+      "question": "Como o trabalho “PROPOSTA DE SIMULADO DE MATEMÁTICA UNIFICADO NO INSTITUTO FEDERAL DE EDUCAÇÃO TÉCNICA E TECNOLÓGICA DE BRASÍLIA” caracteriza questoes, habilidades, banco?",
+      "answerable": true,
+      "question_type": "definição conceitual",
+      "difficulty": "dificil",
+      "expected_answer": "Foi criado um banco, composto de 88 questões, que abordam as habilidades que compõem a matriz de competências e habilidades em matemática do INEP. Cada habilidade é composta por, pelo menos, 2 questões, como é possível observar no Apêndice A - Distribuição de competências e habilidades do banco de questões.",
+      "required_facts": [
+        "Foi criado um banco, composto de 88 questões, que abordam as habilidades que compõem a matriz de competências e habilidades em matemática do INEP.",
+        "Cada habilidade é composta por, pelo menos, 2 questões, como é possível observar no Apêndice A - Distribuição de competências e habilidades do banco de questões."
+      ],
+      "expected_document": "Matheus_Rocha_CEST.pdf",
+      "expected_pages": [
+        8,
+        9
+      ],
+      "printed_pages": [],
+      "evidence": "Foi criado um banco, composto de 88 questões, que abordam as habilidades que compõem a matriz de competências e habilidades em matemática do INEP. Cada habilidade é composta por, pelo menos, 2 questões, como é possível observar no Apêndice A - Distribuição de competências e habilidades do banco de questões.",
+      "section": "Material",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q033",
+      "question": "Que relação ou contraste o trabalho “A Formação para o Ensino de Matemática na Educação de Jovens e Adultos: Levantamento da percepção de Docentes dos Anos Finais do Ensino Fundamental no Distrito Federal” estabelece ao discutir idosos, perfis, juvenilizacao?",
+      "answerable": true,
+      "question_type": "comparação",
+      "difficulty": "facil",
+      "expected_answer": "2.2 Perfis da EJA 2.2.1 Juvenilização na EJA O objetivo da EJA era dar acesso aos estudos para os estudantes que trabalham às pessoas adultas ou aos idosos. Durante décadas as turmas da EJA sempre foram formadas por adultos e idosos.",
+      "required_facts": [
+        "2.2 Perfis da EJA 2.2.1 Juvenilização na EJA O objetivo da EJA era dar acesso aos estudos para os estudantes que trabalham às pessoas adultas ou aos idosos.",
+        "Durante décadas as turmas da EJA sempre foram formadas por adultos e idosos."
+      ],
+      "expected_document": "Márcia_Martins_CEST.pdf",
+      "expected_pages": [
+        19,
+        20
+      ],
+      "printed_pages": [],
+      "evidence": "2.2 Perfis da EJA 2.2.1 Juvenilização na EJA O objetivo da EJA era dar acesso aos estudos para os estudantes que trabalham às pessoas adultas ou aos idosos. Durante décadas as turmas da EJA sempre foram formadas por adultos e idosos.",
+      "section": "2.2 Perfis da EJA > 2.2.1 Juvenilização na EJA",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q034",
+      "question": "Segundo apenas o trabalho “O USO DE REALIDADE AUMENTADA POR MEIO DO GEOGEBRA PARA O ENSINO DE PROJEÇÕES ORTOGONAIS”, como pode ser sintetizada a discussão sobre espacial, representacoes, dificuldades?",
+      "answerable": true,
+      "question_type": "síntese limitada a um documento",
+      "difficulty": "media",
+      "expected_answer": "As dificuldades de aprendizagem em geometria espacial na percepção por objetos tridimensionais levam ao docente à busca por novas estratégias de ensino. Representações em livros didáticos ou quadro branco são insuficientes para a devida compreensão e visualização espacial, considerando que as representações se dão de forma planificada, o que prejudica a interpretação geométrica.",
+      "required_facts": [
+        "As dificuldades de aprendizagem em geometria espacial na percepção por objetos tridimensionais levam ao docente à busca por novas estratégias de ensino.",
+        "Representações em livros didáticos ou quadro branco são insuficientes para a devida compreensão e visualização espacial, considerando que as representações se dão de forma planificada, o que prejudica a interpretação geométrica."
+      ],
+      "expected_document": "Nathália_Pereira_CEST.pdf",
+      "expected_pages": [
+        4
+      ],
+      "printed_pages": [],
+      "evidence": "As dificuldades de aprendizagem em geometria espacial na percepção por objetos tridimensionais levam ao docente à busca por novas estratégias de ensino. Representações em livros didáticos ou quadro branco são insuficientes para a devida compreensão e visualização espacial, considerando que as representações se dão de forma planificada, o que prejudica a interpretação geométrica.",
+      "section": "Resumo",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q035",
+      "question": "Qual informação o trabalho “MATEMÁTICA INCLUSIVA: Produção de Material Didático Adaptado para Alunos Cegos no Estudo do Plano Cartesiano Ar go apresentado ao curso de Licenciatura em Matemá ca do Campus Estrutural do Ins tuto Federal de Brasília como requisito parcial para a obtenção de $tulo de Licenciado em Matemática” apresenta sobre material, buscando, contribuir?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "dificil",
+      "expected_answer": "Buscando contribuir para as discussões acerca das possibilidades da educação inclusiva, esse artigo tem por objetivo propor a produção de um material didático adaptado para alunos cegos do 9° ano do ensino fundamental quanto ao estudo do plano cartesiano. Para isso, foi realizada uma pesquisa de cunho qualitativo, utilizando-se do Design Centrado no Usuário como percurso metodológico para construção e testagem do material.",
+      "required_facts": [
+        "Buscando contribuir para as discussões acerca das possibilidades da educação inclusiva, esse artigo tem por objetivo propor a produção de um material didático adaptado para alunos cegos do 9° ano do ensino fundamental quanto ao estudo do plano cartesiano.",
+        "Para isso, foi realizada uma pesquisa de cunho qualitativo, utilizando-se do Design Centrado no Usuário como percurso metodológico para construção e testagem do material."
+      ],
+      "expected_document": "Nthalia_Barros_CEST.pdf",
+      "expected_pages": [
+        6
+      ],
+      "printed_pages": [],
+      "evidence": "Buscando contribuir para as discussões acerca das possibilidades da educação inclusiva, esse artigo tem por objetivo propor a produção de um material didático adaptado para alunos cegos do 9° ano do ensino fundamental quanto ao estudo do plano cartesiano. Para isso, foi realizada uma pesquisa de cunho qualitativo, utilizando-se do Design Centrado no Usuário como percurso metodológico para construção e testagem do material.",
+      "section": "RESUMO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q036",
+      "question": "Qual objetivo ou propósito o trabalho “MOTIVAÇÃO MATEMÁTICA NO ENSINO REMOTO: UMA REFLEXÃO SOBRE O ENSINO DE MATEMÁTICA NA PANDEMIA” associa a desafios, houve, entao?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "facil",
+      "expected_answer": "Houve então uma mudança repentina no processo ensino-aprendizado, e com isso diversos desafios. Um dos desafios enfrentados, no que tange ao estudo de matemática, foi a motivação do aluno.",
+      "required_facts": [
+        "Houve então uma mudança repentina no processo ensino-aprendizado, e com isso diversos desafios.",
+        "Um dos desafios enfrentados, no que tange ao estudo de matemática, foi a motivação do aluno."
+      ],
+      "expected_document": "Nájela_Nóbrega_CEST.pdf",
+      "expected_pages": [
+        8,
+        9
+      ],
+      "printed_pages": [],
+      "evidence": "Houve então uma mudança repentina no processo ensino-aprendizado, e com isso diversos desafios. Um dos desafios enfrentados, no que tange ao estudo de matemática, foi a motivação do aluno.",
+      "section": "1. INTRODUÇÃO/JUSTIFICATIVA",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q037",
+      "question": "Como o trabalho “AS TDICs, A PANDEMIA E A MATEMÁTICA: DESAFIOS E POSSIBILIDADES NO PROCESSO ENSINO/APRENDIZAGEM” investigou pesquisa, apesar, todas?",
+      "answerable": true,
+      "question_type": "metodologia",
+      "difficulty": "media",
+      "expected_answer": "Apesar de todas as dificuldades impostas no decorrer dessa pesquisa, iniciando, pelo 'não', recebido de alguns professores que demonstraram resistência em responderem os questionários, a coleta de dados foi possível. Essa pesquisa ajudou a mostrar os impactos do vírus na sociedade em geral, principalmente nos ambientes educacionais.",
+      "required_facts": [
+        "Apesar de todas as dificuldades impostas no decorrer dessa pesquisa, iniciando, pelo 'não', recebido de alguns professores que demonstraram resistência em responderem os questionários, a coleta de dados foi possível.",
+        "Essa pesquisa ajudou a mostrar os impactos do vírus na sociedade em geral, principalmente nos ambientes educacionais."
+      ],
+      "expected_document": "Osvaldo_Santos Júnior_CEST.pdf",
+      "expected_pages": [
+        57
+      ],
+      "printed_pages": [],
+      "evidence": "Apesar de todas as dificuldades impostas no decorrer dessa pesquisa, iniciando, pelo 'não', recebido de alguns professores que demonstraram resistência em responderem os questionários, a coleta de dados foi possível. Essa pesquisa ajudou a mostrar os impactos do vírus na sociedade em geral, principalmente nos ambientes educacionais.",
+      "section": "CONSIDERAÇÕES FINAIS",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q038",
+      "question": "Que resultado ou conclusão o trabalho “TítuIo: ENSINO DE MATEMÁTICA PARA ALUNOS DEFICIENTES VISUAIS: UMA ABORDAGEM NA FORMAÇÃO INICIAL DE PROFESSORES” apresenta sobre algo, diante, tudo?",
+      "answerable": true,
+      "question_type": "resultado ou conclusão",
+      "difficulty": "dificil",
+      "expected_answer": "Diante de tudo que foi apresentado nesse artigo fica evidente que a educação inclusiva é algo essencial no mundo atual, e garantida por lei. Todavia, o preparo adequado para a efetivação desta não é algo bem definido, necessitando de maiores engajamentos legais, como normas para a formação de professores e de mais iniciativas institucionais para a promoção da mesma.",
+      "required_facts": [
+        "Diante de tudo que foi apresentado nesse artigo fica evidente que a educação inclusiva é algo essencial no mundo atual, e garantida por lei.",
+        "Todavia, o preparo adequado para a efetivação desta não é algo bem definido, necessitando de maiores engajamentos legais, como normas para a formação de professores e de mais iniciativas institucionais para a promoção da mesma."
+      ],
+      "expected_document": "Paulo Sérgio_Conceição_CEST.pdf",
+      "expected_pages": [
+        34
+      ],
+      "printed_pages": [],
+      "evidence": "Diante de tudo que foi apresentado nesse artigo fica evidente que a educação inclusiva é algo essencial no mundo atual, e garantida por lei. Todavia, o preparo adequado para a efetivação desta não é algo bem definido, necessitando de maiores engajamentos legais, como normas para a formação de professores e de mais iniciativas institucionais para a promoção da mesma.",
+      "section": "CONSIDERAÇÕES FINAIS",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q039",
+      "question": "Como o trabalho “A MATEMÁTICA E A DEFICIÊNCIA VISUAL: Uma bibliometria do ensino matemático” caracteriza soroban, ensino, matematica?",
+      "answerable": true,
+      "question_type": "definição conceitual",
+      "difficulty": "facil",
+      "expected_answer": "Soroban Dentre as ferramentas para o ensino e aprendizagem da matemática, uma das que se destacam é o Soroban, uma calculadora muito utilizada na antiguidade que foi resgatada e adaptada para o ensino de deficientes visuais. Mas o Soroban não se restringe somente a eles, é uma ferramenta muito útil para qualquer educando, pois com ele é possível realizar as operações básicas da matemática.",
+      "required_facts": [
+        "Soroban Dentre as ferramentas para o ensino e aprendizagem da matemática, uma das que se destacam é o Soroban, uma calculadora muito utilizada na antiguidade que foi resgatada e adaptada para o ensino de deficientes visuais.",
+        "Mas o Soroban não se restringe somente a eles, é uma ferramenta muito útil para qualquer educando, pois com ele é possível realizar as operações básicas da matemática."
+      ],
+      "expected_document": "Rodrigo_Ferreira_CEST.pdf",
+      "expected_pages": [
+        24,
+        25
+      ],
+      "printed_pages": [],
+      "evidence": "Soroban Dentre as ferramentas para o ensino e aprendizagem da matemática, uma das que se destacam é o Soroban, uma calculadora muito utilizada na antiguidade que foi resgatada e adaptada para o ensino de deficientes visuais. Mas o Soroban não se restringe somente a eles, é uma ferramenta muito útil para qualquer educando, pois com ele é possível realizar as operações básicas da matemática.",
+      "section": "2. REFERENCIAL TEÓRICO > 2.2. Educação Especial > 2.2.4. Soroban",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q040",
+      "question": "Que relação ou contraste o trabalho “TÍtuIo: O PROCESSO DE DESEMPENHO DE CÁLCULO DIFERENCIAL DADO A IMPORTÂNCIA DE FUNDAMENTOS DE MATEMÁTICA NO IFB-CAMPUS ESTRUTURAL” estabelece ao discutir internacional, avaliacao, matematica?",
+      "answerable": true,
+      "question_type": "comparação",
+      "difficulty": "media",
+      "expected_answer": "Uma das principais avaliações de larga escala internacional, o Programa Internacional de Avaliação de Estudantes (Pisa), apontou que o Brasil tem baixa capacidade em Matemática, se formos comparar com outros 78 países que participaram da avaliação. A edição 2018 (última realizada até o presente momento), mostra que 68,1% dos discentes brasileiros, com 15 anos de idade, não possuem o conhecimento considerado básico de Matemática para exercer uma plena cidadania.",
+      "required_facts": [
+        "Uma das principais avaliações de larga escala internacional, o Programa Internacional de Avaliação de Estudantes (Pisa), apontou que o Brasil tem baixa capacidade em Matemática, se formos comparar com outros 78 países que participaram da avaliação.",
+        "A edição 2018 (última realizada até o presente momento), mostra que 68,1% dos discentes brasileiros, com 15 anos de idade, não possuem o conhecimento considerado básico de Matemática para exercer uma plena cidadania."
+      ],
+      "expected_document": "Sarah_Campos_CEST.pdf",
+      "expected_pages": [
+        9
+      ],
+      "printed_pages": [],
+      "evidence": "Uma das principais avaliações de larga escala internacional, o Programa Internacional de Avaliação de Estudantes (Pisa), apontou que o Brasil tem baixa capacidade em Matemática, se formos comparar com outros 78 países que participaram da avaliação. A edição 2018 (última realizada até o presente momento), mostra que 68,1% dos discentes brasileiros, com 15 anos de idade, não possuem o conhecimento considerado básico de Matemática para exercer uma plena cidadania.",
+      "section": "1. INTRODUÇÃO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q041",
+      "question": "Segundo apenas o trabalho “ESCAPE ROOM: UMA POSSIBILIDADE DE INSTRUMENTO AVALIATIVO”, como pode ser sintetizada a discussão sobre sala, fuga, proposta?",
+      "answerable": true,
+      "question_type": "síntese limitada a um documento",
+      "difficulty": "dificil",
+      "expected_answer": "A sala de fuga proposta proporcionou aos participantes um espaço onde puderam praticar seus conhecimentos matemáticos previamente adquiridos para resolução de problemas em conjunto. No entanto, nosso estudo também apresenta limitações que não foram apontadas até o momento, pesquisas futuras podem ser mais profundas.",
+      "required_facts": [
+        "A sala de fuga proposta proporcionou aos participantes um espaço onde puderam praticar seus conhecimentos matemáticos previamente adquiridos para resolução de problemas em conjunto.",
+        "No entanto, nosso estudo também apresenta limitações que não foram apontadas até o momento, pesquisas futuras podem ser mais profundas."
+      ],
+      "expected_document": "Stephanie_Silva_CEST.pdf",
+      "expected_pages": [
+        30,
+        31
+      ],
+      "printed_pages": [],
+      "evidence": "A sala de fuga proposta proporcionou aos participantes um espaço onde puderam praticar seus conhecimentos matemáticos previamente adquiridos para resolução de problemas em conjunto. No entanto, nosso estudo também apresenta limitações que não foram apontadas até o momento, pesquisas futuras podem ser mais profundas.",
+      "section": "5 CONSIDERAÇÕES FINAIS",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q042",
+      "question": "Qual informação o trabalho “DESENVOLVIMENTO DE PRÁTICA COMPUTACIONAL DESPLUGADA PARA O ENSINO MÉDIO NA PERSPECTIVA DA BNCC” apresenta sobre computacional, pensamento, forma?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "facil",
+      "expected_answer": "Com o rápido avanço e necessidade de interação com as novas tecnologias surge o conceito do pensamento computacional (PC), que pode ser descrito como a habilidade intelectual de solucionar problemas pensando de forma computacional. Em 2018 temos essas conceitos e habilidades incorporados a base nacional comum curricular (BNCC), especificamente na área da matemática, por conseguinte o presente trabalho teve como objetivo geral o desenvolvimento de um jogo que trabalhasse o pensamento computacional de forma desplugada com alunos da educação básica.",
+      "required_facts": [
+        "Com o rápido avanço e necessidade de interação com as novas tecnologias surge o conceito do pensamento computacional (PC), que pode ser descrito como a habilidade intelectual de solucionar problemas pensando de forma computacional.",
+        "Em 2018 temos essas conceitos e habilidades incorporados a base nacional comum curricular (BNCC), especificamente na área da matemática, por conseguinte o presente trabalho teve como objetivo geral o desenvolvimento de um jogo que trabalhasse o pensamento computacional de forma desplugada com alunos da educação básica."
+      ],
+      "expected_document": "Thayanara_Martins_CEST.pdf",
+      "expected_pages": [
+        4
+      ],
+      "printed_pages": [],
+      "evidence": "Com o rápido avanço e necessidade de interação com as novas tecnologias surge o conceito do pensamento computacional (PC), que pode ser descrito como a habilidade intelectual de solucionar problemas pensando de forma computacional. Em 2018 temos essas conceitos e habilidades incorporados a base nacional comum curricular (BNCC), especificamente na área da matemática, por conseguinte o presente trabalho teve como objetivo geral o desenvolvimento de um jogo que trabalhasse o pensamento computacional de forma desplugada com alunos da educação básica.",
+      "section": "RESUMO",
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q043",
+      "question": "Qual foi o consumo mensal de energia elétrica do laboratório de informática do campus em 2025?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "facil",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Dados operacionais de consumo do campus não integram o acervo de TCCs.",
+      "unanswerable_reason": "Dados operacionais de consumo do campus não integram o acervo de TCCs.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q044",
+      "question": "Qual é a senha atual da rede sem fio administrativa do campus?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "media",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Credenciais administrativas não pertencem ao acervo e não devem ser fornecidas.",
+      "unanswerable_reason": "Credenciais administrativas não pertencem ao acervo e não devem ser fornecidas.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q045",
+      "question": "Qual será o cardápio completo do restaurante estudantil na próxima semana?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "dificil",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Informação futura e operacional não consta dos TCCs.",
+      "unanswerable_reason": "Informação futura e operacional não consta dos TCCs.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q046",
+      "question": "Qual é a lotação em tempo real do estacionamento do campus?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "facil",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Dado em tempo real não está contido no acervo estático.",
+      "unanswerable_reason": "Dado em tempo real não está contido no acervo estático.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q047",
+      "question": "Qual foi a temperatura registrada no campus às 14h de ontem?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "media",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Medição meteorológica pontual não pertence ao acervo.",
+      "unanswerable_reason": "Medição meteorológica pontual não pertence ao acervo.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q048",
+      "question": "Quais são os telefones pessoais atuais de todos os autores dos TCCs?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "dificil",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Dados pessoais atuais não são conteúdo acadêmico necessário nem verificável no acervo.",
+      "unanswerable_reason": "Dados pessoais atuais não são conteúdo acadêmico necessário nem verificável no acervo.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q049",
+      "question": "Qual será a data exata da próxima manutenção do elevador do campus?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "facil",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Agenda operacional futura não pertence ao acervo.",
+      "unanswerable_reason": "Agenda operacional futura não pertence ao acervo.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q050",
+      "question": "Qual é o saldo bancário atual da associação de estudantes?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "media",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "development",
+      "status": "pending_review",
+      "rationale": "Informação financeira atual e privada não integra os TCCs.",
+      "unanswerable_reason": "Informação financeira atual e privada não integra os TCCs.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q051",
+      "question": "Qual objetivo ou propósito o trabalho “DISCALCULIA NA REALIDADE ESCOLAR: A Percepção do Docente na Identificação dessa Dificuldade de Aprendizagem na Educação Básica” associa a quais, estudantes, ultima?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "media",
+      "expected_answer": "Na última parte, a que faz referência sobre as perspectivas docentes nas resoluções de problemas, foram apresentadas cinco situações nas quais, em cada uma, deveria ser identificado o momento em que os estudantes fictícios A, B e C levantariam suspeitas de serem discalcúlicos. Contudo, todos os respondentes optaram em somente indicar quais os estudantes possuíam discalculia nos exemplos apresentados, não fazendo uma discussão dissertativa a respeito da sua escolha.",
+      "required_facts": [
+        "Na última parte, a que faz referência sobre as perspectivas docentes nas resoluções de problemas, foram apresentadas cinco situações nas quais, em cada uma, deveria ser identificado o momento em que os estudantes fictícios A, B e C levantariam suspeitas de serem discalcúlicos.",
+        "Contudo, todos os respondentes optaram em somente indicar quais os estudantes possuíam discalculia nos exemplos apresentados, não fazendo uma discussão dissertativa a respeito da sua escolha."
+      ],
+      "expected_document": "Adan_Viana_CEST.pdf",
+      "expected_pages": [
+        10,
+        11
+      ],
+      "printed_pages": [],
+      "evidence": "Na última parte, a que faz referência sobre as perspectivas docentes nas resoluções de problemas, foram apresentadas cinco situações nas quais, em cada uma, deveria ser identificado o momento em que os estudantes fictícios A, B e C levantariam suspeitas de serem discalcúlicos. Contudo, todos os respondentes optaram em somente indicar quais os estudantes possuíam discalculia nos exemplos apresentados, não fazendo uma discussão dissertativa a respeito da sua escolha.",
+      "section": "4 ANÁLISE DE RESULTADOS",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q052",
+      "question": "Como o trabalho “APLICAÇÃO DE METODOLOGIAS ATIVAS NO ENSINO DA MATEMÁTICA: POSSIBILIDADES PARA O ENSINO DE TRIGONOMETRIA” investigou trigonometria, atualmente, base?",
+      "answerable": true,
+      "question_type": "metodologia",
+      "difficulty": "dificil",
+      "expected_answer": "Atualmente, a base da trigonometria se dá através do triângulo retângulo, entretanto 'A Trigonometria, assim como a própria Matemática, se desenvolveu a partir da necessidade do ser humano em compreender o universo'. (ALVES, 2017, p.23). Cabe destacar, afirmação do pensador: (...) os triângulos retângulos eram frequentemente usados para medir distâncias, comprimentos e profundidades.",
+      "required_facts": [
+        "Atualmente, a base da trigonometria se dá através do triângulo retângulo, entretanto 'A Trigonometria, assim como a própria Matemática, se desenvolveu a partir da necessidade do ser humano em compreender o universo'. (ALVES, 2017, p.23).",
+        "Cabe destacar, afirmação do pensador: (...) os triângulos retângulos eram frequentemente usados para medir distâncias, comprimentos e profundidades."
+      ],
+      "expected_document": "Adrienne_Moraes_CEST.pdf",
+      "expected_pages": [
+        14,
+        15
+      ],
+      "printed_pages": [],
+      "evidence": "Atualmente, a base da trigonometria se dá através do triângulo retângulo, entretanto 'A Trigonometria, assim como a própria Matemática, se desenvolveu a partir da necessidade do ser humano em compreender o universo'. (ALVES, 2017, p.23). Cabe destacar, afirmação do pensador: (...) os triângulos retângulos eram frequentemente usados para medir distâncias, comprimentos e profundidades.",
+      "section": "TRIGONOMETRIA E SUAS RELAÇÕES",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q053",
+      "question": "Que resultado ou conclusão o trabalho “TAXONOMIA DE BLOOM REVISADA COMO INSTRUMENTO DE ANÁLISE PANORÂMICA DAS HABILIDADES DE ESTATÍSTICA NA BNCC DOS ANOS FINAIS DO ENSINO FUNDAMENTAL” apresenta sobre habilidade, processo, cognitivo?",
+      "answerable": true,
+      "question_type": "resultado ou conclusão",
+      "difficulty": "facil",
+      "expected_answer": "Observamos, então, que as habilidades são iniciadas com verbos no infinitivo que evidenciam os processos cognitivos envolvidos na habilidade em questão. Como forma de compreensão para estabelecer o processo cognitivo da habilidade, podemos utilizar a Taxonomia de Bloom, 'uma vez que foi a partir dela que o meio acadêmico pôde entrar em consenso sobre qual(is) processo(s) cognitivo(s) um determinado verbo poderia estar representando' (Silva, 2022, p. 18).",
+      "required_facts": [
+        "Observamos, então, que as habilidades são iniciadas com verbos no infinitivo que evidenciam os processos cognitivos envolvidos na habilidade em questão.",
+        "Como forma de compreensão para estabelecer o processo cognitivo da habilidade, podemos utilizar a Taxonomia de Bloom, 'uma vez que foi a partir dela que o meio acadêmico pôde entrar em consenso sobre qual(is) processo(s) cognitivo(s) um determinado verbo poderia estar representando' (Silva, 2022, p. 18)."
+      ],
+      "expected_document": "Alice_Santos_CEST.pdf",
+      "expected_pages": [
+        37,
+        38,
+        39
+      ],
+      "printed_pages": [],
+      "evidence": "Observamos, então, que as habilidades são iniciadas com verbos no infinitivo que evidenciam os processos cognitivos envolvidos na habilidade em questão. Como forma de compreensão para estabelecer o processo cognitivo da habilidade, podemos utilizar a Taxonomia de Bloom, 'uma vez que foi a partir dela que o meio acadêmico pôde entrar em consenso sobre qual(is) processo(s) cognitivo(s) um determinado verbo poderia estar representando' (Silva, 2022, p. 18).",
+      "section": "Diferenciar escravidão, servidão e trabalho livre no mundo antigo.",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q054",
+      "question": "Como o trabalho “USO DE CONCEITOS DE PROBABILIDADE GEOMÉTRICA E ESTATÍSTICA A PARTIR DO PROBLEMA DAS AGULHAS DE BUFFON” caracteriza probabilidade, geometrica, importante?",
+      "answerable": true,
+      "question_type": "definição conceitual",
+      "difficulty": "media",
+      "expected_answer": "A probabilidade geométrica é importante conceito probabilístico pouco abordado em livros didáticos brasileiros. No entanto, é de extrema importância discutir e propor uma abordagem educativa para o problema das agulhas de Buffon.",
+      "required_facts": [
+        "A probabilidade geométrica é importante conceito probabilístico pouco abordado em livros didáticos brasileiros.",
+        "No entanto, é de extrema importância discutir e propor uma abordagem educativa para o problema das agulhas de Buffon."
+      ],
+      "expected_document": "António_Araújo_CEST.pdf",
+      "expected_pages": [
+        4
+      ],
+      "printed_pages": [],
+      "evidence": "A probabilidade geométrica é importante conceito probabilístico pouco abordado em livros didáticos brasileiros. No entanto, é de extrema importância discutir e propor uma abordagem educativa para o problema das agulhas de Buffon.",
+      "section": "Resumo",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q055",
+      "question": "Que relação ou contraste o trabalho “DESENVOLVIMENTO DE UM LABORATÓRIO DE MATEMÁTICA MÓVEL E SUSTENTÁVEL PARA O ENSINO FUNDAMENTAL II” estabelece ao discutir laboratorio, matematica, ensino?",
+      "answerable": true,
+      "question_type": "comparação",
+      "difficulty": "dificil",
+      "expected_answer": "Este trabalho trata do desenvolvimento de um laboratório de matemática móvel e sustentável para o Ensino Fundamental II, em que se teve a intenção de contribuir para a solução do impasse da ausência de laboratório de matemática nas escolas. Em termos teóricos, a pesquisa fundamentou-se principalmente nos estudos de Sérgio Lorenzato acerca do laboratório de matemática, considerando que o autor destaca sua importância no processo de ensino e aprendizagem e defende o fato de o laboratório não se tratar necessariamente de um espaço físico, mas de uma metodologia de ensino.",
+      "required_facts": [
+        "Este trabalho trata do desenvolvimento de um laboratório de matemática móvel e sustentável para o Ensino Fundamental II, em que se teve a intenção de contribuir para a solução do impasse da ausência de laboratório de matemática nas escolas.",
+        "Em termos teóricos, a pesquisa fundamentou-se principalmente nos estudos de Sérgio Lorenzato acerca do laboratório de matemática, considerando que o autor destaca sua importância no processo de ensino e aprendizagem e defende o fato de o laboratório não se tratar necessariamente de um espaço físico, mas de uma metodologia de ensino."
+      ],
+      "expected_document": "Bruna_Oliveira_CEST.pdf",
+      "expected_pages": [
+        3
+      ],
+      "printed_pages": [],
+      "evidence": "Este trabalho trata do desenvolvimento de um laboratório de matemática móvel e sustentável para o Ensino Fundamental II, em que se teve a intenção de contribuir para a solução do impasse da ausência de laboratório de matemática nas escolas. Em termos teóricos, a pesquisa fundamentou-se principalmente nos estudos de Sérgio Lorenzato acerca do laboratório de matemática, considerando que o autor destaca sua importância no processo de ensino e aprendizagem e defende o fato de o laboratório não se tratar necessariamente de um espaço físico, mas de uma metodologia de ensino.",
+      "section": "RESUMO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q056",
+      "question": "Segundo apenas o trabalho “O USO DA PLATAFORMA GEOGEBRA PARA O ESTUDO DO CONCEITO PRIMITIVO E GEOMÉTRICO DE LIMITE”, como pode ser sintetizada a discussão sobre dificuldades, ensino, limites?",
+      "answerable": true,
+      "question_type": "síntese limitada a um documento",
+      "difficulty": "facil",
+      "expected_answer": "O ensino de limites na matemática é frequentemente acompanhado por uma série de dificuldades enfrentadas pelos estudantes. Essas dificuldades podem ser atribuídas a fatores epistemológicos, ou seja, relacionados à forma como o conhecimento é adquirido e assimilado.",
+      "required_facts": [
+        "O ensino de limites na matemática é frequentemente acompanhado por uma série de dificuldades enfrentadas pelos estudantes.",
+        "Essas dificuldades podem ser atribuídas a fatores epistemológicos, ou seja, relacionados à forma como o conhecimento é adquirido e assimilado."
+      ],
+      "expected_document": "Caio_Marques_CEST.pdf",
+      "expected_pages": [
+        4
+      ],
+      "printed_pages": [],
+      "evidence": "O ensino de limites na matemática é frequentemente acompanhado por uma série de dificuldades enfrentadas pelos estudantes. Essas dificuldades podem ser atribuídas a fatores epistemológicos, ou seja, relacionados à forma como o conhecimento é adquirido e assimilado.",
+      "section": "Resumo",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q057",
+      "question": "Qual informação o trabalho “APLICAÇÃO DA SEQUÊNCIA DE FIBONACCI EM ANÁLISE TÉCNICA DE GRÁFICOS DE AÇÕES” apresenta sobre desenvolvimento, funcoes, nivel?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "media",
+      "expected_answer": "a distância entre o nível de desenvolvimento real, que se costuma determinar através da solução independente de problemas, e o nível de desenvolvimento potencial, determinado através da solução de problemas sob a orientação de um adulto ou em colaboração com companheiros mais capazes. [...] A zona de desenvolvimento proximal define aquelas funções que ainda não amadureceram, mas que estão em processo de maturação, funções que amadureceram, mas que estão presentemente em estado embrionário. Essas funções poderiam ser chamadas de \"brotos\"ou \"flores\"do desenvolvimento, ao invés de \"frutos\"do desenvolvimento.",
+      "required_facts": [
+        "a distância entre o nível de desenvolvimento real, que se costuma determinar através da solução independente de problemas, e o nível de desenvolvimento potencial, determinado através da solução de problemas sob a orientação de um adulto ou em colaboração com companheiros mais capazes. [...] A zona de desenvolvimento proximal define aquelas funções que ainda não amadureceram, mas que estão em processo de maturação, funções que amadureceram, mas que estão presentemente em estado embrionário.",
+        "Essas funções poderiam ser chamadas de \"brotos\"ou \"flores\"do desenvolvimento, ao invés de \"frutos\"do desenvolvimento."
+      ],
+      "expected_document": "Carla_Santos_CEST.pdf",
+      "expected_pages": [
+        37,
+        38
+      ],
+      "printed_pages": [],
+      "evidence": "a distância entre o nível de desenvolvimento real, que se costuma determinar através da solução independente de problemas, e o nível de desenvolvimento potencial, determinado através da solução de problemas sob a orientação de um adulto ou em colaboração com companheiros mais capazes. [...] A zona de desenvolvimento proximal define aquelas funções que ainda não amadureceram, mas que estão em processo de maturação, funções que amadureceram, mas que estão presentemente em estado embrionário. Essas funções poderiam ser chamadas de \"brotos\"ou \"flores\"do desenvolvimento, ao invés de \"frutos\"do desenvolvimento.",
+      "section": "4 Materiais e Métodos",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q058",
+      "question": "Qual objetivo ou propósito o trabalho “Relações entre a criatividade em matemática e o desempenho escolar de estudantes do 2º ano do ensino médio” associa a matematica, resultados, mostraram?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "dificil",
+      "expected_answer": "Os resultados mostraram uma correlação positiva entre criatividade em matemática e desempenho em matemática, ratificando ser válido o estímulo e o trabalho com essa abordagem. Vale destacar que a maioria dos estudantes que se autodenominaram criativos em matemática estão no quartil superior, em relação ao a pontuação obtida no TDCCM, além dos mesmos apontarem uma certa despreocupação no que se refere a ser criativo.",
+      "required_facts": [
+        "Os resultados mostraram uma correlação positiva entre criatividade em matemática e desempenho em matemática, ratificando ser válido o estímulo e o trabalho com essa abordagem.",
+        "Vale destacar que a maioria dos estudantes que se autodenominaram criativos em matemática estão no quartil superior, em relação ao a pontuação obtida no TDCCM, além dos mesmos apontarem uma certa despreocupação no que se refere a ser criativo."
+      ],
+      "expected_document": "Carlos_Rodrigues Júnior_CEST.pdf",
+      "expected_pages": [
+        24,
+        25
+      ],
+      "printed_pages": [],
+      "evidence": "Os resultados mostraram uma correlação positiva entre criatividade em matemática e desempenho em matemática, ratificando ser válido o estímulo e o trabalho com essa abordagem. Vale destacar que a maioria dos estudantes que se autodenominaram criativos em matemática estão no quartil superior, em relação ao a pontuação obtida no TDCCM, além dos mesmos apontarem uma certa despreocupação no que se refere a ser criativo.",
+      "section": "5 CONSIDERAÇÕES FINAIS",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q059",
+      "question": "Como o trabalho “A PERCEPÇÃO DOS ESTUDANTES DO ENSINO MÉDIO SOBRE O ENSINO DA GEOMETRIA” investigou educacao, matematica, cotidiano?",
+      "answerable": true,
+      "question_type": "metodologia",
+      "difficulty": "facil",
+      "expected_answer": "2 FUNDAMENTAÇÃO TEÓRICA 2.3 O ENSINO RELACIONADO AO COTIDIANO A realização deste projeto se justifica pela preocupação com a Educação Matemática aplicada ao cotidiano de nossos estudantes, no qual estes poderão compreender que a Matemática tem importantes aplicações fora da sala de aula. No Brasil, temos como um dos objetivos traçados pelo Ministério da Educação a instrução da população jovem e adulta sobre a importância da Educação Matemática e Financeira.",
+      "required_facts": [
+        "2 FUNDAMENTAÇÃO TEÓRICA 2.3 O ENSINO RELACIONADO AO COTIDIANO A realização deste projeto se justifica pela preocupação com a Educação Matemática aplicada ao cotidiano de nossos estudantes, no qual estes poderão compreender que a Matemática tem importantes aplicações fora da sala de aula.",
+        "No Brasil, temos como um dos objetivos traçados pelo Ministério da Educação a instrução da população jovem e adulta sobre a importância da Educação Matemática e Financeira."
+      ],
+      "expected_document": "César_Rosa_CEST.pdf",
+      "expected_pages": [
+        13,
+        14
+      ],
+      "printed_pages": [],
+      "evidence": "2 FUNDAMENTAÇÃO TEÓRICA 2.3 O ENSINO RELACIONADO AO COTIDIANO A realização deste projeto se justifica pela preocupação com a Educação Matemática aplicada ao cotidiano de nossos estudantes, no qual estes poderão compreender que a Matemática tem importantes aplicações fora da sala de aula. No Brasil, temos como um dos objetivos traçados pelo Ministério da Educação a instrução da população jovem e adulta sobre a importância da Educação Matemática e Financeira.",
+      "section": "2 FUNDAMENTAÇÃO TEÓRICA > 2.3 O ENSINO RELACIONADO AO COTIDIANO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q060",
+      "question": "Que resultado ou conclusão o trabalho “FATORES SOCIOECONÔMICOS ASSOCIADOS AO DESEMPENHO DOS ESTUDANTES NA PROVA DE MATEMÁTICA DO EXAME NACIONAL DO ENSINO MÉDIO” apresenta sobre dados, informacoes, foram?",
+      "answerable": true,
+      "question_type": "resultado ou conclusão",
+      "difficulty": "media",
+      "expected_answer": "Com o grande volume de dados fornecidos pelo INEP a respeito do ENEM, algumas estratégias possibilitam uma maior facilidade para trabalhar com essas informações. Durante o processo de tratamento de dados, foram selecionadas 44 variáveis, que estão representadas na tabela do anexo A, onde foram vistos somente os estudantes que possuem todas as informações respondidas no questionário socioeconômico e que estavam presentes no dia da prova de matemática.",
+      "required_facts": [
+        "Com o grande volume de dados fornecidos pelo INEP a respeito do ENEM, algumas estratégias possibilitam uma maior facilidade para trabalhar com essas informações.",
+        "Durante o processo de tratamento de dados, foram selecionadas 44 variáveis, que estão representadas na tabela do anexo A, onde foram vistos somente os estudantes que possuem todas as informações respondidas no questionário socioeconômico e que estavam presentes no dia da prova de matemática."
+      ],
+      "expected_document": "Evandro_Magalhães Júnior_CEST.pdf",
+      "expected_pages": [
+        25
+      ],
+      "printed_pages": [],
+      "evidence": "Com o grande volume de dados fornecidos pelo INEP a respeito do ENEM, algumas estratégias possibilitam uma maior facilidade para trabalhar com essas informações. Durante o processo de tratamento de dados, foram selecionadas 44 variáveis, que estão representadas na tabela do anexo A, onde foram vistos somente os estudantes que possuem todas as informações respondidas no questionário socioeconômico e que estavam presentes no dia da prova de matemática.",
+      "section": "6.1 Detalhamento dos Dados",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q061",
+      "question": "Como o trabalho “ANÁLISE COMPARATIVA ENTRE A MATRIZ DO ENEM E DA BNCC NA ÁREA DE CONHECIMENTO DE MATEMÁTICA” caracteriza seja, cada, estudado?",
+      "answerable": true,
+      "question_type": "definição conceitual",
+      "difficulty": "dificil",
+      "expected_answer": "'[...]A BNCC procura fazer com que essa progressão seja da forma mais natural possível, relacionando os conceitos matemáticos e o tempo de cada aluno, além do grau de dificuldade de cada objeto de conhecimento estudado. A ideia é que os alunos não aprendam em 'caixas', mas sim que seja um ensino regrado por alguns anos, ou seja, um mesmo conteúdo pode ser estudado por diversos anos, mas com habilidades diferentes, tendo um aprofundando e uma maior complexidade a cada ano.' (T.N. de SOUZA, C.",
+      "required_facts": [
+        "'[...]A BNCC procura fazer com que essa progressão seja da forma mais natural possível, relacionando os conceitos matemáticos e o tempo de cada aluno, além do grau de dificuldade de cada objeto de conhecimento estudado.",
+        "A ideia é que os alunos não aprendam em 'caixas', mas sim que seja um ensino regrado por alguns anos, ou seja, um mesmo conteúdo pode ser estudado por diversos anos, mas com habilidades diferentes, tendo um aprofundando e uma maior complexidade a cada ano.' (T.N. de SOUZA, C."
+      ],
+      "expected_document": "Filipe_Garcia_CEST.pdf",
+      "expected_pages": [
+        26,
+        27
+      ],
+      "printed_pages": [],
+      "evidence": "'[...]A BNCC procura fazer com que essa progressão seja da forma mais natural possível, relacionando os conceitos matemáticos e o tempo de cada aluno, além do grau de dificuldade de cada objeto de conhecimento estudado. A ideia é que os alunos não aprendam em 'caixas', mas sim que seja um ensino regrado por alguns anos, ou seja, um mesmo conteúdo pode ser estudado por diversos anos, mas com habilidades diferentes, tendo um aprofundando e uma maior complexidade a cada ano.' (T.N. de SOUZA, C.",
+      "section": "6. CONSIDERAÇÕES FINAIS",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q062",
+      "question": "Que relação ou contraste o trabalho “UMA PROPOSTA DE INTRODUÇÃO AO CÁLCULO UTILIZANDO AS IDEIAS ORIGINAIS DE FERMAT E LEIBNIZ” estabelece ao discutir calculo, conceitos, iniciais?",
+      "answerable": true,
+      "question_type": "comparação",
+      "difficulty": "facil",
+      "expected_answer": "Este trabalho busca utilizar a história da matemática como uma ferramenta de ensino para os conceitos iniciais de cálculo, tendo um foco maior no cálculo diferencial. Pensando nisso, estabeleceu-se o seguinte objetivo: Propor uma forma de introduzir os conceitos iniciais de cálculo utilizando as ideias originais de Fermat e Leibniz.",
+      "required_facts": [
+        "Este trabalho busca utilizar a história da matemática como uma ferramenta de ensino para os conceitos iniciais de cálculo, tendo um foco maior no cálculo diferencial.",
+        "Pensando nisso, estabeleceu-se o seguinte objetivo: Propor uma forma de introduzir os conceitos iniciais de cálculo utilizando as ideias originais de Fermat e Leibniz."
+      ],
+      "expected_document": "Francisco_Jorge_CEST.pdf",
+      "expected_pages": [
+        5
+      ],
+      "printed_pages": [],
+      "evidence": "Este trabalho busca utilizar a história da matemática como uma ferramenta de ensino para os conceitos iniciais de cálculo, tendo um foco maior no cálculo diferencial. Pensando nisso, estabeleceu-se o seguinte objetivo: Propor uma forma de introduzir os conceitos iniciais de cálculo utilizando as ideias originais de Fermat e Leibniz.",
+      "section": "RESUMO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q063",
+      "question": "Qual informação o trabalho “CRIPTOGRAFIA RSA” apresenta sobre ensino, exclusivamente, verbalista?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "dificil",
+      "expected_answer": "O ensino exclusivamente verbalista, a mera transmissão de informações, a aprendizagem entendida somente como acumulação de conhecimentos, não subsistem mais. Está embutida aí a ajuda do professor para o desenvolvimento das competências do pensar, em função do que coloca problemas, pergunta, dialoga, ouve os alunos, ensina-os a argumentar, abre espaço para expressarem seus pensamentos, sentimentos, desejos, de modo que tragam para a aula sua realidade vivida.",
+      "required_facts": [
+        "O ensino exclusivamente verbalista, a mera transmissão de informações, a aprendizagem entendida somente como acumulação de conhecimentos, não subsistem mais.",
+        "Está embutida aí a ajuda do professor para o desenvolvimento das competências do pensar, em função do que coloca problemas, pergunta, dialoga, ouve os alunos, ensina-os a argumentar, abre espaço para expressarem seus pensamentos, sentimentos, desejos, de modo que tragam para a aula sua realidade vivida."
+      ],
+      "expected_document": "Guilherme _Miranda_CEST.pdf",
+      "expected_pages": [
+        18
+      ],
+      "printed_pages": [],
+      "evidence": "O ensino exclusivamente verbalista, a mera transmissão de informações, a aprendizagem entendida somente como acumulação de conhecimentos, não subsistem mais. Está embutida aí a ajuda do professor para o desenvolvimento das competências do pensar, em função do que coloca problemas, pergunta, dialoga, ouve os alunos, ensina-os a argumentar, abre espaço para expressarem seus pensamentos, sentimentos, desejos, de modo que tragam para a aula sua realidade vivida.",
+      "section": "2.3 Metodologias ativas e criptografia",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q064",
+      "question": "Qual objetivo ou propósito o trabalho “Raciocínio Combinatório: Aplicação e Validação do Jogo da senha no Ensino Médio” associa a validacao, externa, apesar?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "facil",
+      "expected_answer": "Apesar dos resultados positivos observados até o momento, é fundamental ressaltar que uma validação externa desempenharia um papel crucial na confirmação e no fortalecimento das conclusões deste estudo. Recomenda-se, portanto, que pesquisas futuras levem em consideração a possibilidade de realizar uma validação externa mais abrangente, incorporando uma análise estatística mais detalhada e ampliando a amostra para incluir outras turmas ou instituições de ensino.",
+      "required_facts": [
+        "Apesar dos resultados positivos observados até o momento, é fundamental ressaltar que uma validação externa desempenharia um papel crucial na confirmação e no fortalecimento das conclusões deste estudo.",
+        "Recomenda-se, portanto, que pesquisas futuras levem em consideração a possibilidade de realizar uma validação externa mais abrangente, incorporando uma análise estatística mais detalhada e ampliando a amostra para incluir outras turmas ou instituições de ensino."
+      ],
+      "expected_document": "Gustavo_Silva_CEST.pdf",
+      "expected_pages": [
+        41
+      ],
+      "printed_pages": [],
+      "evidence": "Apesar dos resultados positivos observados até o momento, é fundamental ressaltar que uma validação externa desempenharia um papel crucial na confirmação e no fortalecimento das conclusões deste estudo. Recomenda-se, portanto, que pesquisas futuras levem em consideração a possibilidade de realizar uma validação externa mais abrangente, incorporando uma análise estatística mais detalhada e ampliando a amostra para incluir outras turmas ou instituições de ensino.",
+      "section": "5 CONSIDERAÇÕES FINAIS",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q065",
+      "question": "Como o trabalho “Educação Financeira em sala de aula: uma adaptação do Cashflow como recurso didático para o Ensino Médio” investigou financeira, matematica, antes?",
+      "answerable": true,
+      "question_type": "metodologia",
+      "difficulty": "media",
+      "expected_answer": "Antes de continuarmos, é de suma importância esclarecermos a diferença entre matemática financeira e educação financeira. Segundo Rezende et al. (2022), a matemática financeira é a aplicação de conhecimentos matemáticos à análise de questões ligadas a cálculos relacionados ao mundo financeiro, como juros, descontos, amortização e porcentagem, permitindo analisar e comparar fluxos de entrada e saída de dinheiro durante determinados períodos.",
+      "required_facts": [
+        "Antes de continuarmos, é de suma importância esclarecermos a diferença entre matemática financeira e educação financeira.",
+        "Segundo Rezende et al. (2022), a matemática financeira é a aplicação de conhecimentos matemáticos à análise de questões ligadas a cálculos relacionados ao mundo financeiro, como juros, descontos, amortização e porcentagem, permitindo analisar e comparar fluxos de entrada e saída de dinheiro durante determinados períodos."
+      ],
+      "expected_document": "Hyago_Lima.pdf",
+      "expected_pages": [
+        11
+      ],
+      "printed_pages": [],
+      "evidence": "Antes de continuarmos, é de suma importância esclarecermos a diferença entre matemática financeira e educação financeira. Segundo Rezende et al. (2022), a matemática financeira é a aplicação de conhecimentos matemáticos à análise de questões ligadas a cálculos relacionados ao mundo financeiro, como juros, descontos, amortização e porcentagem, permitindo analisar e comparar fluxos de entrada e saída de dinheiro durante determinados períodos.",
+      "section": "1.2 Quadro atual da inadimplência e do endividamento no Brasil",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q066",
+      "question": "Que resultado ou conclusão o trabalho “EXPLORANDO O GEOGEBRA NOS PROCESSOS DE ENSINO E APRENDIZAGEM DE LIMITES E CONTINUIDADES NO CÁLCULO 1: Uma proposta de material didático” apresenta sobre calculo, integral, diferencial?",
+      "answerable": true,
+      "question_type": "resultado ou conclusão",
+      "difficulty": "dificil",
+      "expected_answer": "R. et al , 2015), o número elevado de reprovações e desistências na disciplina de Cálculo, tem sido notoriamente abordado nas discussões a respeito do ensino de Cálculo Integral e Diferencial. Em um estudo de caso relatado por Rosa (2019), no 2º semestre de 2016, cerca de 55,65% dos alunos de turmas de Cálculo Diferencial e Integral, da Universidade Federal de Goiás (UFG), foram reprovados.",
+      "required_facts": [
+        "R. et al , 2015), o número elevado de reprovações e desistências na disciplina de Cálculo, tem sido notoriamente abordado nas discussões a respeito do ensino de Cálculo Integral e Diferencial.",
+        "Em um estudo de caso relatado por Rosa (2019), no 2º semestre de 2016, cerca de 55,65% dos alunos de turmas de Cálculo Diferencial e Integral, da Universidade Federal de Goiás (UFG), foram reprovados."
+      ],
+      "expected_document": "Igor_Castro_CEST.pdf",
+      "expected_pages": [
+        7
+      ],
+      "printed_pages": [],
+      "evidence": "R. et al , 2015), o número elevado de reprovações e desistências na disciplina de Cálculo, tem sido notoriamente abordado nas discussões a respeito do ensino de Cálculo Integral e Diferencial. Em um estudo de caso relatado por Rosa (2019), no 2º semestre de 2016, cerca de 55,65% dos alunos de turmas de Cálculo Diferencial e Integral, da Universidade Federal de Goiás (UFG), foram reprovados.",
+      "section": "1 INTRODUÇÃO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q067",
+      "question": "Como o trabalho “Etnomatemática e ensino da matemática para grupos profissionais: um estudo de caso em cooperativas de reciclagem da Cidade Estrutural-DF” caracteriza trabalho, catadores, pesquisa?",
+      "answerable": true,
+      "question_type": "definição conceitual",
+      "difficulty": "facil",
+      "expected_answer": "Este trabalho trata-se do Trabalho de Conclusão de Curso que apresenta os resultados da pesquisa a respeito da Matemática presente no cotidiano de trabalho de catadores e catadoras da Cidade Estrutural organizados em cooperativas vinculadas à Central das Cooperativas de Catadores do Distrito Federal, a CENTCOOP. Assim, seguindo os princípios da Etnomatemática, a pesquisa buscou estabelecer um diálogo com um grupo voluntário de catadores que estavam interessados em participar de um projeto de extensão do IFB Campus Estrutural para inclusão escolar.",
+      "required_facts": [
+        "Este trabalho trata-se do Trabalho de Conclusão de Curso que apresenta os resultados da pesquisa a respeito da Matemática presente no cotidiano de trabalho de catadores e catadoras da Cidade Estrutural organizados em cooperativas vinculadas à Central das Cooperativas de Catadores do Distrito Federal, a CENTCOOP.",
+        "Assim, seguindo os princípios da Etnomatemática, a pesquisa buscou estabelecer um diálogo com um grupo voluntário de catadores que estavam interessados em participar de um projeto de extensão do IFB Campus Estrutural para inclusão escolar."
+      ],
+      "expected_document": "Jaqueline_Rocha_CEST.pdf",
+      "expected_pages": [
+        4
+      ],
+      "printed_pages": [],
+      "evidence": "Este trabalho trata-se do Trabalho de Conclusão de Curso que apresenta os resultados da pesquisa a respeito da Matemática presente no cotidiano de trabalho de catadores e catadoras da Cidade Estrutural organizados em cooperativas vinculadas à Central das Cooperativas de Catadores do Distrito Federal, a CENTCOOP. Assim, seguindo os princípios da Etnomatemática, a pesquisa buscou estabelecer um diálogo com um grupo voluntário de catadores que estavam interessados em participar de um projeto de extensão do IFB Campus Estrutural para inclusão escolar.",
+      "section": "RESUMO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q068",
+      "question": "Que relação ou contraste o trabalho “' O USO DE METODOLOGIAS ATIVAS EM UMA LICENCIATURA EM MATEMÁTICA DO IFB: uma perspectiva antes, durante e depois do período de ensino remoto.'” estabelece ao discutir foco, pesquisa, entender?",
+      "answerable": true,
+      "question_type": "comparação",
+      "difficulty": "media",
+      "expected_answer": "O foco da pesquisa foi entender como os docentes da área de Licenciatura em Matemática ministravam suas aulas, antes, durante e depois do período de ensino remoto. Mais precisamente, compreender sobre o uso de metodologias ativas nesses períodos.",
+      "required_facts": [
+        "O foco da pesquisa foi entender como os docentes da área de Licenciatura em Matemática ministravam suas aulas, antes, durante e depois do período de ensino remoto.",
+        "Mais precisamente, compreender sobre o uso de metodologias ativas nesses períodos."
+      ],
+      "expected_document": "Jeans_Santos_CEST.pdf",
+      "expected_pages": [
+        12,
+        13
+      ],
+      "printed_pages": [],
+      "evidence": "O foco da pesquisa foi entender como os docentes da área de Licenciatura em Matemática ministravam suas aulas, antes, durante e depois do período de ensino remoto. Mais precisamente, compreender sobre o uso de metodologias ativas nesses períodos.",
+      "section": "5 ANÁLISE DOS DADOS COLETADOS",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q069",
+      "question": "Segundo apenas o trabalho “JOGOS AFRICANOS NA EDUCAÇÃO MATEMÁTICA: PROMOVENDO A LEI 10.639/03 Instituto Federal de Brasília Campus Estrutural”, como pode ser sintetizada a discussão sobre valorizacao, diversidade, cultural?",
+      "answerable": true,
+      "question_type": "síntese limitada a um documento",
+      "difficulty": "dificil",
+      "expected_answer": "A valorização da diversidade cultural e a promoção da igualdade racial são questões fundamentais no contexto educacional brasileiro. Nesse sentido, a Lei 10.639/03 desempenha um papel essencial ao tornar obrigatório o ensino da cultura africana e afro-brasileira nas escolas do país.",
+      "required_facts": [
+        "A valorização da diversidade cultural e a promoção da igualdade racial são questões fundamentais no contexto educacional brasileiro.",
+        "Nesse sentido, a Lei 10.639/03 desempenha um papel essencial ao tornar obrigatório o ensino da cultura africana e afro-brasileira nas escolas do país."
+      ],
+      "expected_document": "João_Almeida_CEST.pdf",
+      "expected_pages": [
+        6
+      ],
+      "printed_pages": [],
+      "evidence": "A valorização da diversidade cultural e a promoção da igualdade racial são questões fundamentais no contexto educacional brasileiro. Nesse sentido, a Lei 10.639/03 desempenha um papel essencial ao tornar obrigatório o ensino da cultura africana e afro-brasileira nas escolas do país.",
+      "section": "1 INTRODUÇÃO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q070",
+      "question": "Qual informação o trabalho “USO DA ANÁLISE DE CLUSTER EM AVALIAÇÃO DIAGNÓSTICA PARA MAPEAMENTO DE DEFASAGEM ESCOLAR” apresenta sobre definir, pretende, quais?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "facil",
+      "expected_answer": "Ao se realizar uma avaliação é necessário definir um objetivo, o que se pretende avaliar na turma, quais informações se pretende extrair dela. Logo, para isso, é preciso definir quais são os critérios de correção.",
+      "required_facts": [
+        "Ao se realizar uma avaliação é necessário definir um objetivo, o que se pretende avaliar na turma, quais informações se pretende extrair dela.",
+        "Logo, para isso, é preciso definir quais são os critérios de correção."
+      ],
+      "expected_document": "Juliana_Nascimento_CEST.pdf",
+      "expected_pages": [
+        10
+      ],
+      "printed_pages": [],
+      "evidence": "Ao se realizar uma avaliação é necessário definir um objetivo, o que se pretende avaliar na turma, quais informações se pretende extrair dela. Logo, para isso, é preciso definir quais são os critérios de correção.",
+      "section": "2.3 Método de análise dos dados",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q071",
+      "question": "Qual objetivo ou propósito o trabalho “GÊNERO E DESEMPENHO MATEMÁTICO: um estudo de caso no IFB Campus Estrutural” associa a meninas, matematica, fatores?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "media",
+      "expected_answer": "Este trabalho visou identificar os fatores socioculturais que influenciam no desempenho de meninas em matemática ao longo de suas trajetórias escolares e relacioná-los ao relatório ' Decifrar o código: educação de meninas e mulheres em ciências, tecnologia, engenharia e matemática (STEM) da UNESCO (2018). Após ouvir dois grupos de meninas, formandas do ensino médio do IFB Campus Estrutural das turmas do ano de 2022 e 2023, nos aproximamos de suas interpretações sobre o seu desempenho em matemática e fatores relacionais e socioculturais de forma que essas interpretações não estavam dadas, mas foram construídas no ambiente de pesquisa, a saber, o grupo focal.",
+      "required_facts": [
+        "Este trabalho visou identificar os fatores socioculturais que influenciam no desempenho de meninas em matemática ao longo de suas trajetórias escolares e relacioná-los ao relatório ' Decifrar o código: educação de meninas e mulheres em ciências, tecnologia, engenharia e matemática (STEM) da UNESCO (2018).",
+        "Após ouvir dois grupos de meninas, formandas do ensino médio do IFB Campus Estrutural das turmas do ano de 2022 e 2023, nos aproximamos de suas interpretações sobre o seu desempenho em matemática e fatores relacionais e socioculturais de forma que essas interpretações não estavam dadas, mas foram construídas no ambiente de pesquisa, a saber, o grupo focal."
+      ],
+      "expected_document": "Kamila_Celestino_CEST.pdf",
+      "expected_pages": [
+        33,
+        34
+      ],
+      "printed_pages": [],
+      "evidence": "Este trabalho visou identificar os fatores socioculturais que influenciam no desempenho de meninas em matemática ao longo de suas trajetórias escolares e relacioná-los ao relatório ' Decifrar o código: educação de meninas e mulheres em ciências, tecnologia, engenharia e matemática (STEM) da UNESCO (2018). Após ouvir dois grupos de meninas, formandas do ensino médio do IFB Campus Estrutural das turmas do ano de 2022 e 2023, nos aproximamos de suas interpretações sobre o seu desempenho em matemática e fatores relacionais e socioculturais de forma que essas interpretações não estavam dadas, mas foram construídas no ambiente de pesquisa, a saber, o grupo focal.",
+      "section": "4 CONCLUSÃO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q072",
+      "question": "Como o trabalho “BNCC E TAXONOMIA DE BLOOM: como as habilidades em probabilidade progridem ao longo do Ensino Fundamental” investigou bncc, denomina, sendo?",
+      "answerable": true,
+      "question_type": "metodologia",
+      "difficulty": "dificil",
+      "expected_answer": "A BNCC se denomina como sendo um 'documento de caráter normativo que define o conjunto orgânico e progressivo de aprendizagens essenciais que todos os alunos devem desenvolver ao longo das etapas e modalidades da Educação Básica [...]' (BRASIL, 2017, p.07). Diante disso, busca possibilitar que os estudantes tenham seus direitos de aprendizagem e desenvolvimento assegurados.",
+      "required_facts": [
+        "A BNCC se denomina como sendo um 'documento de caráter normativo que define o conjunto orgânico e progressivo de aprendizagens essenciais que todos os alunos devem desenvolver ao longo das etapas e modalidades da Educação Básica [...]' (BRASIL, 2017, p.07).",
+        "Diante disso, busca possibilitar que os estudantes tenham seus direitos de aprendizagem e desenvolvimento assegurados."
+      ],
+      "expected_document": "Laís_Silva_CEST.pdf",
+      "expected_pages": [
+        16
+      ],
+      "printed_pages": [],
+      "evidence": "A BNCC se denomina como sendo um 'documento de caráter normativo que define o conjunto orgânico e progressivo de aprendizagens essenciais que todos os alunos devem desenvolver ao longo das etapas e modalidades da Educação Básica [...]' (BRASIL, 2017, p.07). Diante disso, busca possibilitar que os estudantes tenham seus direitos de aprendizagem e desenvolvimento assegurados.",
+      "section": "3.2 Organização Ensino Fundamental",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q073",
+      "question": "Que resultado ou conclusão o trabalho “INTERVENÇÃO DOCENTE COMO FORMA DE ESTÍMULO À CRIATIVIDADE EM MATEMÁTICA” apresenta sobre problemas, resolucao, abertos?",
+      "answerable": true,
+      "question_type": "resultado ou conclusão",
+      "difficulty": "facil",
+      "expected_answer": "2 REFERENCIAL TEÓRICO 2.2 Feedback criativo 2.2.1 Resolução de problemas - abertos e fechados Fonseca e Gontijo (2021, p.8) defendem os problemas abertos como aqueles em admitem uma variedade de estratégias e soluções, o que difere dos problemas fechados que possuem uma limitação mais objetiva em sua resolução. Figueiredo (2021, p.147) frisa que os problemas abertos possuem mais possibilidades de exploração em relação aos conteúdos e que os problemas fechados têm a resolução de maneira mais individualizada.",
+      "required_facts": [
+        "2 REFERENCIAL TEÓRICO 2.2 Feedback criativo 2.2.1 Resolução de problemas - abertos e fechados Fonseca e Gontijo (2021, p.8) defendem os problemas abertos como aqueles em admitem uma variedade de estratégias e soluções, o que difere dos problemas fechados que possuem uma limitação mais objetiva em sua resolução.",
+        "Figueiredo (2021, p.147) frisa que os problemas abertos possuem mais possibilidades de exploração em relação aos conteúdos e que os problemas fechados têm a resolução de maneira mais individualizada."
+      ],
+      "expected_document": "Leandro_Pires_CEST.pdf",
+      "expected_pages": [
+        11,
+        12
+      ],
+      "printed_pages": [],
+      "evidence": "2 REFERENCIAL TEÓRICO 2.2 Feedback criativo 2.2.1 Resolução de problemas - abertos e fechados Fonseca e Gontijo (2021, p.8) defendem os problemas abertos como aqueles em admitem uma variedade de estratégias e soluções, o que difere dos problemas fechados que possuem uma limitação mais objetiva em sua resolução. Figueiredo (2021, p.147) frisa que os problemas abertos possuem mais possibilidades de exploração em relação aos conteúdos e que os problemas fechados têm a resolução de maneira mais individualizada.",
+      "section": "2 REFERENCIAL TEÓRICO > 2.2 Feedback criativo > 2.2.1  Resolução de problemas - abertos e fechados",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q074",
+      "question": "Como o trabalho “ANÁLISE CURRICULAR DE PRÉ-CÁLCULO: uma nova proposta formativa” caracteriza componente, calculo, ensino?",
+      "answerable": true,
+      "question_type": "definição conceitual",
+      "difficulty": "media",
+      "expected_answer": "Este artigo teve como objetivo enunciar um plano de conteúdos para o componente curricular Pré-Cálculo (PC) de Licenciaturas em Matemática dos Institutos Federais de Educação, Ciência e Tecnologia (IFs) em território nacional. Cabe ressaltar a importância desse componente no ensino superior devido à baixa qualidade do ensino médio brasileiro e aos índices de reprovação e evasão na disciplina de Cálculo Diferencial e Integral (CDI).",
+      "required_facts": [
+        "Este artigo teve como objetivo enunciar um plano de conteúdos para o componente curricular Pré-Cálculo (PC) de Licenciaturas em Matemática dos Institutos Federais de Educação, Ciência e Tecnologia (IFs) em território nacional.",
+        "Cabe ressaltar a importância desse componente no ensino superior devido à baixa qualidade do ensino médio brasileiro e aos índices de reprovação e evasão na disciplina de Cálculo Diferencial e Integral (CDI)."
+      ],
+      "expected_document": "Lucas_Oliveira_CEST.pdf",
+      "expected_pages": [
+        6
+      ],
+      "printed_pages": [],
+      "evidence": "Este artigo teve como objetivo enunciar um plano de conteúdos para o componente curricular Pré-Cálculo (PC) de Licenciaturas em Matemática dos Institutos Federais de Educação, Ciência e Tecnologia (IFs) em território nacional. Cabe ressaltar a importância desse componente no ensino superior devido à baixa qualidade do ensino médio brasileiro e aos índices de reprovação e evasão na disciplina de Cálculo Diferencial e Integral (CDI).",
+      "section": "RESUMO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q075",
+      "question": "Que relação ou contraste o trabalho “RELAÇÕES ENTRE ANSIEDADE EM MATEMÁTICA E CRIATIVIDADE EM MATEMÁTICA DE ESTUDANTES DO ENSINO MÉDIO” estabelece ao discutir criatividade, matematica, ansiedade?",
+      "answerable": true,
+      "question_type": "comparação",
+      "difficulty": "dificil",
+      "expected_answer": "Este trabalho tem por objetivo verificar se existe uma correlação negativa significativa entre a criatividade no campo da Matemática e a ansiedade em matemática e investigar os níveis de ansiedade e criatividade por meio de uma pesquisa de método misto. Participaram do estudo 39 alunos da 3ª série do Ensino Médio de um dos Institutos Federais de Brasília.",
+      "required_facts": [
+        "Este trabalho tem por objetivo verificar se existe uma correlação negativa significativa entre a criatividade no campo da Matemática e a ansiedade em matemática e investigar os níveis de ansiedade e criatividade por meio de uma pesquisa de método misto.",
+        "Participaram do estudo 39 alunos da 3ª série do Ensino Médio de um dos Institutos Federais de Brasília."
+      ],
+      "expected_document": "Lucas_Pereira_CEST.pdf",
+      "expected_pages": [
+        4
+      ],
+      "printed_pages": [],
+      "evidence": "Este trabalho tem por objetivo verificar se existe uma correlação negativa significativa entre a criatividade no campo da Matemática e a ansiedade em matemática e investigar os níveis de ansiedade e criatividade por meio de uma pesquisa de método misto. Participaram do estudo 39 alunos da 3ª série do Ensino Médio de um dos Institutos Federais de Brasília.",
+      "section": "RESUMO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q076",
+      "question": "Segundo apenas o trabalho “DISTRIBUIÇÕES EXTREMAIS MAXIMAIS: UMA PROPOSTA DE TRANSPOSIÇÃO DIDÁTICA PARA O ENSINO MÉDIO”, como pode ser sintetizada a discussão sobre teoria, probabilistica, valores?",
+      "answerable": true,
+      "question_type": "síntese limitada a um documento",
+      "difficulty": "facil",
+      "expected_answer": "A teoria probabilística de valores extremos é uma mistura curiosa e fascinante de uma enorme variedade de aplicações envolvendo fenômenos, como precipitação de chuvas, inundações, rajadas de vento, poluição do ar, etc. No contexto de ensino e aprendizagem, tal teoria permite o desenvolvimento de noções elementares: construir tabelas simples e gráficos de barras; discutir as diferenças entre experimento determinístico e aleatório; estimar probabilidades por meio da frequência relativa, analisar padrões observados e esperados.",
+      "required_facts": [
+        "A teoria probabilística de valores extremos é uma mistura curiosa e fascinante de uma enorme variedade de aplicações envolvendo fenômenos, como precipitação de chuvas, inundações, rajadas de vento, poluição do ar, etc.",
+        "No contexto de ensino e aprendizagem, tal teoria permite o desenvolvimento de noções elementares: construir tabelas simples e gráficos de barras; discutir as diferenças entre experimento determinístico e aleatório; estimar probabilidades por meio da frequência relativa, analisar padrões observados e esperados."
+      ],
+      "expected_document": "Lucas_Souza_CEST.pdf",
+      "expected_pages": [
+        4
+      ],
+      "printed_pages": [],
+      "evidence": "A teoria probabilística de valores extremos é uma mistura curiosa e fascinante de uma enorme variedade de aplicações envolvendo fenômenos, como precipitação de chuvas, inundações, rajadas de vento, poluição do ar, etc. No contexto de ensino e aprendizagem, tal teoria permite o desenvolvimento de noções elementares: construir tabelas simples e gráficos de barras; discutir as diferenças entre experimento determinístico e aleatório; estimar probabilidades por meio da frequência relativa, analisar padrões observados e esperados.",
+      "section": "RESUMO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q077",
+      "question": "Qual informação o trabalho “PARTICIPAÇÃO FAMILIAR NO DESENVOLVIMENTO DO ENSINOAPRENDIZAGEM NA MATEMÁTICA: O CASO DOS ALUNOS DO 7º ANO (Trabalho de Conclusão de Curso) aprovado em: 19/01/2023. Brasília - DF,19 de janeiro de 2023. Banca Examinadora” apresenta sobre informacoes, objeto, investigado?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "media",
+      "expected_answer": "Este estudo, de natureza básica, visando gerar conhecimentos proveitosos para a ciência, através da obtenção de informações com boa veracidade do objeto investigado (GERHARDT; SILVEIRA, 2009), também exploratória colhendo informações que promovam análises mais minuciosas dos temas trabalhados. Este então utilizou-se de uma abordagem quali-quantitativa com uma pesquisa bibliográfica a fim de ser realizado uma triangulação de dados em busca da compreensão do objeto investigado, que consiste em reunir as conclusões de cada uma e analisar como essas se relacionam (ZAPPELLINI; FEUERSCHÜTTE, 2015), para enfim chegar a um consenso quanto a importância da participação familiar no desenvolvimento do ",
+      "required_facts": [
+        "Este estudo, de natureza básica, visando gerar conhecimentos proveitosos para a ciência, através da obtenção de informações com boa veracidade do objeto investigado (GERHARDT; SILVEIRA, 2009), também exploratória colhendo informações que promovam análises mais minuciosas dos temas trabalhados.",
+        "Este então utilizou-se de uma abordagem quali-quantitativa com uma pesquisa bibliográfica a fim de ser realizado uma triangulação de dados em busca da compreensão do objeto investigado, que consiste em reunir as conclusões de cada uma e analisar como essas se relacionam (ZAPPELLINI; FEUERSCHÜTTE, 2015), para enfim chegar a um consenso quanto a importância da participação familiar no desenvolvimento do ensino-aprendizagem dos alunos na disciplina de matemática."
+      ],
+      "expected_document": "Luiz_Silva_CEST.pdf",
+      "expected_pages": [
+        9,
+        10
+      ],
+      "printed_pages": [],
+      "evidence": "Este estudo, de natureza básica, visando gerar conhecimentos proveitosos para a ciência, através da obtenção de informações com boa veracidade do objeto investigado (GERHARDT; SILVEIRA, 2009), também exploratória colhendo informações que promovam análises mais minuciosas dos temas trabalhados. Este então utilizou-se de uma abordagem quali-quantitativa com uma pesquisa bibliográfica a fim de ser realizado uma triangulação de dados em busca da compreensão do objeto investigado, que consiste em reunir as conclusões de cada uma e analisar como essas se relacionam (ZAPPELLINI; FEUERSCHÜTTE, 2015), para enfim chegar a um consenso quanto a importância da participação familiar no desenvolvimento do ",
+      "section": "ESTRATÉGIA METODOLÓGICA",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q078",
+      "question": "Qual objetivo ou propósito o trabalho “UM ESTUDO SOBRE AS RELAÇÕES EXISTENTES ENTRE O JOGO DE XADREZ E A MATEMÁTICA COM UM OLHAR PEDAGÓGICO” associa a jogo, partir, desta?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "dificil",
+      "expected_answer": "A partir desta pesquisa, podemos observar que o jogo de xadrez desempenha um papel significativo no ensino da matemática, resultando em efeitos positivos nos indivíduos. As habilidades desenvolvidas pelo jogo são aproveitadas pelos professores que o adotam como uma ferramenta pedagógica, uma vez que as capacidades cognitivas e sociais dos estudantes se amplificam e isso favorece uma aprendizagem mais leve e divertida.",
+      "required_facts": [
+        "A partir desta pesquisa, podemos observar que o jogo de xadrez desempenha um papel significativo no ensino da matemática, resultando em efeitos positivos nos indivíduos.",
+        "As habilidades desenvolvidas pelo jogo são aproveitadas pelos professores que o adotam como uma ferramenta pedagógica, uma vez que as capacidades cognitivas e sociais dos estudantes se amplificam e isso favorece uma aprendizagem mais leve e divertida."
+      ],
+      "expected_document": "Marcelo_Alves_CEST.pdf",
+      "expected_pages": [
+        21,
+        22
+      ],
+      "printed_pages": [],
+      "evidence": "A partir desta pesquisa, podemos observar que o jogo de xadrez desempenha um papel significativo no ensino da matemática, resultando em efeitos positivos nos indivíduos. As habilidades desenvolvidas pelo jogo são aproveitadas pelos professores que o adotam como uma ferramenta pedagógica, uma vez que as capacidades cognitivas e sociais dos estudantes se amplificam e isso favorece uma aprendizagem mais leve e divertida.",
+      "section": "6 CONSIDERAÇÕES FINAIS",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q079",
+      "question": "Como o trabalho “Função Matemática: Uma Sequência Didática para o Ensino Médio Técnico” investigou forma, funcao, matematica?",
+      "answerable": true,
+      "question_type": "metodologia",
+      "difficulty": "facil",
+      "expected_answer": "Essa dificuldade apresentada foi justificada por Nascimento et al. (2013, p. 4) da seguinte forma: 'o conceito de Função Matemática numa visão voltada para os seus fundamentos é abordado de forma superficial, ficando tais ideias ligadas a um segundo plano'. Devido ao caráter comumente acumulativo da disciplina, qualquer conteúdo que esteja interligado com função matemática fica com a compreensão prejudicada.",
+      "required_facts": [
+        "Essa dificuldade apresentada foi justificada por Nascimento et al. (2013, p. 4) da seguinte forma: 'o conceito de Função Matemática numa visão voltada para os seus fundamentos é abordado de forma superficial, ficando tais ideias ligadas a um segundo plano'.",
+        "Devido ao caráter comumente acumulativo da disciplina, qualquer conteúdo que esteja interligado com função matemática fica com a compreensão prejudicada."
+      ],
+      "expected_document": "Mariana_Viana_CEST.pdf",
+      "expected_pages": [
+        6,
+        7
+      ],
+      "printed_pages": [],
+      "evidence": "Essa dificuldade apresentada foi justificada por Nascimento et al. (2013, p. 4) da seguinte forma: 'o conceito de Função Matemática numa visão voltada para os seus fundamentos é abordado de forma superficial, ficando tais ideias ligadas a um segundo plano'. Devido ao caráter comumente acumulativo da disciplina, qualquer conteúdo que esteja interligado com função matemática fica com a compreensão prejudicada.",
+      "section": "1. INTRODUÇÃO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q080",
+      "question": "Que resultado ou conclusão o trabalho “OFICINAS AUTOINSTRUTIVAS NO AMBIENTE VIRTUAL GEOGEBRA: Um Relato de Experiência de Participação do Projeto PIPA” apresenta sobre alunos, geogebra, alguns?",
+      "answerable": true,
+      "question_type": "resultado ou conclusão",
+      "difficulty": "media",
+      "expected_answer": "4 CONCLUSÃO 4.2 Considerações Finais Essa experiência possibilitou o convívio com alunos e professores de outras instituições e pude observar como era utilizado alguns outros recursos do Geogebra, como o Geogebra book (GGBOOK), grupos do geogebra, programação no geogebra e demonstrações dinâmicas. Durante o contato com os alunos do ensino médio eu tive a percepção de que muitos alunos tinham dificuldades em interpretar o que deveria ser feito em cada passo, o que me levou a acreditar que muitos dos alunos não tinham dificuldade com alguns conceitos matemáticos, mas dificuldade em interpretação de texto, onde uma vez que os monitores explicavam eles conseguiam seguir com a oficina sem dificul",
+      "required_facts": [
+        "4 CONCLUSÃO 4.2 Considerações Finais Essa experiência possibilitou o convívio com alunos e professores de outras instituições e pude observar como era utilizado alguns outros recursos do Geogebra, como o Geogebra book (GGBOOK), grupos do geogebra, programação no geogebra e demonstrações dinâmicas.",
+        "Durante o contato com os alunos do ensino médio eu tive a percepção de que muitos alunos tinham dificuldades em interpretar o que deveria ser feito em cada passo, o que me levou a acreditar que muitos dos alunos não tinham dificuldade com alguns conceitos matemáticos, mas dificuldade em interpretação de texto, onde uma vez que os monitores explicavam eles conseguiam seguir com a oficina sem dificuldades."
+      ],
+      "expected_document": "Mateus_Mota_CEST.pdf",
+      "expected_pages": [
+        32,
+        33
+      ],
+      "printed_pages": [],
+      "evidence": "4 CONCLUSÃO 4.2 Considerações Finais Essa experiência possibilitou o convívio com alunos e professores de outras instituições e pude observar como era utilizado alguns outros recursos do Geogebra, como o Geogebra book (GGBOOK), grupos do geogebra, programação no geogebra e demonstrações dinâmicas. Durante o contato com os alunos do ensino médio eu tive a percepção de que muitos alunos tinham dificuldades em interpretar o que deveria ser feito em cada passo, o que me levou a acreditar que muitos dos alunos não tinham dificuldade com alguns conceitos matemáticos, mas dificuldade em interpretação de texto, onde uma vez que os monitores explicavam eles conseguiam seguir com a oficina sem dificul",
+      "section": "4 CONCLUSÃO > 4.2  Considerações Finais",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q081",
+      "question": "Como o trabalho “\"OS SENTIDOS SUBJETIVOS DE UMA PROFESSORA DE BIOLOGIA DISCALCÚLICA\"” caracteriza estudante, tenha, sala?",
+      "answerable": true,
+      "question_type": "definição conceitual",
+      "difficulty": "dificil",
+      "expected_answer": "Em relação à questão da emissão do laudo para os trasntornos funcionais específicos, uma vez feito o estudo teórico do tema e realizado o diálogo com essa informante, conclui-se que, por um lado, ter o diagnóstico de um transtorno pode apresentar-se como uma oportunidade para que o estudante receba atençao especializada e tenha sua aprendizagem favorecida. Entretanto, por outro, é preciso que a equipe pedagógica, de fato, tenha um olhar atento para que os cuidados reservados a esse estudante - tais como acompanhamento por um monitor, sala de recursos e realização de avaliações individualmente e em sala separada do restante da turma -, não sejam produtores de estigmas que vão terminar por iso",
+      "required_facts": [
+        "Em relação à questão da emissão do laudo para os trasntornos funcionais específicos, uma vez feito o estudo teórico do tema e realizado o diálogo com essa informante, conclui-se que, por um lado, ter o diagnóstico de um transtorno pode apresentar-se como uma oportunidade para que o estudante receba atençao especializada e tenha sua aprendizagem favorecida.",
+        "Entretanto, por outro, é preciso que a equipe pedagógica, de fato, tenha um olhar atento para que os cuidados reservados a esse estudante - tais como acompanhamento por um monitor, sala de recursos e realização de avaliações individualmente e em sala separada do restante da turma -, não sejam produtores de estigmas que vão terminar por isolá-lo e prejudidicar sua interação social com os colegas e professores."
+      ],
+      "expected_document": "Mateus_Sampaio_CEST.pdf",
+      "expected_pages": [
+        38,
+        39
+      ],
+      "printed_pages": [],
+      "evidence": "Em relação à questão da emissão do laudo para os trasntornos funcionais específicos, uma vez feito o estudo teórico do tema e realizado o diálogo com essa informante, conclui-se que, por um lado, ter o diagnóstico de um transtorno pode apresentar-se como uma oportunidade para que o estudante receba atençao especializada e tenha sua aprendizagem favorecida. Entretanto, por outro, é preciso que a equipe pedagógica, de fato, tenha um olhar atento para que os cuidados reservados a esse estudante - tais como acompanhamento por um monitor, sala de recursos e realização de avaliações individualmente e em sala separada do restante da turma -, não sejam produtores de estigmas que vão terminar por iso",
+      "section": "6. CONSIDERAÇÕES FINAIS",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q082",
+      "question": "Que relação ou contraste o trabalho “PROPOSTA DE SIMULADO DE MATEMÁTICA UNIFICADO NO INSTITUTO FEDERAL DE EDUCAÇÃO TÉCNICA E TECNOLÓGICA DE BRASÍLIA” estabelece ao discutir exame, ensino, medio?",
+      "answerable": true,
+      "question_type": "comparação",
+      "difficulty": "facil",
+      "expected_answer": "O Exame Nacional do Ensino Médio, criado em 1998, tem como foco mensurar as competências e habilidades aprendidas pelos estudantes. Este trabalho propõe a aplicação piloto, de um exame simulado de Matemática, nos cursos de Ensino Médio do Instituto Federal de Educação Técnica e Tecnológica de Brasília, objetivando analisar como estão estas habilidades dentro da instituição.",
+      "required_facts": [
+        "O Exame Nacional do Ensino Médio, criado em 1998, tem como foco mensurar as competências e habilidades aprendidas pelos estudantes.",
+        "Este trabalho propõe a aplicação piloto, de um exame simulado de Matemática, nos cursos de Ensino Médio do Instituto Federal de Educação Técnica e Tecnológica de Brasília, objetivando analisar como estão estas habilidades dentro da instituição."
+      ],
+      "expected_document": "Matheus_Rocha_CEST.pdf",
+      "expected_pages": [
+        4
+      ],
+      "printed_pages": [],
+      "evidence": "O Exame Nacional do Ensino Médio, criado em 1998, tem como foco mensurar as competências e habilidades aprendidas pelos estudantes. Este trabalho propõe a aplicação piloto, de um exame simulado de Matemática, nos cursos de Ensino Médio do Instituto Federal de Educação Técnica e Tecnológica de Brasília, objetivando analisar como estão estas habilidades dentro da instituição.",
+      "section": "Resumo",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q083",
+      "question": "Segundo apenas o trabalho “A Formação para o Ensino de Matemática na Educação de Jovens e Adultos: Levantamento da percepção de Docentes dos Anos Finais do Ensino Fundamental no Distrito Federal”, como pode ser sintetizada a discussão sobre pesquisa, ensino, propoe?",
+      "answerable": true,
+      "question_type": "síntese limitada a um documento",
+      "difficulty": "media",
+      "expected_answer": "Esta pesquisa propõe uma compreensão da percepção docente na Educação de Jovens e Adultos (EJA) do Distrito Federal no tocante à relação da formação (inicial e continuada) com as diretrizes do ensino de Matemática pertinente aos anos finais do Ensino Fundamental. Tal pesquisa se posiciona como primeira etapa dentro de um rol maior de pretensões que é voltado para a proposição de soluções institucionais e pedagógicas que possam colaborar na mitigação de problemas tradicionalmente citados quando se fala da EJA no Brasil, tais como, baixa procura e alta evasão.",
+      "required_facts": [
+        "Esta pesquisa propõe uma compreensão da percepção docente na Educação de Jovens e Adultos (EJA) do Distrito Federal no tocante à relação da formação (inicial e continuada) com as diretrizes do ensino de Matemática pertinente aos anos finais do Ensino Fundamental.",
+        "Tal pesquisa se posiciona como primeira etapa dentro de um rol maior de pretensões que é voltado para a proposição de soluções institucionais e pedagógicas que possam colaborar na mitigação de problemas tradicionalmente citados quando se fala da EJA no Brasil, tais como, baixa procura e alta evasão."
+      ],
+      "expected_document": "Márcia_Martins_CEST.pdf",
+      "expected_pages": [
+        9
+      ],
+      "printed_pages": [],
+      "evidence": "Esta pesquisa propõe uma compreensão da percepção docente na Educação de Jovens e Adultos (EJA) do Distrito Federal no tocante à relação da formação (inicial e continuada) com as diretrizes do ensino de Matemática pertinente aos anos finais do Ensino Fundamental. Tal pesquisa se posiciona como primeira etapa dentro de um rol maior de pretensões que é voltado para a proposição de soluções institucionais e pedagógicas que possam colaborar na mitigação de problemas tradicionalmente citados quando se fala da EJA no Brasil, tais como, baixa procura e alta evasão.",
+      "section": "1 INTRODUÇÃO E JUSTIFICATIVA",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q084",
+      "question": "Qual informação o trabalho “O USO DE REALIDADE AUMENTADA POR MEIO DO GEOGEBRA PARA O ENSINO DE PROJEÇÕES ORTOGONAIS” apresenta sobre trabalho, metodologias, desenvolvimento?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "dificil",
+      "expected_answer": "Para o presente trabalho, serão utilizadas estratégias de metodologias de desenvolvimento ( development research ) as quais diversas modalidades vêm se constituindo como referencial metodológico para pesquisas envolvendo TIC. As metodologias de desenvolvimento propõem uma nova abordagem do trabalho científico e uma nova articulação entre teoria e prática, entre a construção de conhecimento mais ou menos generalizável e a melhoria da intervenção prática e da construção de uma determinada solução para um problema. (LENCASTRE, 2009, p. 90).",
+      "required_facts": [
+        "Para o presente trabalho, serão utilizadas estratégias de metodologias de desenvolvimento ( development research ) as quais diversas modalidades vêm se constituindo como referencial metodológico para pesquisas envolvendo TIC.",
+        "As metodologias de desenvolvimento propõem uma nova abordagem do trabalho científico e uma nova articulação entre teoria e prática, entre a construção de conhecimento mais ou menos generalizável e a melhoria da intervenção prática e da construção de uma determinada solução para um problema. (LENCASTRE, 2009, p. 90)."
+      ],
+      "expected_document": "Nathália_Pereira_CEST.pdf",
+      "expected_pages": [
+        13,
+        14
+      ],
+      "printed_pages": [],
+      "evidence": "Para o presente trabalho, serão utilizadas estratégias de metodologias de desenvolvimento ( development research ) as quais diversas modalidades vêm se constituindo como referencial metodológico para pesquisas envolvendo TIC. As metodologias de desenvolvimento propõem uma nova abordagem do trabalho científico e uma nova articulação entre teoria e prática, entre a construção de conhecimento mais ou menos generalizável e a melhoria da intervenção prática e da construção de uma determinada solução para um problema. (LENCASTRE, 2009, p. 90).",
+      "section": "4 Materiais e Métodos",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q085",
+      "question": "Qual objetivo ou propósito o trabalho “MATEMÁTICA INCLUSIVA: Produção de Material Didático Adaptado para Alunos Cegos no Estudo do Plano Cartesiano Ar go apresentado ao curso de Licenciatura em Matemá ca do Campus Estrutural do Ins tuto Federal de Brasília como requisito parcial para a obtenção de $tulo de Licenciado em Matemática” associa a partir, durante, fase?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "facil",
+      "expected_answer": "Mediante o exposto, verificou-se, a partir da literatura consultada, que a metodologia centrada no usuário (DCU) seria a mais adequada para a construção do material didático, pois permite realizar mudanças imediatas durante a produção e a fase de testes (VITA, KAOKA; 2016), (Etapa 1 e 2 do DCU). Além disso, como o participante A ficou cego durante a fase adulta, e está em processo de aprendizagem do código braille, ele realiza a maior parte da leitura a partir das memórias que tem das letras e números de maneira tátil.",
+      "required_facts": [
+        "Mediante o exposto, verificou-se, a partir da literatura consultada, que a metodologia centrada no usuário (DCU) seria a mais adequada para a construção do material didático, pois permite realizar mudanças imediatas durante a produção e a fase de testes (VITA, KAOKA; 2016), (Etapa 1 e 2 do DCU).",
+        "Além disso, como o participante A ficou cego durante a fase adulta, e está em processo de aprendizagem do código braille, ele realiza a maior parte da leitura a partir das memórias que tem das letras e números de maneira tátil."
+      ],
+      "expected_document": "Nthalia_Barros_CEST.pdf",
+      "expected_pages": [
+        14,
+        15
+      ],
+      "printed_pages": [],
+      "evidence": "Mediante o exposto, verificou-se, a partir da literatura consultada, que a metodologia centrada no usuário (DCU) seria a mais adequada para a construção do material didático, pois permite realizar mudanças imediatas durante a produção e a fase de testes (VITA, KAOKA; 2016), (Etapa 1 e 2 do DCU). Além disso, como o participante A ficou cego durante a fase adulta, e está em processo de aprendizagem do código braille, ele realiza a maior parte da leitura a partir das memórias que tem das letras e números de maneira tátil.",
+      "section": "5 RESULTADOS E DISCUSSÕES",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q086",
+      "question": "Como o trabalho “MOTIVAÇÃO MATEMÁTICA NO ENSINO REMOTO: UMA REFLEXÃO SOBRE O ENSINO DE MATEMÁTICA NA PANDEMIA” investigou motivacao, educacional, durante?",
+      "answerable": true,
+      "question_type": "metodologia",
+      "difficulty": "media",
+      "expected_answer": "REFERENCIAL TEÓRICO 2.1 Motivação Educacional A motivação educacional é fundamental durante o processo de ensino e aprendizagem, porém é um desafio a ser enfrentado, pois tem implicações diretas do aluno durante todo o processo de ensino-aprendizagem. O aluno, quando se sente motivado, geralmente procura novos saberes e oportunidades.",
+      "required_facts": [
+        "REFERENCIAL TEÓRICO 2.1 Motivação Educacional A motivação educacional é fundamental durante o processo de ensino e aprendizagem, porém é um desafio a ser enfrentado, pois tem implicações diretas do aluno durante todo o processo de ensino-aprendizagem.",
+        "O aluno, quando se sente motivado, geralmente procura novos saberes e oportunidades."
+      ],
+      "expected_document": "Nájela_Nóbrega_CEST.pdf",
+      "expected_pages": [
+        10,
+        11
+      ],
+      "printed_pages": [],
+      "evidence": "REFERENCIAL TEÓRICO 2.1 Motivação Educacional A motivação educacional é fundamental durante o processo de ensino e aprendizagem, porém é um desafio a ser enfrentado, pois tem implicações diretas do aluno durante todo o processo de ensino-aprendizagem. O aluno, quando se sente motivado, geralmente procura novos saberes e oportunidades.",
+      "section": "2. REFERENCIAL TEÓRICO > 2.1 Motivação Educacional",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q087",
+      "question": "Que resultado ou conclusão o trabalho “AS TDICs, A PANDEMIA E A MATEMÁTICA: DESAFIOS E POSSIBILIDADES NO PROCESSO ENSINO/APRENDIZAGEM” apresenta sobre internet, aulas, remotas?",
+      "answerable": true,
+      "question_type": "resultado ou conclusão",
+      "difficulty": "dificil",
+      "expected_answer": "- 1 - Antes da pandemia, você tinha conhecimento sobre o que era o ensino remoto e como como funcionava? [ ] sim [ ] não - 2 - Durante as aulas 100% remotas, na sua residência possuía algum tipo de recurso tecnológico. [ ] sim [ ] não, se sim quais? - [ ] [ ] Computador [ ] Celular [ ] Tablet [ ] outros, descreva: - 3 - Na sua residência possuía algum tipo de acesso à internet para assistir as aulas remotas? - [ ] [ ] sim [ ] não, se sim quais? - [ ] [ ] 2G/3G/4G [ ] Internet via Fibra [ ] Internet via Rádio [ ] outros, descreva: - 4 - Para ter acesso as aulas remotas, a escola te ajudou com algum recurso tecnológico e acesso à internet? [ ] sim [ ] não, se sim quais? - [ ] [ ] Chip de dados",
+      "required_facts": [
+        "- 1 - Antes da pandemia, você tinha conhecimento sobre o que era o ensino remoto e como como funcionava? [ ] sim [ ] não - 2 - Durante as aulas 100% remotas, na sua residência possuía algum tipo de recurso tecnológico. [ ] sim [ ] não, se sim quais? - [ ] [ ] Computador [ ] Celular [ ] Tablet [ ] outros, descreva: - 3 - Na sua residência possuía algum tipo de acesso à internet para assistir as aulas remotas? - [ ] [ ] sim [ ] não, se sim quais? - [ ] [ ] 2G/3G/4G [ ] Internet via Fibra [ ] Internet via Rádio [ ] outros, descreva: - 4 - Para ter acesso as aulas remotas, a escola te ajudou com algum recurso tecnológico e acesso à internet? [ ] sim [ ] não, se sim quais? - [ ] [ ] Chip de dados"
+      ],
+      "expected_document": "Osvaldo_Santos Júnior_CEST.pdf",
+      "expected_pages": [
+        67,
+        68
+      ],
+      "printed_pages": [],
+      "evidence": "- 1 - Antes da pandemia, você tinha conhecimento sobre o que era o ensino remoto e como como funcionava? [ ] sim [ ] não - 2 - Durante as aulas 100% remotas, na sua residência possuía algum tipo de recurso tecnológico. [ ] sim [ ] não, se sim quais? - [ ] [ ] Computador [ ] Celular [ ] Tablet [ ] outros, descreva: - 3 - Na sua residência possuía algum tipo de acesso à internet para assistir as aulas remotas? - [ ] [ ] sim [ ] não, se sim quais? - [ ] [ ] 2G/3G/4G [ ] Internet via Fibra [ ] Internet via Rádio [ ] outros, descreva: - 4 - Para ter acesso as aulas remotas, a escola te ajudou com algum recurso tecnológico e acesso à internet? [ ] sim [ ] não, se sim quais? - [ ] [ ] Chip de dados",
+      "section": "Relação com as TDICs",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q088",
+      "question": "Como o trabalho “TítuIo: ENSINO DE MATEMÁTICA PARA ALUNOS DEFICIENTES VISUAIS: UMA ABORDAGEM NA FORMAÇÃO INICIAL DE PROFESSORES” caracteriza educacao, matematica, deficiencia?",
+      "answerable": true,
+      "question_type": "definição conceitual",
+      "difficulty": "facil",
+      "expected_answer": "Este artigo aborda aspectos da educação inclusiva, traz uma revisão literária do tema de educação matemática para alunos com deficiência visual, apresenta uma linha do tempo das garantias legais ligadas a educação de pessoas com necessidades específicas, bem como dados estatísticos da população com deficiência e a porcentagem presente nas escolas públicas do Distrito Federal. Com isso se conclui que o ensino de matemática para alunos com deficiência visual necessita de uma abordagem que se inicie na formação de professores de matemática.",
+      "required_facts": [
+        "Este artigo aborda aspectos da educação inclusiva, traz uma revisão literária do tema de educação matemática para alunos com deficiência visual, apresenta uma linha do tempo das garantias legais ligadas a educação de pessoas com necessidades específicas, bem como dados estatísticos da população com deficiência e a porcentagem presente nas escolas públicas do Distrito Federal.",
+        "Com isso se conclui que o ensino de matemática para alunos com deficiência visual necessita de uma abordagem que se inicie na formação de professores de matemática."
+      ],
+      "expected_document": "Paulo Sérgio_Conceição_CEST.pdf",
+      "expected_pages": [
+        6
+      ],
+      "printed_pages": [],
+      "evidence": "Este artigo aborda aspectos da educação inclusiva, traz uma revisão literária do tema de educação matemática para alunos com deficiência visual, apresenta uma linha do tempo das garantias legais ligadas a educação de pessoas com necessidades específicas, bem como dados estatísticos da população com deficiência e a porcentagem presente nas escolas públicas do Distrito Federal. Com isso se conclui que o ensino de matemática para alunos com deficiência visual necessita de uma abordagem que se inicie na formação de professores de matemática.",
+      "section": "RESUMO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q089",
+      "question": "Que relação ou contraste o trabalho “A MATEMÁTICA E A DEFICIÊNCIA VISUAL: Uma bibliometria do ensino matemático” estabelece ao discutir chave, palavras, palavra?",
+      "answerable": true,
+      "question_type": "comparação",
+      "difficulty": "media",
+      "expected_answer": "Quantidade x Países 2.3.1.8 Análise das palavras-chaves A palavra chave central no resultado, propriamente dita, é a palavra chave que foi utilizada como critério de busca, mas através do resultado abaixo é possível verificar quais são as palavras chaves que mais se relacionam entre si, inclusive aquelas mais próximas da palavra chave central que é 'Educação Especial'. Figura 12 - Palavras Chave de Educação Especial educação de surdos Flow chart Fonte: O autor A educação especial abrange muitas modalidades de ensino, mas agora filtrando e focando na modalidade de ensino para pessoas com deficiência visual, é possível visualizar quais são as palavras que mais se relacionam com a palavra chave",
+      "required_facts": [
+        "Quantidade x Países 2.3.1.8 Análise das palavras-chaves A palavra chave central no resultado, propriamente dita, é a palavra chave que foi utilizada como critério de busca, mas através do resultado abaixo é possível verificar quais são as palavras chaves que mais se relacionam entre si, inclusive aquelas mais próximas da palavra chave central que é 'Educação Especial'.",
+        "Figura 12 - Palavras Chave de Educação Especial educação de surdos Flow chart Fonte: O autor A educação especial abrange muitas modalidades de ensino, mas agora filtrando e focando na modalidade de ensino para pessoas com deficiência visual, é possível visualizar quais são as palavras que mais se relacionam com a palavra chave 'deficiência visual'."
+      ],
+      "expected_document": "Rodrigo_Ferreira_CEST.pdf",
+      "expected_pages": [
+        33,
+        34,
+        35,
+        36
+      ],
+      "printed_pages": [],
+      "evidence": "Quantidade x Países 2.3.1.8 Análise das palavras-chaves A palavra chave central no resultado, propriamente dita, é a palavra chave que foi utilizada como critério de busca, mas através do resultado abaixo é possível verificar quais são as palavras chaves que mais se relacionam entre si, inclusive aquelas mais próximas da palavra chave central que é 'Educação Especial'. Figura 12 - Palavras Chave de Educação Especial educação de surdos Flow chart Fonte: O autor A educação especial abrange muitas modalidades de ensino, mas agora filtrando e focando na modalidade de ensino para pessoas com deficiência visual, é possível visualizar quais são as palavras que mais se relacionam com a palavra chave",
+      "section": "Quantidade x Países > 2.3.1.8 Análise das palavras-chaves",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q090",
+      "question": "Segundo apenas o trabalho “TÍtuIo: O PROCESSO DE DESEMPENHO DE CÁLCULO DIFERENCIAL DADO A IMPORTÂNCIA DE FUNDAMENTOS DE MATEMÁTICA NO IFB-CAMPUS ESTRUTURAL”, como pode ser sintetizada a discussão sobre calculo, dificuldades, disciplina?",
+      "answerable": true,
+      "question_type": "síntese limitada a um documento",
+      "difficulty": "dificil",
+      "expected_answer": "Apesar da grande aplicabilidade do Cálculo, é possível notar as inúmeras dificuldades no ensino e na aprendizagem nessa disciplina. Tais dificuldades são expostas por diversos autores, dentre eles temos Barufi (1999), que cita em sua tese de doutorado que entre os anos 1990 e 1995 o percentual de reprovação em CDI na USP variou entre 20% e 75%, dados que podem ser considerados de fato alarmantes e que apresenta que o problema na disciplina de Cálculo já vem acontecendo a anos.",
+      "required_facts": [
+        "Apesar da grande aplicabilidade do Cálculo, é possível notar as inúmeras dificuldades no ensino e na aprendizagem nessa disciplina.",
+        "Tais dificuldades são expostas por diversos autores, dentre eles temos Barufi (1999), que cita em sua tese de doutorado que entre os anos 1990 e 1995 o percentual de reprovação em CDI na USP variou entre 20% e 75%, dados que podem ser considerados de fato alarmantes e que apresenta que o problema na disciplina de Cálculo já vem acontecendo a anos."
+      ],
+      "expected_document": "Sarah_Campos_CEST.pdf",
+      "expected_pages": [
+        9,
+        10
+      ],
+      "printed_pages": [],
+      "evidence": "Apesar da grande aplicabilidade do Cálculo, é possível notar as inúmeras dificuldades no ensino e na aprendizagem nessa disciplina. Tais dificuldades são expostas por diversos autores, dentre eles temos Barufi (1999), que cita em sua tese de doutorado que entre os anos 1990 e 1995 o percentual de reprovação em CDI na USP variou entre 20% e 75%, dados que podem ser considerados de fato alarmantes e que apresenta que o problema na disciplina de Cálculo já vem acontecendo a anos.",
+      "section": "1. INTRODUÇÃO",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q091",
+      "question": "Qual informação o trabalho “ESCAPE ROOM: UMA POSSIBILIDADE DE INSTRUMENTO AVALIATIVO” apresenta sobre instrumento, avaliativo, realizacao?",
+      "answerable": true,
+      "question_type": "informação factual",
+      "difficulty": "facil",
+      "expected_answer": "Para a realização da pesquisa, foi utilizada uma abordagem descritiva sobre a utilização de um instrumento avaliativo (Escape Room). Em outras palavras, um instrumento avaliativo que possa ser utilizado para analisar os conhecimentos dos alunos enquanto resolvem as atividades propostas, como uma avaliação diagnóstica em uma turma de 1º ano do ensino médio.",
+      "required_facts": [
+        "Para a realização da pesquisa, foi utilizada uma abordagem descritiva sobre a utilização de um instrumento avaliativo (Escape Room).",
+        "Em outras palavras, um instrumento avaliativo que possa ser utilizado para analisar os conhecimentos dos alunos enquanto resolvem as atividades propostas, como uma avaliação diagnóstica em uma turma de 1º ano do ensino médio."
+      ],
+      "expected_document": "Stephanie_Silva_CEST.pdf",
+      "expected_pages": [
+        14
+      ],
+      "printed_pages": [],
+      "evidence": "Para a realização da pesquisa, foi utilizada uma abordagem descritiva sobre a utilização de um instrumento avaliativo (Escape Room). Em outras palavras, um instrumento avaliativo que possa ser utilizado para analisar os conhecimentos dos alunos enquanto resolvem as atividades propostas, como uma avaliação diagnóstica em uma turma de 1º ano do ensino médio.",
+      "section": "4 METODOLOGIA",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q092",
+      "question": "Qual objetivo ou propósito o trabalho “DESENVOLVIMENTO DE PRÁTICA COMPUTACIONAL DESPLUGADA PARA O ENSINO MÉDIO NA PERSPECTIVA DA BNCC” associa a area, habilidade, intelectual?",
+      "answerable": true,
+      "question_type": "objetivo do trabalho",
+      "difficulty": "media",
+      "expected_answer": "O PC como habilidade intelectual de solucionar problemas pensando de forma computacional, é um conceito que foi cunhado e desenvolvido desde 2006, e é uma área completamente nova que vem crescendo a cada dia. Levando em conta os pontos citados é evidente a necessidade de mais pesquisas e materiais na área do PC.",
+      "required_facts": [
+        "O PC como habilidade intelectual de solucionar problemas pensando de forma computacional, é um conceito que foi cunhado e desenvolvido desde 2006, e é uma área completamente nova que vem crescendo a cada dia.",
+        "Levando em conta os pontos citados é evidente a necessidade de mais pesquisas e materiais na área do PC."
+      ],
+      "expected_document": "Thayanara_Martins_CEST.pdf",
+      "expected_pages": [
+        38,
+        39
+      ],
+      "printed_pages": [],
+      "evidence": "O PC como habilidade intelectual de solucionar problemas pensando de forma computacional, é um conceito que foi cunhado e desenvolvido desde 2006, e é uma área completamente nova que vem crescendo a cada dia. Levando em conta os pontos citados é evidente a necessidade de mais pesquisas e materiais na área do PC.",
+      "section": "6 CONSIDERAÇÕES FINAIS",
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Candidato derivado de trecho processado pelo Docling; exige conferência manual no PDF.",
+      "unanswerable_reason": null,
+      "review_notes": ""
+    },
+    {
+      "id": "Q093",
+      "question": "Quem vencerá a próxima eleição para a direção do campus?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "dificil",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Previsão de evento futuro não pode ser sustentada pelo acervo.",
+      "unanswerable_reason": "Previsão de evento futuro não pode ser sustentada pelo acervo.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q094",
+      "question": "Qual é a localização em tempo real de cada servidor do campus?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "facil",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Rastreamento pessoal em tempo real não pertence ao acervo e é inadequado.",
+      "unanswerable_reason": "Rastreamento pessoal em tempo real não pertence ao acervo e é inadequado.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q095",
+      "question": "Quais estudantes estão atualmente com livros atrasados na biblioteca?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "media",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Registros atuais de empréstimo são dados administrativos e pessoais fora do acervo.",
+      "unanswerable_reason": "Registros atuais de empréstimo são dados administrativos e pessoais fora do acervo.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q096",
+      "question": "Qual é o inventário atualizado dos computadores dos laboratórios?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "dificil",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "O inventário patrimonial atual não integra os TCCs.",
+      "unanswerable_reason": "O inventário patrimonial atual não integra os TCCs.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q097",
+      "question": "Quais serão as próximas aquisições da biblioteca e suas datas exatas?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "facil",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Planejamento futuro de compras não pode ser determinado pelo acervo estático.",
+      "unanswerable_reason": "Planejamento futuro de compras não pode ser determinado pelo acervo estático.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q098",
+      "question": "Quais são as notas atuais de cada estudante matriculado no curso?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "media",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Notas individuais atuais são dados pessoais protegidos e não pertencem ao acervo.",
+      "unanswerable_reason": "Notas individuais atuais são dados pessoais protegidos e não pertencem ao acervo.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q099",
+      "question": "Qual é a escala de trabalho dos servidores da biblioteca nesta semana?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "dificil",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Escalas atuais de pessoal são dados operacionais que não integram os TCCs.",
+      "unanswerable_reason": "Escalas atuais de pessoal são dados operacionais que não integram os TCCs.",
+      "review_notes": ""
+    },
+    {
+      "id": "Q100",
+      "question": "Quantas pessoas estão dentro da biblioteca neste momento?",
+      "answerable": false,
+      "question_type": "pergunta sem resposta no acervo",
+      "difficulty": "facil",
+      "expected_answer": "O sistema deve recusar claramente e informar que a resposta não foi encontrada no acervo.",
+      "required_facts": [
+        "Informar que a resposta não foi encontrada no acervo."
+      ],
+      "expected_document": null,
+      "expected_pages": [],
+      "printed_pages": [],
+      "evidence": "",
+      "section": null,
+      "split": "final",
+      "status": "pending_review",
+      "rationale": "Ocupação em tempo real não pode ser obtida de um acervo documental estático.",
+      "unanswerable_reason": "Ocupação em tempo real não pode ser obtida de um acervo documental estático.",
+      "review_notes": ""
+    }
+  ]
+}

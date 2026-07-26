@@ -101,9 +101,19 @@ class DocumentService:
         self.documents_dir.mkdir(parents=True, exist_ok=True)
         target = (self.documents_dir / safe_name).resolve()
         self._ensure_within_documents_dir(target)
-        if target.exists():
-            raise InvalidDocumentError("Já existe um PDF com esse nome")
         incoming_hash = hashlib.sha256(content).hexdigest()
+        if target.exists():
+            try:
+                existing_hash = self._sha256(target)
+            except OSError as exc:
+                raise DocumentProcessingError(
+                    "Não foi possível verificar o PDF existente"
+                ) from exc
+            if existing_hash == incoming_hash:
+                return self._process(target)
+            raise InvalidDocumentError(
+                "Já existe um PDF diferente com esse nome"
+            )
         if self._duplicate_file(incoming_hash) is not None:
             raise InvalidDocumentError("Este PDF já existe no acervo")
 

@@ -1,0 +1,11 @@
+{
+  "generated_at": "2026-07-23T01:34:23.213376+00:00",
+  "benchmark_sha256": "49440376b4b12c574d864e6162b63199e433e9bdcd06c469a507d70c7eb56486",
+  "question_count": 100,
+  "answerable_count": 84,
+  "unanswerable_count": 16,
+  "top_k": 8,
+  "candidate_pool_size": 24,
+  "judge_model": "não executado",
+  "judge_prompt_sha256": "b9df4ffd026bfe567062a0684301cadd9ec4e459611af65178abdea52e6b3871"
+}

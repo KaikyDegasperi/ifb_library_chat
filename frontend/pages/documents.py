@@ -2,7 +2,8 @@
 
 import os
 import unicodedata
-from typing import Any
+from collections.abc import Callable, Sequence
+from typing import Any, Protocol, TypedDict
 
 import streamlit as st
 
@@ -16,6 +17,25 @@ from frontend.api_client import (
 
 ADMIN_TOKEN_STATE_KEY = "admin_api_token"
 ADMIN_AUTH_ERROR_STATE_KEY = "admin_auth_error"
+UPLOAD_BATCH_RESULTS_STATE_KEY = "upload_batch_results"
+UPLOAD_BATCH_KEY_STATE_KEY = "upload_batch_key"
+
+
+class UploadedPDF(Protocol):
+    """Contrato mínimo dos arquivos retornados pelo file uploader."""
+
+    name: str
+    size: int
+    type: str | None
+
+    def getvalue(self) -> bytes: ...
+
+
+class BatchUploadResult(TypedDict):
+    file_name: str
+    status: str
+    message: str
+    chunk_count: int
 
 
 def render_catalog_page(
@@ -125,7 +145,7 @@ def render_documents_page(
     )
 
     if section == "Adicionar PDF":
-        _render_upload(client, documents or [], admin_token)
+        _render_upload(client, admin_token)
     elif section == "Resumo":
         _render_summary(documents or [])
     else:
@@ -208,85 +228,179 @@ def _render_summary(documents: list[dict[str, Any]]) -> None:
 
 def _render_upload(
     client: APIClient,
-    documents: list[dict[str, Any]],
     admin_token: str,
 ) -> None:
-    st.subheader(":material/upload_file: Upload de novo PDF")
+    st.subheader(":material/upload_file: Upload de PDFs em lote")
     maximum_mb = int(os.getenv("MAX_UPLOAD_SIZE_MB", "25"))
-    uploaded = st.file_uploader(
-        "Selecione um arquivo PDF",
-        type=["pdf"],
-        accept_multiple_files=False,
-        help=f"Formato PDF, com tamanho máximo de {maximum_mb} MB.",
+    st.caption(
+        "Selecione vários arquivos. Eles serão processados um de cada vez "
+        "e uma falha não interromperá os demais."
     )
-    valid = True
-    if uploaded is not None:
-        if not uploaded.name.lower().endswith(".pdf"):
-            st.error("Selecione um arquivo com extensão .pdf.")
-            valid = False
-        if uploaded.size > maximum_mb * 1024 * 1024:
-            st.error(f"O arquivo excede o limite de {maximum_mb} MB.")
-            valid = False
-        if valid:
-            st.caption(f"Arquivo selecionado: {uploaded.name} ({_size(uploaded.size)})")
+    previous_results = st.session_state.get(UPLOAD_BATCH_RESULTS_STATE_KEY)
+    if isinstance(previous_results, list) and previous_results:
+        _render_batch_results(previous_results)
 
-    if not st.button(
-        "Processar e indexar PDF",
-        type="primary",
-        disabled=uploaded is None or not valid,
-        width="stretch",
-    ):
+    upload_key = st.session_state.setdefault(UPLOAD_BATCH_KEY_STATE_KEY, 0)
+    with st.container(border=True):
+        uploaded_files = st.file_uploader(
+            "Selecione os arquivos PDF",
+            type=["pdf"],
+            accept_multiple_files=True,
+            max_upload_size=maximum_mb,
+            help=f"Cada PDF pode ter no máximo {maximum_mb} MB.",
+            key=f"document-upload-batch-{upload_key}",
+        )
+        valid_files, validation_errors = _validate_upload_batch(
+            uploaded_files,
+            maximum_mb * 1024 * 1024,
+        )
+        if uploaded_files:
+            total_size = sum(uploaded.size for uploaded in uploaded_files)
+            st.caption(
+                f"{len(uploaded_files)} arquivo(s) selecionado(s) · "
+                f"{_size(total_size)} no total"
+            )
+        for error in validation_errors:
+            st.error(error, icon=":material/error:")
+        submitted = st.button(
+            (
+                f"Processar e indexar {len(valid_files)} PDF(s)"
+                if valid_files
+                else "Selecione os PDFs"
+            ),
+            type="primary",
+            icon=":material/play_arrow:",
+            disabled=not valid_files,
+            width="stretch",
+        )
+
+    if not submitted:
         return
 
-    existing_ids = {item.get("document_id") for item in documents}
-    with st.status("Enviando o PDF para a FastAPI...", expanded=True) as status:
+    progress = st.progress(0, text="Preparando o lote...")
+    with st.status("Processando o lote de PDFs...", expanded=True) as status:
         try:
-            result = client.ingest_document(
+            results = _process_upload_batch(
+                client,
+                valid_files,
+                admin_token=admin_token,
+                on_progress=lambda current, total, name: progress.progress(
+                    current / total,
+                    text=f"{current} de {total}: {name}",
+                ),
+            )
+        except APIResponseError as exc:
+            if exc.status_code in {401, 403}:
+                _deny_admin_access()
+            status.update(label="Não foi possível processar o lote", state="error")
+            if exc.status_code == 503:
+                st.error("As operações administrativas estão desabilitadas na API.")
+            else:
+                st.error(f"Erro inesperado da API: {exc}")
+            return
+
+        succeeded = sum(result["status"] == "success" for result in results)
+        failed = len(results) - succeeded
+        status.update(
+            label=f"Lote concluído: {succeeded} sucesso(s), {failed} falha(s)",
+            state="complete" if not failed else "error",
+            expanded=bool(failed),
+        )
+    st.session_state[UPLOAD_BATCH_RESULTS_STATE_KEY] = results
+    st.session_state[UPLOAD_BATCH_KEY_STATE_KEY] = upload_key + 1
+    st.rerun()
+
+
+def _validate_upload_batch(
+    uploaded_files: Sequence[UploadedPDF],
+    maximum_size_bytes: int,
+) -> tuple[list[UploadedPDF], list[str]]:
+    valid_files: list[UploadedPDF] = []
+    errors: list[str] = []
+    names: set[str] = set()
+    for uploaded in uploaded_files:
+        normalized_name = unicodedata.normalize("NFKC", uploaded.name).casefold()
+        if not uploaded.name.lower().endswith(".pdf"):
+            errors.append(f"{uploaded.name}: o arquivo precisa ter extensão .pdf.")
+        elif uploaded.size > maximum_size_bytes:
+            errors.append(
+                f"{uploaded.name}: excede o limite de {_size(maximum_size_bytes)}."
+            )
+        elif normalized_name in names:
+            errors.append(f"{uploaded.name}: nome repetido no lote.")
+        else:
+            valid_files.append(uploaded)
+            names.add(normalized_name)
+    return valid_files, errors
+
+
+def _process_upload_batch(
+    client: APIClient,
+    uploaded_files: Sequence[UploadedPDF],
+    *,
+    admin_token: str,
+    on_progress: Callable[[int, int, str], None] | None = None,
+) -> list[BatchUploadResult]:
+    results: list[BatchUploadResult] = []
+    total = len(uploaded_files)
+    for current, uploaded in enumerate(uploaded_files, start=1):
+        try:
+            document = client.ingest_document(
                 uploaded.name,
                 uploaded.getvalue(),
                 uploaded.type or "application/pdf",
                 admin_token=admin_token,
             )
-        except APITimeoutError as exc:
-            status.update(label="Tempo limite excedido", state="error")
-            st.error(str(exc))
-            return
-        except APIUnavailableError as exc:
-            status.update(label="FastAPI indisponível", state="error")
-            st.error(str(exc))
-            return
         except APIResponseError as exc:
-            if exc.status_code in {401, 403}:
-                _deny_admin_access()
-            status.update(label="Falha na ingestão", state="error")
-            if exc.status_code == 503:
-                st.error("As operações administrativas estão desabilitadas na API.")
-                return
-            if exc.status_code in {400, 413, 415, 422}:
-                st.error(f"O PDF foi rejeitado: {exc}")
-            else:
-                st.error(f"Erro inesperado da API: {exc}")
-            return
-        except APIClientError as exc:
-            status.update(label="Falha na ingestão", state="error")
-            st.error(str(exc))
-            return
+            if exc.status_code in {401, 403, 503}:
+                raise
+            results.append(_failed_upload(uploaded.name, str(exc)))
+        except (APITimeoutError, APIUnavailableError, APIClientError) as exc:
+            results.append(_failed_upload(uploaded.name, str(exc)))
+        else:
+            chunk_count = int(document.get("chunk_count", 0))
+            results.append(
+                {
+                    "file_name": str(document.get("file_name") or uploaded.name),
+                    "status": "success",
+                    "message": f"Indexado com {chunk_count} chunks.",
+                    "chunk_count": chunk_count,
+                }
+            )
+        if on_progress:
+            on_progress(current, total, uploaded.name)
+    return results
 
-        duplicate = result.get("document_id") in existing_ids
-        status.update(
-            label=(
-                "Documento já existente verificado com sucesso"
-                if duplicate
-                else "Documento processado e indexado"
-            ),
-            state="complete",
+
+def _failed_upload(file_name: str, message: str) -> BatchUploadResult:
+    return {
+        "file_name": file_name,
+        "status": "error",
+        "message": message,
+        "chunk_count": 0,
+    }
+
+
+def _render_batch_results(results: Sequence[BatchUploadResult]) -> None:
+    succeeded = sum(result["status"] == "success" for result in results)
+    failed = len(results) - succeeded
+    if failed:
+        st.warning(
+            f"Último lote: {succeeded} processado(s) e {failed} com falha.",
+            icon=":material/warning:",
         )
+    else:
         st.success(
-            f"{result.get('file_name', uploaded.name)} está disponível com "
-            f"{result.get('chunk_count', 0)} chunks."
+            f"Último lote: {succeeded} PDF(s) processado(s) com sucesso.",
+            icon=":material/check_circle:",
         )
-    st.session_state.documents_refresh = True
-    st.rerun()
+    for result in results:
+        icon = (
+            ":material/check_circle:"
+            if result["status"] == "success"
+            else ":material/error:"
+        )
+        st.write(f"{icon} **{result['file_name']}** — {result['message']}")
 
 
 def _render_document_list(

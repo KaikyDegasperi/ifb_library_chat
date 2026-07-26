@@ -1,0 +1,50 @@
+[
+  {
+    "etapa": "Linha de base",
+    "document_recall_at_1": 0.6666666666666666,
+    "document_recall_at_3": 0.8095238095238095,
+    "document_recall_at_k": 0.8809523809523809,
+    "page_recall_at_k": 0.38095238095238093,
+    "mrr": 0.748015873015873,
+    "correct_document_citation_rate": 0.8809523809523809,
+    "correct_page_citation_rate": 0.38095238095238093,
+    "correct_refusal_rate": 1.0,
+    "improper_refusal_rate": 0.3333333333333333,
+    "latencia_media_ms": 1885.14,
+    "latencia_p95_ms": 3391.0,
+    "erros": 0,
+    "timeouts": 0
+  },
+  {
+    "etapa": "Perguntas revisadas",
+    "document_recall_at_1": 0.7619047619047619,
+    "document_recall_at_3": 0.8571428571428571,
+    "document_recall_at_k": 0.9285714285714286,
+    "page_recall_at_k": 0.7142857142857143,
+    "mrr": 0.8184523809523809,
+    "correct_document_citation_rate": 0.9285714285714286,
+    "correct_page_citation_rate": 0.7142857142857143,
+    "correct_refusal_rate": 1.0,
+    "improper_refusal_rate": 0.09523809523809523,
+    "latencia_media_ms": 1918.04,
+    "latencia_p95_ms": 2733.0,
+    "erros": 0,
+    "timeouts": 0
+  },
+  {
+    "etapa": "Reranqueamento v2",
+    "document_recall_at_1": 0.7619047619047619,
+    "document_recall_at_3": 0.8571428571428571,
+    "document_recall_at_k": 0.9285714285714286,
+    "page_recall_at_k": 0.7142857142857143,
+    "mrr": 0.8184523809523809,
+    "correct_document_citation_rate": 0.9761904761904762,
+    "correct_page_citation_rate": 0.8095238095238095,
+    "correct_refusal_rate": 1.0,
+    "improper_refusal_rate": 0.0,
+    "latencia_media_ms": 3022.66,
+    "latencia_p95_ms": 5422.0,
+    "erros": 0,
+    "timeouts": 0
+  }
+]

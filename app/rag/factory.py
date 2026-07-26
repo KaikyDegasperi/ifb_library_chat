@@ -53,6 +53,7 @@ def create_rag_service(settings: Settings) -> RAGService:
         retriever=retriever,
         llm_provider=create_llm_provider(settings),
         retrieval_top_k=settings.rag_retrieval_top_k,
+        candidate_pool_size=settings.rag_candidate_pool_size,
         min_similarity=settings.rag_min_similarity,
         max_context_chars=settings.rag_max_context_chars,
         max_question_chars=settings.rag_max_question_chars,

@@ -20,17 +20,35 @@ def validate_benchmark(
 ) -> list[str]:
     errors: list[str] = []
     questions = benchmark.questions
+    specifications = {
+        "1.0": {"total": 50, "unanswerable": 10, "split": 25},
+        "2.0": {"total": 100, "unanswerable": 16, "split": 50},
+    }
+    specification = specifications.get(benchmark.benchmark_version)
+    if specification is None:
+        errors.append(f"Versão de benchmark desconhecida: {benchmark.benchmark_version}")
+        return errors
     ids = [question.id for question in questions]
     duplicates = sorted(identifier for identifier, count in Counter(ids).items() if count > 1)
-    if len(questions) != 50:
-        errors.append(f"Total inválido: esperado 50, obtido {len(questions)}")
+    if len(questions) != specification["total"]:
+        errors.append(
+            f"Total inválido: esperado {specification['total']}, obtido {len(questions)}"
+        )
     if duplicates:
         errors.append(f"IDs duplicados: {', '.join(duplicates)}")
     unanswerable = sum(not question.answerable for question in questions)
-    if unanswerable != 10:
-        errors.append(f"Proporção inválida: esperado 10/50 sem resposta, obtido {unanswerable}/{len(questions)}")
+    if unanswerable != specification["unanswerable"]:
+        errors.append(
+            "Proporção inválida: esperado "
+            f"{specification['unanswerable']}/{specification['total']} sem resposta, "
+            f"obtido {unanswerable}/{len(questions)}"
+        )
     split_counts = Counter(question.split for question in questions)
-    if split_counts != {"development": 25, "final": 25}:
+    expected_splits = {
+        "development": specification["split"],
+        "final": specification["split"],
+    }
+    if split_counts != expected_splits:
         errors.append(f"Divisão inválida: {dict(split_counts)}")
     if require_approved:
         not_approved = [question.id for question in questions if question.status != "approved"]
@@ -66,6 +84,35 @@ def validate_benchmark(
             if not question.unanswerable_reason:
                 errors.append(f"{question.id}: motivo de ausência não informado")
 
+    if benchmark.benchmark_version == "2.0":
+        corpus = {path.name for path in documents_dir.glob("*.pdf")}
+        excluded = set(benchmark.excluded_documents)
+        if len(excluded) != 1:
+            errors.append(
+                f"Benchmark 2.0 exige uma exclusão documental justificada; obtidas {len(excluded)}"
+            )
+        unknown_exclusions = sorted(excluded - corpus)
+        if unknown_exclusions:
+            errors.append(f"Exclusões fora do corpus: {', '.join(unknown_exclusions)}")
+        for split in ("development", "final"):
+            represented = Counter(
+                question.expected_document
+                for question in questions
+                if question.split == split and question.answerable
+            )
+            missing = sorted(corpus - excluded - set(represented))
+            repeated = sorted(name for name, count in represented.items() if count != 1)
+            if missing:
+                errors.append(f"{split}: TCCs sem pergunta: {', '.join(missing)}")
+            if repeated:
+                errors.append(f"{split}: TCCs sem cobertura unitária: {', '.join(repeated)}")
+            included_exclusions = sorted(excluded & set(represented))
+            if included_exclusions:
+                errors.append(
+                    f"{split}: documentos excluídos possuem perguntas: "
+                    f"{', '.join(included_exclusions)}"
+                )
+
     if development_run:
         payload = read_json(development_run)
         final_ids = {question.id for question in questions if question.split == "final"}
@@ -89,7 +136,10 @@ def main() -> None:
         for error in errors:
             print(f"ERRO: {error}")
         raise SystemExit(1)
-    print("Benchmark válido: 50 perguntas aprovadas, fontes e splits conferidos.")
+    print(
+        f"Benchmark válido: {len(benchmark.questions)} perguntas aprovadas, "
+        "fontes e splits conferidos."
+    )
 
 
 if __name__ == "__main__":

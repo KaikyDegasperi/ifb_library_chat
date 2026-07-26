@@ -65,6 +65,7 @@ class Settings(BaseSettings):
     rag_context_token_budget: int = Field(default=1_600, ge=256)
     rag_output_token_reserve: int = Field(default=256, ge=32)
     rag_retrieval_top_k: int = Field(default=8, ge=1)
+    rag_candidate_pool_size: int = Field(default=24, ge=1)
     rag_min_similarity: float = Field(default=0.35, ge=-1.0, le=1.0)
     rag_max_context_chars: int = Field(default=12_000, ge=500)
     rag_max_question_chars: int = Field(default=2_000, ge=1, le=10_000)

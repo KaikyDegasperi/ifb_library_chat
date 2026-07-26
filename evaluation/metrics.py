@@ -25,8 +25,11 @@ def page_recall_at(records: Iterable[dict[str, Any]], k: int) -> float:
     hits = 0
     for record in items:
         expected = set(record.get("expected_pages", []))
+        expected_document = record.get("expected_document")
         pages: set[int] = set()
         for result in record.get("retrieval_results", [])[:k]:
+            if result.get("file_name") != expected_document:
+                continue
             start = result.get("page_start")
             end = result.get("page_end") or start
             if isinstance(start, int) and isinstance(end, int):

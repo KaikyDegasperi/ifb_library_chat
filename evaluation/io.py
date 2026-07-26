@@ -55,7 +55,15 @@ def question_row(question: BenchmarkQuestion, documents_dir: Path) -> dict[str, 
 def write_benchmark_xlsx(path: Path, benchmark: Benchmark, documents_dir: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     workbook = Workbook()
-    sheet = workbook.active
+    metadata = workbook.active
+    metadata.title = "metadata"
+    metadata.append(["benchmark_version", benchmark.benchmark_version])
+    metadata.append(["seed", benchmark.seed])
+    metadata.append(
+        ["excluded_documents", json.dumps(benchmark.excluded_documents, ensure_ascii=False)]
+    )
+    metadata.sheet_state = "hidden"
+    sheet = workbook.create_sheet()
     sheet.title = "questions"
     sheet.append(BENCHMARK_COLUMNS)
     for cell in sheet[1]:
@@ -87,7 +95,21 @@ def write_benchmark_xlsx(path: Path, benchmark: Benchmark, documents_dir: Path) 
 
 
 def benchmark_from_xlsx(path: Path, seed: int = 42) -> Benchmark:
-    sheet = load_workbook(path, data_only=True)["questions"]
+    workbook = load_workbook(path, data_only=True)
+    sheet = workbook["questions"]
+    benchmark_version = "1.0"
+    excluded_documents: dict[str, str] = {}
+    if "metadata" in workbook.sheetnames:
+        metadata = {
+            str(row[0]): row[1]
+            for row in workbook["metadata"].iter_rows(values_only=True)
+            if row and row[0]
+        }
+        benchmark_version = str(metadata.get("benchmark_version") or "1.0")
+        seed = int(metadata.get("seed") or seed)
+        raw_exclusions = metadata.get("excluded_documents")
+        if raw_exclusions:
+            excluded_documents = json.loads(str(raw_exclusions))
     headers = [str(cell.value) for cell in sheet[1]]
     questions: list[BenchmarkQuestion] = []
     for values in sheet.iter_rows(min_row=2, values_only=True):
@@ -105,7 +127,12 @@ def benchmark_from_xlsx(path: Path, seed: int = 42) -> Benchmark:
         for field in ("question", "question_type", "difficulty", "expected_answer", "evidence", "split", "status", "rationale", "review_notes"):
             row[field] = "" if row.get(field) is None else str(row[field])
         questions.append(BenchmarkQuestion.model_validate(row))
-    return Benchmark(seed=seed, questions=questions)
+    return Benchmark(
+        benchmark_version=benchmark_version,
+        seed=seed,
+        excluded_documents=excluded_documents,
+        questions=questions,
+    )
 
 
 def _split(value: Any, caster: type) -> list:

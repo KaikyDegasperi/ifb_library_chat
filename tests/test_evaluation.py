@@ -3,8 +3,13 @@ from pathlib import Path
 
 import pytest
 
-from evaluation.generate_benchmark import generate_benchmark
-from evaluation.io import read_benchmark, write_benchmark
+from evaluation.generate_benchmark import generate_benchmark, generate_corpus_benchmark
+from evaluation.io import (
+    benchmark_from_xlsx,
+    read_benchmark,
+    write_benchmark,
+    write_benchmark_xlsx,
+)
 from evaluation.metrics import document_recall_at, mean_reciprocal_rank, page_recall_at
 from evaluation.models import Benchmark, BenchmarkQuestion, RunOutput, RunRecord
 from evaluation.report import generate_reports
@@ -77,6 +82,59 @@ def test_generation_has_exact_distribution_and_pending_status(tmp_path: Path):
     assert {item.status for item in benchmark.questions} == {"pending_review"}
 
 
+def test_full_corpus_benchmark_covers_each_document_in_both_splits(tmp_path: Path):
+    documents_dir = tmp_path / "pdfs"
+    processed_dir = tmp_path / "processed"
+    documents_dir.mkdir()
+    processed_dir.mkdir()
+    for index in range(43):
+        name = f"doc-{index:02d}.pdf"
+        (documents_dir / name).write_bytes(b"%PDF-1.4")
+        chunks = []
+        pages = (2,) if index == 42 else (2, 3)
+        for page in pages:
+            chunks.append(
+                {
+                    "text": "Metodologia " + (
+                        f"O trabalho {index} analisou dados educacionais na página {page}. "
+                        * 8
+                    ),
+                    "metadata": {
+                        "file_name": name,
+                        "title": f"Trabalho {index}",
+                        "page_start": page,
+                        "page_end": page,
+                        "section": "Metodologia",
+                    },
+                }
+            )
+        (processed_dir / f"{index}.chunks.json").write_text(
+            json.dumps({"chunks": chunks}), encoding="utf-8"
+        )
+
+    benchmark = generate_corpus_benchmark(processed_dir, seed=42)
+
+    assert benchmark.benchmark_version == "2.0"
+    assert len(benchmark.questions) == 100
+    assert sum(question.answerable for question in benchmark.questions) == 84
+    assert "doc-42.pdf" in benchmark.excluded_documents
+    for split in ("development", "final"):
+        represented = {
+            question.expected_document
+            for question in benchmark.questions
+            if question.split == split and question.answerable
+        }
+        assert represented == {f"doc-{index:02d}.pdf" for index in range(42)}
+
+    xlsx = tmp_path / "benchmark.xlsx"
+    write_benchmark_xlsx(xlsx, benchmark, documents_dir)
+    restored = benchmark_from_xlsx(xlsx)
+    assert restored.benchmark_version == "2.0"
+    assert restored.seed == 42
+    assert restored.excluded_documents == benchmark.excluded_documents
+    assert len(restored.questions) == 100
+
+
 def test_validation_detects_missing_documents_and_unapproved(tmp_path: Path):
     benchmark = valid_benchmark()
     benchmark.questions[0].status = "pending_review"
@@ -118,9 +176,31 @@ def test_recall_mrr_and_page_metrics():
     assert page_recall_at(records, 2) == 1
 
 
+def test_page_recall_requires_the_expected_document():
+    records = [
+        record(
+            retrieved_documents=["other.pdf"],
+            retrieval_results=[
+                {"file_name": "other.pdf", "page_start": 2, "page_end": 2}
+            ],
+            top_k=1,
+        )
+    ]
+    assert page_recall_at(records, 1) == 0
+
+
 @pytest.mark.parametrize(
     ("answer", "expected"),
-    [("Não encontrei essa informação no acervo.", True), ("A resposta é 42.", False)],
+    [
+        ("Não encontrei essa informação no acervo.", True),
+        ("Com base nas fontes consultadas, não encontrei essa informação.", True),
+        ("A resposta é 42.", False),
+        (
+            "A resposta fundamentada está aqui e apresenta todos os fatos solicitados. "
+            "Em uma ressalva posterior, não encontrei informações adicionais.",
+            False,
+        ),
+    ],
 )
 def test_refusal_classification(answer: str, expected: bool):
     assert is_refusal(answer) is expected

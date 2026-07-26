@@ -82,6 +82,7 @@ class RAGService:
         retriever: Retriever,
         llm_provider: LanguageModelProvider,
         retrieval_top_k: int = 8,
+        candidate_pool_size: int | None = None,
         min_similarity: float = 0.35,
         max_context_chars: int = 12_000,
         max_question_chars: int = 2_000,
@@ -89,7 +90,12 @@ class RAGService:
         llm_timeout_seconds: float = 30.0,
         metrics_details_enabled: bool = False,
     ) -> None:
-        if retrieval_top_k < 1 or max_context_chars < 1 or max_question_chars < 1:
+        if (
+            retrieval_top_k < 1
+            or (candidate_pool_size is not None and candidate_pool_size < 1)
+            or max_context_chars < 1
+            or max_question_chars < 1
+        ):
             raise ValueError("Limites do RAG devem ser maiores que zero")
         if not -1.0 <= min_similarity <= 1.0:
             raise ValueError("min_similarity deve estar entre -1 e 1")
@@ -98,6 +104,10 @@ class RAGService:
         self.retriever = retriever
         self.llm_provider = llm_provider
         self.retrieval_top_k = retrieval_top_k
+        self.candidate_pool_size = max(
+            retrieval_top_k,
+            candidate_pool_size or retrieval_top_k,
+        )
         self.min_similarity = min_similarity
         self.max_context_chars = max_context_chars
         self.max_question_chars = max_question_chars
@@ -131,14 +141,14 @@ class RAGService:
             if callable(timed_search):
                 retrieved, search_timings = timed_search(
                     question,
-                    top_k=effective_top_k,
+                    top_k=max(effective_top_k, self.candidate_pool_size),
                     document_id=document_id,
                     title=title,
                 )
             else:
                 retrieved = self.retriever.search(
                     question,
-                    top_k=effective_top_k,
+                    top_k=max(effective_top_k, self.candidate_pool_size),
                     document_id=document_id,
                     title=title,
                 )
@@ -160,7 +170,7 @@ class RAGService:
         retrieval_time = self._elapsed_ms(retrieval_started)
 
         context_started = time.perf_counter()
-        selected = self._select_results(retrieved, question)
+        selected = self._select_results(retrieved, question)[:effective_top_k]
         context, selected = self._build_context(selected)
         if not selected:
             context_preparation_time = self._elapsed_ms(context_started)

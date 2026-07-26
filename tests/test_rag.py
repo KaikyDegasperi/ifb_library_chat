@@ -142,6 +142,26 @@ def test_answer_uses_retrieved_context_and_returns_sources() -> None:
     assert evaluation.context_chars > 0
 
 
+def test_candidate_pool_is_reranked_before_context_selection() -> None:
+    retriever = FakeRetriever(
+        results=[
+            result("Trecho apenas semanticamente próximo.", chunk_id="semantic", similarity=0.9),
+            result("A discalculia afeta a aprendizagem.", chunk_id="lexical", similarity=0.7),
+        ]
+    )
+    service = RAGService(
+        retriever,
+        FakeLLM(),
+        retrieval_top_k=1,
+        candidate_pool_size=24,
+    )
+
+    response = service.answer("Como a discalculia afeta a aprendizagem?")
+
+    assert retriever.calls[0]["top_k"] == 24
+    assert [source.chunk_id for source in response.sources] == ["lexical"]
+
+
 @pytest.mark.parametrize("question", ["", "   ", "\n"])
 def test_empty_question_is_rejected(question: str) -> None:
     with pytest.raises(InvalidQuestionError, match="não pode ser vazia"):

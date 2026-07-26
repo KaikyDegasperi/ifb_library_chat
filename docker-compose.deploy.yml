@@ -1,0 +1,13 @@
+services:
+  api:
+    environment:
+      LLM_PROVIDER: openai
+      LLM_BASE_URL: https://api.openai.com/v1
+      LLM_MODEL: gpt-4o-mini
+      LLM_TIMEOUT_SECONDS: "60"
+    volumes:
+      - ./pdfs_ifb:/data/pdfs
+      - ./data/processed:/data/processed
+      - ./data/chroma:/data/chroma
+      - ./logs:/data/logs
+      - model_cache:/home/appuser/.cache
