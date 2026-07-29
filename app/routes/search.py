@@ -5,8 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.config import Settings
 from app.dependencies import provide_settings, provide_vector_service
+from app.rag.service import Retriever
 from app.schemas.search import SearchRequest, SearchResponse, SearchResultResponse
-from app.vectorstore.service import VectorIndexService
 
 router = APIRouter(tags=["busca"])
 logger = logging.getLogger(__name__)
@@ -15,11 +15,11 @@ logger = logging.getLogger(__name__)
 @router.post(
     "/search",
     response_model=SearchResponse,
-    summary="Executa somente a recuperação semântica",
+    summary="Executa somente a recuperação configurada",
 )
 async def search(
     request: SearchRequest,
-    service: VectorIndexService = Depends(provide_vector_service),
+    service: Retriever = Depends(provide_vector_service),
     settings: Settings = Depends(provide_settings),
 ) -> SearchResponse:
     if len(request.query) > settings.search_max_query_chars:
@@ -54,7 +54,7 @@ async def search(
             "Consulta inválida",
         ) from exc
     except Exception as exc:
-        logger.error("Busca vetorial indisponível: %s", type(exc).__name__)
+        logger.error("Recuperação indisponível: %s", type(exc).__name__)
         raise HTTPException(
             status.HTTP_503_SERVICE_UNAVAILABLE,
             "Busca temporariamente indisponível",

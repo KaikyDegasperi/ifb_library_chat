@@ -4,7 +4,7 @@ Base da API para o chatbot de consulta aos Trabalhos de Conclusão de Curso da
 Licenciatura em Matemática do IFB Campus Estrutural.
 
 O projeto oferece configuração local reproduzível, logging, ingestão estruturada
-com Docling, indexação persistente no ChromaDB, busca semântica, pipeline RAG e
+com Docling, indexação persistente no ChromaDB, recuperação lexical BM25, pipeline RAG e
 uma interface Streamlit para consulta e administração do acervo.
 
 ## Requisitos
@@ -197,6 +197,9 @@ arquivo, URL ou log. Um token negado é descartado da sessão.
 | `CHROMA_COLLECTION` | `ifb_tcc_matematica` | Nome da coleção |
 | `EMBEDDING_MODEL` | `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` | Modelo multilíngue configurado |
 | `EMBEDDING_BATCH_SIZE` | `32` | Textos processados por lote de embeddings |
+| `RETRIEVAL_PROVIDER` | `bm25` | Recuperador principal (`bm25` ou `dense`) |
+| `BM25_K1` | `1.5` | Saturação da frequência de termos no BM25 |
+| `BM25_B` | `0.75` | Normalização por tamanho do chunk no BM25 |
 | `SEARCH_TOP_K` | `5` | Quantidade padrão de resultados da busca |
 | `LLM_PROVIDER` | `none` | Provedor configurado |
 | `LLM_BASE_URL` | vazio | URL de provedor compatível |
@@ -390,7 +393,7 @@ comando termina com código 1. Erros de entrada terminam com código 2.
 ## Pipeline RAG
 
 O serviço RAG é independente da API HTTP. Ele valida a pergunta, consulta o
-ChromaDB, descarta resultados abaixo do limiar, remove trechos quase idênticos,
+recuperador configurado, descarta resultados abaixo do limiar, remove trechos quase idênticos,
 limita o contexto e chama o provedor de linguagem configurado.
 
 Configuração de um endpoint compatível com a API de chat da OpenAI:

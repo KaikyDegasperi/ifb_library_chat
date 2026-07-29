@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     )
     embedding_batch_size: int = Field(default=32, ge=1)
     search_top_k: int = Field(default=5, ge=1)
+    retrieval_provider: str = "bm25"
+    bm25_k1: float = Field(default=1.5, gt=0)
+    bm25_b: float = Field(default=0.75, ge=0, le=1)
 
     llm_provider: str = "none"
     llm_base_url: str | None = None
@@ -79,6 +82,14 @@ class Settings(BaseSettings):
     def normalize_cors_origins(cls, origins: list[str]) -> list[str]:
         normalized = [origin.strip().rstrip("/") for origin in origins if origin.strip()]
         return list(dict.fromkeys(normalized))
+
+    @field_validator("retrieval_provider")
+    @classmethod
+    def validate_retrieval_provider(cls, provider: str) -> str:
+        normalized = provider.strip().lower()
+        if normalized not in {"bm25", "dense"}:
+            raise ValueError("RETRIEVAL_PROVIDER deve ser bm25 ou dense")
+        return normalized
 
     @model_validator(mode="after")
     def validate_production_security(self) -> "Settings":

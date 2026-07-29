@@ -16,6 +16,7 @@ from evaluation.report import generate_reports
 from evaluation.run import execute_question, is_refusal, run_benchmark
 from evaluation.validate_benchmark import validate_benchmark
 from frontend.api_client import APIClientError, APITimeoutError
+from evaluation.bm25_baseline import BM25Index, CorpusChunk, summarize, tokenize
 
 
 def question(index: int, *, answerable: bool = True, split: str | None = None) -> BenchmarkQuestion:
@@ -187,6 +188,42 @@ def test_page_recall_requires_the_expected_document():
         )
     ]
     assert page_recall_at(records, 1) == 0
+
+
+def test_bm25_baseline_ranks_lexical_match_first():
+    chunks = [
+        CorpusChunk("1", "geometria plana e triângulos", "geometria.pdf", 3, 3, None, 0),
+        CorpusChunk("2", "estatística e análise de dados", "estatistica.pdf", 7, 7, None, 0),
+    ]
+    results = BM25Index(chunks).search("análise estatística dos dados", top_k=2)
+    assert results[0]["file_name"] == "estatistica.pdf"
+    assert tokenize("Educação MATEMÁTICA") == ["educação", "matemática"]
+
+
+def test_bm25_summary_uses_only_answerable_questions():
+    records = [
+        {
+            "answerable": True,
+            "first_relevant_rank": 2,
+            "reciprocal_rank": 0.5,
+            "page_exact": True,
+            "page_tolerance_1": True,
+            "retrieval_time_ms": 2.0,
+        },
+        {
+            "answerable": False,
+            "first_relevant_rank": None,
+            "reciprocal_rank": 0.0,
+            "page_exact": False,
+            "page_tolerance_1": False,
+            "retrieval_time_ms": 1.0,
+        },
+    ]
+    metrics = summarize(records, top_k=8)
+    assert metrics["answerable_count"] == 1
+    assert metrics["hit_rate_at_1"] == 0
+    assert metrics["hit_rate_at_8"] == 1
+    assert metrics["mrr"] == 0.5
 
 
 @pytest.mark.parametrize(

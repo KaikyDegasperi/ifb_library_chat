@@ -46,6 +46,19 @@ def test_metrics_details_can_be_enabled_by_environment(monkeypatch) -> None:
     assert settings.metrics_details_enabled is True
 
 
+def test_bm25_is_the_default_retrieval_provider() -> None:
+    settings = Settings(_env_file=None)
+
+    assert settings.retrieval_provider == "bm25"
+    assert settings.bm25_k1 == 1.5
+    assert settings.bm25_b == 0.75
+
+
+def test_retrieval_provider_is_validated() -> None:
+    with pytest.raises(ValidationError, match="RETRIEVAL_PROVIDER"):
+        Settings(retrieval_provider="unsupported", _env_file=None)
+
+
 def test_docs_are_disabled_by_default_only_in_production() -> None:
     development = Settings(app_env="development", _env_file=None)
     production = Settings(

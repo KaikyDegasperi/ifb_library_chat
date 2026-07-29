@@ -21,11 +21,13 @@ O diagnóstico identificou um PDF sem conteúdo suficiente após extração/OCR.
 permanece contabilizado no corpus, mas é excluído da avaliação de respostas com motivo
 registrado. O benchmark contém 100 perguntas:
 
-- desenvolvimento: 42 perguntas respondíveis (uma por TCC avaliável) e 8 sem resposta;
-- teste final: 42 perguntas respondíveis (uma nova por TCC avaliável) e 8 sem resposta;
-- total: 84 perguntas respondíveis e 16 sem resposta no acervo.
+- desenvolvimento: 42 perguntas com resposta no acervo (uma por TCC avaliável) e 8
+  sem resposta;
+- teste final: 42 perguntas com resposta no acervo (uma nova por TCC avaliável) e 8
+  sem resposta;
+- total: 84 perguntas com resposta no acervo e 16 sem resposta no acervo.
 
-Cada pergunta respondível registra resposta esperada, fatos obrigatórios, PDF,
+Cada pergunta com resposta no acervo registra resposta esperada, fatos obrigatórios, PDF,
 página(s), trecho de evidência, seção, tipo e dificuldade. Os candidatos gerados
 automaticamente permanecem `pending_review`. Um revisor deve abrir o PDF, conferir a
 evidência e a numeração real das páginas, editar a pergunta e somente então marcar
@@ -39,6 +41,9 @@ evidência e a numeração real das páginas, editar a pergunta e somente então
   resultados.
 - Page Recall@k: proporção em que ao menos uma página esperada foi recuperada.
 - MRR: valor médio do inverso da posição do primeiro documento correto.
+- Baseline lexical BM25: comparação com os mesmos chunks, perguntas e valor de `k`
+  usados pelo recuperador denso. A comparação deve relatar as métricas dos dois
+  métodos lado a lado, separadamente nos conjuntos de desenvolvimento e final.
 
 ### Geração (avaliação humana cega, escala 0–2)
 
@@ -54,7 +59,10 @@ ser resolvidas por consenso, sem alterar as perguntas finais.
 ### Segurança e operação
 
 - taxa de recusa correta nas 16 perguntas sem resposta;
-- taxa de recusa indevida nas 84 perguntas respondíveis;
+- taxa de recusa indevida nas 84 perguntas com resposta no acervo;
+- baseline de decisão “responder sempre”: acurácia de 84% em cada conjunto, recall
+  de 100% para perguntas com resposta e especificidade de 0% para perguntas sem
+  resposta;
 - média, mediana e percentil 95 da latência;
 - quantidade de erros e timeouts.
 
@@ -81,6 +89,9 @@ python -m evaluation.run --benchmark evaluation/benchmark/benchmark_approved.jso
 python -m evaluation.freeze_config
 python -m evaluation.run --benchmark evaluation/benchmark/benchmark_approved.json --split final --confirm-final --output evaluation/results/final_run.json
 python -m evaluation.report --run evaluation/results/final_run.json --output-dir evaluation/results/final
+python -m evaluation.bm25_baseline \
+  --dense-run evaluation/results/complete/development_run.json \
+  --dense-run evaluation/results/complete/final_run.json
 ```
 
 ## Interpretação

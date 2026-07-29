@@ -60,6 +60,11 @@ def build_health(settings: Settings) -> dict[str, Any]:
     essentials_available = chroma["available"] and embeddings["available"]
     return {
         "status": "ok" if essentials_available else "degraded",
+        "retrieval": {
+            "available": True,
+            "provider": settings.retrieval_provider,
+            "detail": "configured",
+        },
         "chroma": chroma,
         "embeddings": embeddings,
         "llm": llm,

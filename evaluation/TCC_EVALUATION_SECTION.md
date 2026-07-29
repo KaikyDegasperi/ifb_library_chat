@@ -23,10 +23,12 @@ Um dos 43 PDFs não apresentou conteúdo textual suficiente mesmo após a etapa 
 produzindo apenas informações de capa e aprovação. Esse documento foi mantido no
 diagnóstico do corpus, mas excluído, com justificativa registrada, da avaliação de
 respostas. Foi construído um benchmark com 100 perguntas. Cada um dos 42 TCCs
-avaliáveis foi representado por uma pergunta respondível no conjunto de desenvolvimento e por outra pergunta
-respondível, baseada em evidência diferente, no conjunto final. Foram acrescentadas
+avaliáveis foi representado por uma pergunta com resposta no acervo no conjunto de
+desenvolvimento e por outra pergunta com resposta no acervo, baseada em evidência
+diferente, no conjunto final. Foram acrescentadas
 oito perguntas sem resposta no acervo em cada conjunto, totalizando 50 casos de
-desenvolvimento e 50 casos finais. Para cada pergunta respondível foram registrados o
+desenvolvimento e 50 casos finais. Para cada pergunta com resposta no acervo foram
+registrados o
 PDF esperado, as páginas, o trecho de evidência, os fatos obrigatórios, o tipo da
 pergunta e o grau de dificuldade. Todos os candidatos foram conferidos manualmente no
 documento original antes da aprovação.
@@ -58,7 +60,8 @@ Esses valores indicam [INTERPRETAÇÃO LIMITADA AOS DADOS].
 As médias das notas humanas foram [VALOR]/2 para correção, [VALOR]/2 para fidelidade,
 [VALOR]/2 para completude e [VALOR]/2 para qualidade das citações. A taxa de recusa
 correta foi [VALOR], enquanto a recusa indevida ocorreu em [VALOR] das perguntas
-respondíveis. O tempo mediano foi [VALOR] ms e o percentil 95 foi [VALOR] ms. Foram
+com resposta no acervo. O tempo mediano foi [VALOR] ms e o percentil 95 foi [VALOR]
+ms. Foram
 observados [N] erros e [N] timeouts.
 
 Os resultados devem ser interpretados no escopo do corpus fechado e das perguntas

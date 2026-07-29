@@ -143,6 +143,29 @@ class FakeVectorService:
         ]
 
 
+class FakeSecondaryIndexer:
+    def __init__(self) -> None:
+        self.indexed: list[str] = []
+        self.deleted: list[str] = []
+
+    def index(self, input_path: Path | str) -> IndexReport:
+        self.indexed.append(str(input_path))
+        return IndexReport(
+            documents_indexed=1,
+            documents_skipped=0,
+            documents_failed=0,
+            chunks_indexed=2,
+            chunks_removed=0,
+            elapsed_seconds=0.0,
+            collection_count=2,
+            results=[],
+        )
+
+    def delete(self, document_id: str) -> int:
+        self.deleted.append(document_id)
+        return 2
+
+
 class FakeRAGService:
     def __init__(self) -> None:
         self.calls: list[dict[str, object]] = []
@@ -206,10 +229,12 @@ def request_to(
 def api_services(tmp_path: Path):
     repository = FakeRepository()
     vector = FakeVectorService()
+    secondary = FakeSecondaryIndexer()
     document_service = DocumentService(
         repository=repository,
         ingestion_factory=FakeIngestor,
         indexer=vector,
+        secondary_indexer=secondary,
         documents_dir=tmp_path / "documents",
         max_upload_size_bytes=32,
     )
@@ -242,6 +267,7 @@ def api_services(tmp_path: Path):
     yield SimpleNamespace(
         repository=repository,
         vector=vector,
+        secondary=secondary,
         rag=rag,
         documents_dir=settings.documents_dir,
     )
@@ -258,6 +284,7 @@ def test_document_endpoints(api_services) -> None:
     assert listed.json()[0]["chunk_count"] == 2
     assert found.status_code == 200
     assert found.json()["file_name"] == "teste.pdf"
+    assert api_services.secondary.deleted == ["doc-1"]
     assert found.json()["author"] == "Autora de Teste"
     assert found.json()["year"] == 2026
     assert "file_path" not in listed.json()[0]

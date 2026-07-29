@@ -1,4 +1,4 @@
-"""CLI para consultas semânticas de teste."""
+"""CLI para consultas de teste com o recuperador configurado."""
 
 import argparse
 import json
@@ -7,12 +7,13 @@ from pathlib import Path
 
 from app.config import get_settings
 from app.logging_config import configure_logging
+from app.retrieval import BM25IndexService
 from app.vectorstore import SentenceTransformerProvider, VectorIndexService
 
 
 def build_parser() -> argparse.ArgumentParser:
     settings = get_settings()
-    parser = argparse.ArgumentParser(description="Consulta o índice vetorial")
+    parser = argparse.ArgumentParser(description="Consulta o índice de recuperação")
     parser.add_argument("query")
     parser.add_argument("--top-k", type=int, default=settings.search_top_k)
     parser.add_argument("--document-id")
@@ -20,6 +21,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--chroma-dir", type=Path, default=settings.chroma_dir)
     parser.add_argument("--collection", default=settings.chroma_collection)
     parser.add_argument("--model", default=settings.embedding_model)
+    parser.add_argument(
+        "--provider",
+        choices=("bm25", "dense"),
+        default=settings.retrieval_provider,
+    )
+    parser.add_argument("--processed-dir", type=Path, default=settings.processed_dir)
     return parser
 
 
@@ -27,12 +34,23 @@ def main() -> int:
     settings = get_settings()
     args = build_parser().parse_args()
     configure_logging(settings.log_level, settings.logs_dir)
-    provider = SentenceTransformerProvider(args.model, settings.embedding_batch_size)
-    service = VectorIndexService(
-        persist_dir=args.chroma_dir,
-        collection_name=args.collection,
-        embedding_provider=provider,
-    )
+    if args.provider == "bm25":
+        service = BM25IndexService(
+            args.processed_dir,
+            k1=settings.bm25_k1,
+            b=settings.bm25_b,
+        )
+        service.index(args.processed_dir)
+    else:
+        provider = SentenceTransformerProvider(
+            args.model,
+            settings.embedding_batch_size,
+        )
+        service = VectorIndexService(
+            persist_dir=args.chroma_dir,
+            collection_name=args.collection,
+            embedding_provider=provider,
+        )
     started = time.perf_counter()
     results = service.search(
         query=args.query,
@@ -44,6 +62,7 @@ def main() -> int:
         json.dumps(
             {
                 "query": args.query,
+                "provider": args.provider,
                 "elapsed_seconds": round(time.perf_counter() - started, 4),
                 "results": [item.model_dump(mode="json") for item in results],
             },

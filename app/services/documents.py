@@ -22,6 +22,10 @@ class Indexer(Protocol):
     def index(self, input_path: Path | str) -> IndexReport: ...
 
 
+class SecondaryIndexer(Indexer, Protocol):
+    def delete(self, document_id: str) -> int: ...
+
+
 class DocumentServiceError(Exception):
     pass
 
@@ -57,10 +61,12 @@ class DocumentService:
         documents_dir: Path,
         max_upload_size_bytes: int,
         max_upload_filename_chars: int = 180,
+        secondary_indexer: SecondaryIndexer | None = None,
     ) -> None:
         self.repository = repository
         self.ingestion_factory = ingestion_factory
         self.indexer = indexer
+        self.secondary_indexer = secondary_indexer
         self.documents_dir = documents_dir.resolve()
         self.max_upload_size_bytes = max_upload_size_bytes
         self.max_upload_filename_chars = max_upload_filename_chars
@@ -78,6 +84,8 @@ class DocumentService:
         deleted = self.repository.delete(document_id)
         if not deleted:
             raise DocumentNotFoundError("Documento não encontrado")
+        if self.secondary_indexer is not None:
+            self.secondary_indexer.delete(document_id)
         return deleted
 
     def ingest_upload(
@@ -171,6 +179,14 @@ class DocumentService:
         index_report = self.indexer.index(ingestion_result.output_file)
         if index_report.documents_failed:
             raise DocumentProcessingError("Não foi possível indexar o PDF")
+        if self.secondary_indexer is not None:
+            secondary_report = self.secondary_indexer.index(
+                ingestion_result.output_file
+            )
+            if secondary_report.documents_failed:
+                raise DocumentProcessingError(
+                    "Não foi possível atualizar o índice lexical"
+                )
         if not ingestion_result.document_id:
             raise DocumentProcessingError("A ingestão não produziu document_id")
         return self.get_document(ingestion_result.document_id)

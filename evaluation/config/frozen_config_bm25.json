@@ -1,0 +1,21 @@
+{
+  "status": "frozen",
+  "chunk_size": 500,
+  "chunk_overlap": 50,
+  "top_k": 8,
+  "candidate_pool_size": 24,
+  "similarity_threshold": 0.35,
+  "retrieval_provider": "bm25",
+  "bm25_k1": 1.5,
+  "bm25_b": 0.75,
+  "embedding_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "generator_model": "gpt-4o-mini",
+  "prompt_version": "sha256:a624d1c16f35bebf",
+  "llm_timeout_seconds": 60.0,
+  "max_context_chars": 12000,
+  "duplicate_threshold": 0.92,
+  "benchmark_version": "2.0",
+  "seed": 42,
+  "code_revision": "a481a6b58d123826cda63ca7ec833849e56cd5f1",
+  "frozen_at": "2026-07-29T23:02:07.373894+00:00"
+}

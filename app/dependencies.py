@@ -9,7 +9,8 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from app.config import Settings, get_settings
 from app.ingestion.service import IngestionService
 from app.rag.factory import create_rag_service
-from app.rag.service import RAGService
+from app.rag.service import RAGService, Retriever
+from app.retrieval import BM25IndexService
 from app.repositories.documents import ChromaDocumentRepository
 from app.services.documents import DocumentService
 from app.vectorstore.embeddings import SentenceTransformerProvider
@@ -52,7 +53,7 @@ async def require_admin(
 
 
 @lru_cache
-def _vector_service() -> VectorIndexService:
+def _dense_service() -> VectorIndexService:
     settings = get_settings()
     return VectorIndexService(
         persist_dir=settings.chroma_dir,
@@ -65,14 +66,40 @@ def _vector_service() -> VectorIndexService:
     )
 
 
-async def provide_vector_service() -> VectorIndexService:
-    return _vector_service()
+@lru_cache
+def _bm25_service() -> BM25IndexService:
+    settings = get_settings()
+    service = BM25IndexService(
+        settings.processed_dir,
+        k1=settings.bm25_k1,
+        b=settings.bm25_b,
+    )
+    repository = ChromaDocumentRepository(_dense_service().collection)
+    active_document_ids = {item.document_id for item in repository.list()}
+    service.index(
+        settings.processed_dir,
+        allowed_document_ids=active_document_ids,
+    )
+    return service
+
+
+@lru_cache
+def _retrieval_service() -> Retriever:
+    settings = get_settings()
+    if settings.retrieval_provider == "bm25":
+        return _bm25_service()
+    return _dense_service()
+
+
+async def provide_vector_service() -> Retriever:
+    """Mantém o nome público antigo, retornando o recuperador configurado."""
+    return _retrieval_service()
 
 
 @lru_cache
 def _document_service() -> DocumentService:
     settings = get_settings()
-    vector_service = _vector_service()
+    vector_service = _dense_service()
     repository = ChromaDocumentRepository(vector_service.collection)
     return DocumentService(
         repository=repository,
@@ -84,6 +111,7 @@ def _document_service() -> DocumentService:
             embedding_model=settings.embedding_model,
         ),
         indexer=vector_service,
+        secondary_indexer=_bm25_service(),
         documents_dir=settings.documents_dir,
         max_upload_size_bytes=settings.max_upload_size_bytes,
         max_upload_filename_chars=settings.max_upload_filename_chars,
@@ -96,7 +124,10 @@ async def provide_document_service() -> DocumentService:
 
 @lru_cache
 def _rag_service() -> RAGService:
-    return create_rag_service(get_settings())
+    return create_rag_service(
+        get_settings(),
+        retriever=_retrieval_service(),
+    )
 
 
 async def provide_rag_service() -> RAGService:

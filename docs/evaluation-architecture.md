@@ -7,7 +7,7 @@ O projeto usa Python 3.14, FastAPI no backend e Streamlit como camada de apresen
 O fluxo de consulta é:
 
 ```text
-POST /chat → RAGService → busca ChromaDB → filtro/remoção de duplicatas
+POST /chat → RAGService → BM25 (padrão) ou busca densa → filtro/remoção de duplicatas
            → montagem do contexto → provedor de LLM → resposta e citações
 ```
 
@@ -19,7 +19,13 @@ O payload de `POST /chat` é `{"question": "...", "top_k": 5, "document_id": nul
 
 `app/ingestion/service.py` usa Docling para converter os PDFs, extrai metadados acadêmicos e grava um documento Docling e uma lista de chunks em `data/processed`. `app/ingestion/chunking.py` usa o `HybridChunker`, respeita seções e aplica fallback por palavras. Os padrões atuais são chunk size 500 e overlap 50.
 
-Os embeddings são gerados por `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`. `app/vectorstore/service.py` persiste uma coleção ChromaDB em `data/chroma`, com distância cosseno. Não há banco SQL: o catálogo de documentos é derivado dos metadados no ChromaDB; o manifesto e os artefatos estruturados usam JSON.
+O recuperador principal é o BM25, selecionado pela comparação experimental. Ele é
+construído a partir dos mesmos chunks processados e pode ser trocado pelo recuperador
+denso com `RETRIEVAL_PROVIDER=dense`. Os embeddings são gerados por
+`sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`, e
+`app/vectorstore/service.py` mantém a coleção ChromaDB usada pelo método denso e pelo
+catálogo. Não há banco SQL: o catálogo de documentos é derivado dos metadados no
+ChromaDB; o manifesto e os artefatos estruturados usam JSON.
 
 Os parâmetros padrão são:
 

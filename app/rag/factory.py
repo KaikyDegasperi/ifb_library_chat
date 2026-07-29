@@ -7,7 +7,8 @@ from app.rag.llm import (
     OpenAICompatibleProvider,
     UnavailableLLMProvider,
 )
-from app.rag.service import RAGService
+from app.rag.service import RAGService, Retriever
+from app.retrieval import BM25IndexService
 from app.vectorstore import SentenceTransformerProvider, VectorIndexService
 
 
@@ -38,17 +39,29 @@ def create_llm_provider(settings: Settings) -> LanguageModelProvider:
     raise ValueError(f"Provedor de LLM não suportado: {settings.llm_provider}")
 
 
-def create_rag_service(settings: Settings) -> RAGService:
-    embedding_provider = SentenceTransformerProvider(
-        model_name=settings.embedding_model,
-        batch_size=settings.embedding_batch_size,
-    )
-    retriever = VectorIndexService(
-        persist_dir=settings.chroma_dir,
-        collection_name=settings.chroma_collection,
-        embedding_provider=embedding_provider,
-        batch_size=settings.embedding_batch_size,
-    )
+def create_rag_service(
+    settings: Settings,
+    retriever: Retriever | None = None,
+) -> RAGService:
+    if retriever is None and settings.retrieval_provider == "bm25":
+        bm25 = BM25IndexService(
+            settings.processed_dir,
+            k1=settings.bm25_k1,
+            b=settings.bm25_b,
+        )
+        bm25.index(settings.processed_dir)
+        retriever = bm25
+    elif retriever is None:
+        embedding_provider = SentenceTransformerProvider(
+            model_name=settings.embedding_model,
+            batch_size=settings.embedding_batch_size,
+        )
+        retriever = VectorIndexService(
+            persist_dir=settings.chroma_dir,
+            collection_name=settings.chroma_collection,
+            embedding_provider=embedding_provider,
+            batch_size=settings.embedding_batch_size,
+        )
     return RAGService(
         retriever=retriever,
         llm_provider=create_llm_provider(settings),
