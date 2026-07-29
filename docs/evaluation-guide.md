@@ -24,17 +24,24 @@ São criados `corpus_diagnostics.json`, `.csv` e `.html` em `evaluation/results`
 
 ## 3. Geração assistida
 
-Os PDFs devem ter sido ingeridos pelo Docling. Gere os 50 candidatos de forma reproduzível:
+Os PDFs devem ter sido ingeridos pelo Docling. Para reproduzir o benchmark oficial de
+100 perguntas, use o modo de corpus completo:
 
 ```bash
-uv run python -m evaluation.generate_benchmark --questions 50 --unanswerable-ratio 0.20 --seed 42
+uv run python -m evaluation.generate_benchmark --full-corpus --seed 42
 ```
 
-O comando cria `benchmark_draft.json` e `benchmark_draft.xlsx`. Todos os itens começam como `pending_review`; respostas e evidências são propostas, não gabaritos validados.
+O comando cria `full_corpus_draft.json` e `full_corpus_draft.xlsx`. Todos os itens
+começam como `pending_review`; respostas e evidências são propostas, não gabaritos
+validados.
 
 ## 4. Revisão humana e aprovação
 
-Abra `evaluation/benchmark/benchmark_draft.xlsx`. Para cada linha, confira o PDF pelo caminho da última coluna e as páginas reais indicadas, edite pergunta, resposta e fatos, e defina `status` como `approved`, `rejected` ou `pending_review`. Perguntas respondíveis só podem ser aprovadas com documento, página e evidência verificáveis.
+Abra `evaluation/benchmark/full_corpus_draft.xlsx`. Para cada linha, confira o PDF pelo
+caminho da última coluna e as páginas reais indicadas, edite pergunta, resposta e
+fatos, e defina `status` como `approved`, `rejected` ou `pending_review`. Perguntas com
+resposta no acervo só podem ser aprovadas com documento, página e evidência
+verificáveis.
 
 Depois salve uma cópia e importe-a:
 
@@ -51,7 +58,9 @@ uv run python -m evaluation.validate_benchmark \
   --benchmark evaluation/benchmark/benchmark_approved.json
 ```
 
-Um benchmark válido precisa ter 50 itens aprovados, 40 respondíveis, 10 sem resposta e splits 25/25. Itens rejeitados devem ser corrigidos ou substituídos e revisados novamente.
+O benchmark oficial válido possui 100 itens aprovados: em cada divisão são 42
+perguntas com resposta no acervo e oito sem resposta no acervo. Itens rejeitados devem
+ser corrigidos ou substituídos e revisados novamente.
 
 ## 5. Desenvolvimento
 
@@ -128,8 +137,8 @@ uv run python -m evaluation.report \
 - Recall de página exige interseção entre páginas esperadas e recuperadas.
 - MRR premia o primeiro documento correto em posições mais altas.
 - Taxas de citação usam as fontes efetivamente apresentadas por `/chat`.
-- Recusa correta exige pergunta marcada como não respondível e resposta explicitamente negativa.
-- Recusa indevida é uma negativa em pergunta respondível.
+- Recusa correta exige pergunta marcada como sem resposta no acervo e resposta explicitamente negativa.
+- Recusa indevida é uma negativa em pergunta com resposta no acervo.
 - Resposta indevida é uma resposta não negativa a uma pergunta sem resposta.
 
 O score vetorial nunca é tratado como prova de correção. Resultados sem nota humana continuam sem nota; nenhuma avaliação automática substitui a revisão.

@@ -72,6 +72,13 @@ documentar o experimento no TCC.
 | `evaluation/results/complete/resultados_brutos.jsonl` | Consolidação auditável, uma pergunta por linha |
 | `evaluation/results/complete/resumo_metricas.csv` | Métricas gerais, de desenvolvimento e finais |
 | `evaluation/results/complete/experiment_manifest.json` | Hash do benchmark e metadados da consolidação |
+| `evaluation/config/frozen_config_bm25.json` | Configuração do BM25 integrado |
+| `evaluation/results/bm25_baseline/bm25_results.json` | Resultados BM25 por pergunta |
+| `evaluation/results/bm25_baseline/retrieval_comparison.csv` | Comparação BM25 versus denso |
+| `evaluation/RELATORIO_COMPLETO_REVISAO_METRICAS.md` | Texto final revisado para o TCC |
+
+Os arquivos de `evaluation/results/complete` registram a execução histórica densa.
+Eles são mantidos como evidência e não representam o recuperador BM25 integrado.
 
 ### 3.1 Gabarito aprovado
 
@@ -81,10 +88,10 @@ Esse arquivo contém 100 perguntas aprovadas:
 
 - 50 de desenvolvimento;
 - 50 de teste final;
-- 42 respondíveis e 8 não respondíveis em cada split;
-- 84 respondíveis e 16 não respondíveis no total.
+- 42 perguntas com resposta no acervo e 8 sem resposta no acervo em cada split;
+- 84 perguntas com resposta no acervo e 16 sem resposta no acervo no total.
 
-Para cada pergunta respondível são registrados:
+Para cada pergunta com resposta no acervo são registrados:
 
 - `id`;
 - `question`;
@@ -110,10 +117,10 @@ O SHA-256 registrado para esse benchmark é:
 
 O arquivo exclui justificadamente `Gabriela_Pinto_CEST.pdf` da avaliação de
 respostas, pois o processamento encontrou conteúdo insuficiente para elaborar
-duas perguntas verificáveis. Os outros 42 documentos possuem uma pergunta
-respondível em cada split.
+duas perguntas verificáveis. Os outros 42 documentos possuem uma pergunta com
+resposta no acervo em cada split.
 
-### 3.2 Configuração congelada
+### 3.2 Configuração congelada da execução histórica densa
 
 **Arquivo:** `evaluation/config/frozen_config.json`
 
@@ -133,6 +140,10 @@ Esse arquivo registra a configuração selecionada antes da execução final:
 | timeout do LLM | 60 segundos |
 | benchmark | versão 2.0 |
 | semente | 42 |
+
+A configuração atual selecionada após a comparação está registrada em
+`evaluation/config/frozen_config_bm25.json`, com `retrieval_provider=bm25`,
+`bm25_k1=1,5` e `bm25_b=0,75`.
 
 Também são registrados o hash do prompt, a revisão Git conhecida no momento do
 congelamento e a data UTC.
@@ -225,7 +236,7 @@ Registra:
 - data da consolidação;
 - SHA-256 do benchmark;
 - quantidade de perguntas;
-- quantidade de respondíveis e negativas;
+- quantidade de perguntas com resposta e sem resposta no acervo;
 - `top_k`;
 - pool de candidatos;
 - situação do juiz de qualidade.
@@ -333,11 +344,12 @@ não foi utilizado.
 |---|---|
 | `app/vectorstore/embeddings.py` | Carrega o modelo e normaliza embeddings |
 | `app/vectorstore/service.py` | Executa a consulta HNSW/cosseno no Chroma |
+| `app/retrieval/bm25.py` | Executa a recuperação lexical BM25 selecionada para o sistema final |
 | `app/rag/service.py` | Recupera 24 candidatos, reranqueia, filtra e monta o contexto |
 | `app/rag/prompts.py` | Define a obrigação de usar apenas o contexto e citar fontes |
 | `app/rag/llm.py` | Envia prompts ao provedor de linguagem |
 | `app/rag/factory.py` | Constrói recuperador, LLM e serviço RAG com a configuração |
-| `app/routes/search.py` | Expõe a busca vetorial usada nas métricas de recuperação |
+| `app/routes/search.py` | Expõe o recuperador configurado usado nas métricas de recuperação |
 | `app/routes/chat.py` | Expõe a resposta RAG usada nas métricas de recusa |
 | `frontend/api_client.py` | Cliente usado pelo executor para chamar a API |
 
@@ -478,7 +490,7 @@ Verifica:
 - persistência no Chroma;
 - ausência de duplicação;
 - substituição de versões antigas;
-- busca semântica;
+- busca densa e recuperação lexical BM25;
 - metadados e similaridade;
 - filtros;
 - medição de tempo.

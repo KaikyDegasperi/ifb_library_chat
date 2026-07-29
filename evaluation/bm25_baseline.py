@@ -405,6 +405,10 @@ resposta no acervo. O BM25 usa `k1={result['parameters']['k1']}` e
 foi acrescentado retrospectivamente, depois da avaliação original, e seus parâmetros
 convencionais não foram ajustados no conjunto final.
 
+Como o BM25 também superou o recuperador denso no conjunto de desenvolvimento, ele
+foi selecionado e integrado como recuperador principal do sistema. O método denso
+permanece disponível por configuração para reprodução da comparação.
+
 | Divisão | Método | Hit@1 | Hit@{top_k} | MRR | Página exata | Página ±1 | Latência média (ms) |
 |---|---|---:|---:|---:|---:|---:|---:|
 {table_rows}

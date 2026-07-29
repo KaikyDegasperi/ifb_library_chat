@@ -1,0 +1,52 @@
+% Tabelas finais revisadas conforme as orientações do professor.
+% O relatório histórico denso permanece em results/complete e não deve substituir
+% estas tabelas.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparação entre o baseline BM25 e o recuperador denso}
+\label{tab:comparacao-recuperadores}
+\begin{tabular}{llrrrrr}
+\hline
+Conjunto & Método & Hit@1 & Hit@8 & MRR & Página exata & Página $\pm 1$ \\
+\hline
+Desenvolvimento & BM25 & 88,10\% & 97,62\% & 0,917 & 85,71\% & 90,48\% \\
+Desenvolvimento & Denso & 76,19\% & 92,86\% & 0,818 & 71,43\% & 78,57\% \\
+Final & BM25 & 97,62\% & 100,00\% & 0,988 & 73,81\% & 76,19\% \\
+Final & Denso & 64,29\% & 83,33\% & 0,713 & 50,00\% & 52,38\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Matriz de confusão da decisão na execução histórica densa}
+\label{tab:matriz-confusao-decisao}
+\begin{tabular}{lrrr}
+\hline
+Situação real & Respondeu & Recusou & Total \\
+\hline
+Com resposta no acervo & 34 (VP) & 8 (FN) & 42 \\
+Sem resposta no acervo & 0 (FP) & 8 (VN) & 8 \\
+\hline
+Total & 34 & 16 & 50 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Síntese revisada das métricas de decisão}
+\label{tab:metricas-decisao-revisadas}
+\begin{tabular}{lll}
+\hline
+Métrica & Resultado & Interpretação \\
+\hline
+Recall & 80,95\% & 34 de 42 perguntas com resposta foram atendidas \\
+F1 observada & 89,47\% & Depende da precisão estimada com poucos negativos \\
+F1 de sensibilidade & 80,95\%--89,47\% & Cenários da amostra; não é intervalo de confiança \\
+Acurácia & 84,00\% & Igual ao baseline de responder sempre \\
+Falsos positivos & 0 em 8 & Evidência insuficiente para precisão perfeita \\
+\hline
+\end{tabular}
+\end{table}

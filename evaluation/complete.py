@@ -289,27 +289,52 @@ def _derived_record(
         record["sources"][index - 1]
         for index in supporting_citations & set(citations)
     ]
-    citation_document_correct = bool(
-        answerable and citation_support == 1 and supported_cited_sources
+    citation_document_correct = (
+        None
+        if answerable and citation_support is None
+        else bool(answerable and citation_support == 1 and supported_cited_sources)
     )
-    citation_page_exact = bool(
-        citation_document_correct
-        and any(
-            _same_document(source.get("file_name"), expected_document)
-            and bool(_pages(source) & set(expected_pages))
-            for source in supported_cited_sources
+    citation_page_exact = (
+        None
+        if answerable and citation_support is None
+        else bool(
+            citation_document_correct
+            and any(
+                _same_document(source.get("file_name"), expected_document)
+                and bool(_pages(source) & set(expected_pages))
+                for source in supported_cited_sources
+            )
         )
     )
-    citation_page_evidence = bool(citation_document_correct)
-    retrieval_evidence_valid = bool(answerable and supporting_results)
-    fully_correct = bool(
-        answerable
-        and not record.get("refused")
-        and factual == 1
-        and completeness == 1
-        and faithfulness == 1
-        and relevance == 1
-        and citation_support == 1
+    citation_page_evidence = (
+        None
+        if answerable and citation_support is None
+        else bool(citation_document_correct)
+    )
+    retrieval_evidence_valid = (
+        None
+        if answerable and judge is None
+        else bool(answerable and supporting_results)
+    )
+    quality_scores = (
+        factual,
+        completeness,
+        faithfulness,
+        relevance,
+        citation_support,
+    )
+    fully_correct = (
+        None
+        if answerable and any(score is None for score in quality_scores)
+        else bool(
+            answerable
+            and not record.get("refused")
+            and factual == 1
+            and completeness == 1
+            and faithfulness == 1
+            and relevance == 1
+            and citation_support == 1
+        )
     )
     ambiguous = bool((judge or {}).get("ambiguous"))
     deterministic_audit_sample = answerable and int(re.sub(r"\D", "", benchmark["id"]) or 0) % 5 == 0
@@ -540,10 +565,13 @@ def _write_documents(
     )
     report = f"""# Relatório de avaliação completa do RAG
 
+> **Configuração avaliada:** {metadata['retrieval_provider']}. Este artefato registra
+> uma execução específica e não deve ser atribuído a outro recuperador.
+
 ## Metodologia
 
 - Benchmark congelado: `{metadata['benchmark_sha256']}`.
-- Amostra: {metadata['question_count']} perguntas ({metadata['answerable_count']} respondíveis e {metadata['unanswerable_count']} negativas).
+- Amostra: {metadata['question_count']} perguntas ({metadata['answerable_count']} com resposta no acervo e {metadata['unanswerable_count']} sem resposta no acervo).
 - Execuções por pergunta: 1. Estabilidade entre repetições: não mensurável nesta execução principal.
 - Recuperação reportada: k={metadata['top_k']}; pool interno de candidatos={metadata['candidate_pool_size']}.
 - Página utilizada: página física do PDF (`page_start/page_end` do Chroma). A página impressa foi preservada separadamente quando disponível.
@@ -552,7 +580,7 @@ def _write_documents(
 
 ## Fórmulas
 
-- Hit Rate@k = perguntas com o documento esperado entre as k primeiras / perguntas respondíveis.
+- Hit Rate@k = perguntas com o documento esperado entre as k primeiras / perguntas com resposta no acervo.
 - RR = 1/posição do primeiro documento esperado; MRR = média dos RR.
 - Completude = fatos obrigatórios corretamente mencionados / fatos obrigatórios.
 - Resposta plenamente correta exige correção factual, completude 1, fidelidade 1, relevância 1, sustentação da citação 1 e ausência de recusa.
@@ -579,7 +607,7 @@ def _write_documents(
     )
     latex = """\\begin{table}[htbp]
 \\centering
-\\caption{Resultados da avaliação completa do chatbot RAG}
+\\caption{{Resultados da execução com {metadata['retrieval_provider']}}}
 \\label{tab:avaliacao-rag}
 \\begin{tabular}{lr}
 \\hline
@@ -588,6 +616,8 @@ Métrica & Resultado \\\\
 """ + latex_rows + "\n\\hline\n\\end{tabular}\n\\end{table}\n"
     (output_dir / "tabela_resultados_latex.tex").write_text(latex, encoding="utf-8")
     readme = f"""# Reprodução da avaliação
+
+Configuração registrada neste diretório: **{metadata['retrieval_provider']}**.
 
 Pré-requisitos: API ativa em `127.0.0.1:8000`, 43 PDFs processados, Chroma carregado e provedor LLM configurado.
 
@@ -677,6 +707,10 @@ def evaluate_complete(
         "unanswerable_count": sum(not row["answerable"] for row in rows),
         "top_k": settings.get("top_k"),
         "candidate_pool_size": settings.get("candidate_pool_size"),
+        "retrieval_provider": settings.get(
+            "retrieval_provider",
+            "recuperação densa (execução histórica)",
+        ),
         "judge_model": get_settings().llm_model if use_llm_judge else "não executado",
         "judge_prompt_sha256": hashlib.sha256((JUDGE_SYSTEM_PROMPT + JUDGE_USER_TEMPLATE).encode()).hexdigest(),
     }

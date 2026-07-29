@@ -249,7 +249,7 @@ def generate_benchmark(processed_dir: Path, questions: int, unanswerable_ratio: 
             unanswerable_reason=reason,
         ) for index, (question, reason) in enumerate(UNANSWERABLES[:unanswerable_count])
     ]
-    # Cada metade recebe 20 respondíveis e 5 não respondíveis.
+    # Cada metade recebe 20 perguntas com resposta e 5 sem resposta no acervo.
     ordered = answerables[:20] + unanswerables[:5] + answerables[20:] + unanswerables[5:]
     for index, item in enumerate(ordered, 1):
         item.id = f"Q{index:03d}"

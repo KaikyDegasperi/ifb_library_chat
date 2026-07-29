@@ -90,7 +90,9 @@ def write_benchmark_xlsx(path: Path, benchmark: Benchmark, documents_dir: Path) 
     guide.append(["Revisão humana obrigatória"])
     guide.append(["Confira o PDF e as páginas reais (base 1) antes de aprovar."])
     guide.append(["Edite os campos amarelos e use approved, rejected ou pending_review."])
-    guide.append(["Perguntas respondíveis sem fonte verificável não podem ser aprovadas."])
+    guide.append(
+        ["Perguntas com resposta no acervo exigem fonte verificável para aprovação."]
+    )
     workbook.save(path)
 
 

@@ -31,7 +31,9 @@ class BenchmarkQuestion(BaseModel):
     @model_validator(mode="after")
     def check_source_shape(self) -> "BenchmarkQuestion":
         if self.answerable and (not self.expected_document or not self.expected_pages):
-            raise ValueError("Pergunta respondível precisa de documento e página")
+            raise ValueError(
+                "Pergunta com resposta no acervo precisa de documento e página"
+            )
         if not self.answerable and (self.expected_document or self.expected_pages):
             raise ValueError("Pergunta sem resposta não pode ter fonte esperada")
         return self

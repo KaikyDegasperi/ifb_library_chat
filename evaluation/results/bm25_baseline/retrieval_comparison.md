@@ -7,6 +7,10 @@ resposta no acervo. O BM25 usa `k1=1.5` e
 foi acrescentado retrospectivamente, depois da avaliação original, e seus parâmetros
 convencionais não foram ajustados no conjunto final.
 
+Como o BM25 também superou o recuperador denso no conjunto de desenvolvimento, ele
+foi selecionado e integrado como recuperador principal do sistema. O método denso
+permanece disponível por configuração para reprodução da comparação.
+
 | Divisão | Método | Hit@1 | Hit@8 | MRR | Página exata | Página ±1 | Latência média (ms) |
 |---|---|---:|---:|---:|---:|---:|---:|
 | development | BM25 | 88.1% | 97.6% | 0.917 | 85.7% | 90.5% | 6.98 |

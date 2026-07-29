@@ -3,6 +3,8 @@ from pathlib import Path
 
 import pytest
 
+from evaluation.bm25_baseline import BM25Index, CorpusChunk, summarize, tokenize
+from evaluation.complete import _derived_record
 from evaluation.generate_benchmark import generate_benchmark, generate_corpus_benchmark
 from evaluation.io import (
     benchmark_from_xlsx,
@@ -16,7 +18,6 @@ from evaluation.report import generate_reports
 from evaluation.run import execute_question, is_refusal, run_benchmark
 from evaluation.validate_benchmark import validate_benchmark
 from frontend.api_client import APIClientError, APITimeoutError
-from evaluation.bm25_baseline import BM25Index, CorpusChunk, summarize, tokenize
 
 
 def question(index: int, *, answerable: bool = True, split: str | None = None) -> BenchmarkQuestion:
@@ -224,6 +225,23 @@ def test_bm25_summary_uses_only_answerable_questions():
     assert metrics["hit_rate_at_1"] == 0
     assert metrics["hit_rate_at_8"] == 1
     assert metrics["mrr"] == 0.5
+
+
+def test_missing_quality_judge_is_not_reported_as_zero():
+    benchmark = question(1).model_dump(mode="json")
+    derived = _derived_record(
+        benchmark,
+        record(),
+        judge=None,
+        raw_judge=None,
+        judge_error="Avaliação factual não executada",
+        repetition=1,
+    )
+
+    assert derived["factual_correct"] is None
+    assert derived["citation_document_correct"] is None
+    assert derived["citation_page_exact"] is None
+    assert derived["fully_correct"] is None
 
 
 @pytest.mark.parametrize(

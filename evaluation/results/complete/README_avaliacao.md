@@ -1,5 +1,9 @@
 # Reprodução da avaliação
 
+> Este diretório preserva a execução histórica com recuperação densa. Ele não
+> representa o BM25 atualmente integrado. Os arquivos JSON e CSV brutos não devem ser
+> editados, pois são evidências da execução original.
+
 Pré-requisitos: API ativa em `127.0.0.1:8000`, 43 PDFs processados, Chroma carregado e provedor LLM configurado.
 
 Benchmark congelado: `49440376b4b12c574d864e6162b63199e433e9bdcd06c469a507d70c7eb56486`.

@@ -8,7 +8,10 @@ factual, a fidelidade e a completude das respostas geradas não foram medidas ne
 etapa. Portanto, os resultados não devem ser interpretados como uma avaliação da
 qualidade textual ou factual das respostas finais.
 
-## Baseline de recuperação
+> Esta é uma versão resumida. Para o capítulo completo, use
+> `evaluation/RELATORIO_COMPLETO_REVISAO_METRICAS.md`.
+
+## Comparação e seleção do recuperador
 
 Para dar uma referência aos resultados do recuperador denso, foi implementado um
 baseline lexical BM25. Os dois métodos receberam as mesmas perguntas e operaram sobre
@@ -17,7 +20,9 @@ foi o método de ranqueamento. O BM25 utilizou os parâmetros convencionais `k1=
 `b=0,75`, definidos sem ajuste no conjunto final, e tokenização Unicode sem stemming
 ou remoção de stopwords. Como o baseline foi incorporado depois da avaliação
 original, a comparação tem caráter retrospectivo e não corresponde a uma hipótese
-confirmatória pré-registrada.
+confirmatória pré-registrada. Como o BM25 também foi superior no conjunto de
+desenvolvimento, ele foi selecionado e integrado como recuperador principal. O método
+denso foi preservado como opção de comparação.
 
 | Conjunto | Método | Hit@1 | Hit@8 | MRR | Página exata | Página ±1 |
 |---|---|---:|---:|---:|---:|---:|
@@ -41,7 +46,7 @@ para substituição ou para uma estratégia híbrida. Uma avaliação futura pod
 BM25 e embeddings, mas esse sistema híbrido deve ser tratado como nova configuração e
 avaliado sem reajuste sobre o conjunto final já utilizado.
 
-## Decisão de responder ou recusar
+## Decisão de responder ou recusar na execução histórica densa
 
 No conjunto final, o sistema respondeu a 34 das 42 perguntas com resposta no acervo e
 recusou corretamente as oito perguntas sem resposta. Isso corresponde a recall de
@@ -52,14 +57,14 @@ em oito observações ainda é compatível, de modo aproximado, com uma taxa rea
 falso positivo observado em oito casos”, e não como evidência de precisão perfeita em
 uso real.
 
-A precisão observada foi de 100% e a F1 observada foi de 89,47%, mas ambas dependem do
-pequeno número de perguntas sem resposta. Se as oito perguntas negativas da amostra
-fossem falsos positivos, mantendo-se os demais resultados, a precisão e a F1 seriam
-80,95%. Assim, a F1 pode ser apresentada como uma análise de sensibilidade entre
-80,95% e 89,47% dentro dos resultados possíveis desta amostra, sem afirmar que essa
-faixa constitui um intervalo de confiança para o uso real. A prevalência de perguntas
-com e sem resposta em uso corrente também pode ser diferente da proporção fixada no
-benchmark.
+O cálculo pontual, condicionado à ausência de falso positivo, produz F1 de 89,47%,
+mas esse resumo depende da precisão estimada com poucos casos negativos. Se as oito
+perguntas negativas da amostra fossem falsos positivos, mantendo-se os demais
+resultados, a precisão e a F1 seriam 80,95%. Assim, a F1 pode ser apresentada como uma
+análise de sensibilidade entre 80,95% e 89,47% dentro dos cenários desta amostra, sem
+afirmar que essa faixa constitui um intervalo de confiança para o uso real. A
+prevalência de perguntas com e sem resposta em uso corrente também pode ser diferente
+da proporção fixada no benchmark.
 
 A acurácia observada foi de 84% (42/50). Esse valor é igual ao baseline trivial que
 responde a todas as perguntas, pois 42 das 50 perguntas têm resposta no acervo.
