@@ -8,17 +8,19 @@ O fluxo de consulta é:
 
 ```text
 POST /chat → RAGService → BM25 → pool de 24 candidatos → seleção heurística
-           → filtro/deduplicação → contexto top-8 → LLM → resposta e fontes
+           → filtro/deduplicação → 6 âncoras + 2 promoções → contexto top-8
+           → LLM → resposta e fontes citadas
 ```
 
 O payload mínimo de `POST /chat` é `{"question": "..."}`. Quando `top_k` é
 omitido, a API usa `RAG_RETRIEVAL_TOP_K=8`; um override explícito continua aceito.
-A resposta pública contém `answer`, `sources`, `retrieval_time_ms` e
-`generation_time_ms`.
+A resposta contém `answer`, `sources`, `retrieved_context`, `selection_trace`,
+`retrieval_time_ms` e `generation_time_ms`. `sources` inclui somente as fontes com
+citação inline válida; `retrieved_context` e `selection_trace` são diagnósticos.
 
 `POST /search` registra o ranking inicial do recuperador. A avaliação também
-registra, separadamente, a ordem das fontes de `/chat`, que corresponde ao contexto
-final após seleção, limiar e deduplicação. Hit@k e MRR podem assim ser relatados para
+registra, separadamente, `retrieved_context`, que corresponde ao contexto final após
+seleção, limiar e deduplicação. Hit@k e MRR podem assim ser relatados para
 os dois estágios sem tratá-los como equivalentes.
 
 ## Ingestão e persistência
@@ -37,6 +39,7 @@ Os parâmetros padrão são:
 
 - busca pública: `SEARCH_TOP_K=5` quando o cliente não informa `top_k`;
 - candidatos do RAG: `RAG_RETRIEVAL_TOP_K=8`;
+- promoções lexicais: `RAG_LEXICAL_PROMOTION_SLOTS=2` (seis âncoras BM25);
 - limiar: `RAG_MIN_SIMILARITY=0.35`;
 - contexto máximo: `RAG_MAX_CONTEXT_CHARS=12000`;
 - modelo gerador: definido por `LLM_PROVIDER` e `LLM_MODEL` (por padrão não configurado).
@@ -51,7 +54,8 @@ O pacote `evaluation` é externo às regras do frontend e não modifica os contr
 2. `evaluation.generate_benchmark` seleciona evidências dos chunks processados e cria apenas candidatos `pending_review`.
 3. A revisão ocorre em XLSX. `evaluation.review` importa decisões explícitas; `evaluation.validate_benchmark` bloqueia fontes/páginas inválidas e itens não aprovados.
 4. `evaluation.run` valida a configuração efetiva da API antes de usar `/chat` e
-   `/search`. O split final exige confirmação e configuração congelada.
+   `/search` e grava o preflight aprovado com fingerprints. O split final exige
+   confirmação e configuração congelada.
 5. `evaluation.metrics` calcula recuperação nos dois estágios, matriz de confusão,
    acurácia, precisão, recall, F1, baseline e categorias determinísticas de fontes.
 6. `evaluation.report` produz relatórios locais. Notas humanas permanecem separadas de qualquer julgamento automático.

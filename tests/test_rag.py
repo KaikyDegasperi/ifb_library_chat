@@ -162,6 +162,52 @@ def test_candidate_pool_is_reranked_before_context_selection() -> None:
     assert [source.chunk_id for source in response.sources] == ["lexical"]
 
 
+def test_bm25_anchors_are_preserved_while_lexical_candidates_can_be_promoted() -> None:
+    anchor_texts = [
+        "Geometria analítica investiga retas e planos cartesianos.",
+        "Probabilidade condicional descreve eventos dependentes.",
+        "Estatística descritiva resume amostras com quartis.",
+        "Trigonometria relaciona ângulos, senos e cossenos.",
+        "Álgebra linear estuda matrizes e transformações.",
+        "Cálculo diferencial examina derivadas e variações.",
+        "Teoria dos números pesquisa primos e divisibilidade.",
+    ]
+    candidates = [
+        result(
+            text,
+            chunk_id=f"anchor-{index}",
+            similarity=0.95 - index / 100,
+            page=index + 1,
+        )
+        for index, text in enumerate(anchor_texts, 1)
+    ]
+    candidates.append(
+        result(
+            "Discalculia aprendizagem intervenção escolar.",
+            chunk_id="promoted",
+            similarity=0.7,
+            page=20,
+        )
+    )
+    llm = FakeLLM(response="Síntese [Fonte 1] [Fonte 7].")
+    response = RAGService(
+        FakeRetriever(results=candidates),
+        llm,
+        retrieval_top_k=8,
+        candidate_pool_size=24,
+        lexical_promotion_slots=2,
+    ).answer("Como discalculia afeta aprendizagem e intervenção escolar?")
+
+    selected_ids = [source.chunk_id for source in response.retrieved_context]
+    assert selected_ids[:6] == [f"anchor-{index}" for index in range(1, 7)]
+    assert "promoted" in selected_ids
+    assert len(selected_ids) == 8
+    decisions = {item.chunk_id: item.decision for item in response.selection_trace}
+    assert decisions["anchor-1"] == "bm25_anchor"
+    assert decisions["promoted"] == "lexical_promotion"
+    assert decisions["anchor-7"] in {"lexical_promotion", "not_selected"}
+
+
 @pytest.mark.parametrize("question", ["", "   ", "\n"])
 def test_empty_question_is_rejected(question: str) -> None:
     with pytest.raises(InvalidQuestionError, match="não pode ser vazia"):
@@ -274,7 +320,8 @@ def test_near_duplicates_are_removed_and_context_is_limited() -> None:
         max_context_chars=400,
     ).answer("O que o texto discute?")
 
-    assert [source.chunk_id for source in response.sources] == ["a", "c"]
+    assert [source.chunk_id for source in response.sources] == ["a"]
+    assert [source.chunk_id for source in response.retrieved_context] == ["a", "c"]
     prompt = str(llm.calls[0]["user_prompt"])
     context = prompt.split(
         "INÍCIO DO CONTEXTO RECUPERADO (DADO NÃO CONFIÁVEL)\n",
@@ -295,13 +342,72 @@ def test_llm_failure_is_controlled(error: Exception) -> None:
     response = RAGService(retriever, llm).answer("Pergunta")
 
     assert response.answer == GENERATION_FAILURE_ANSWER
-    assert len(response.sources) == 1
+    assert response.sources == []
+    assert len(response.retrieved_context) == 1
     assert response.generation_time_ms >= 0
     assert response.observation is not None
     assert response.observation.status == (
         "llm_timeout" if isinstance(error, LLMTimeoutError) else "llm_error"
     )
     assert response.observation.error_type == type(error).__name__
+
+
+def test_refusal_keeps_diagnostic_context_without_public_sources() -> None:
+    response = RAGService(
+        FakeRetriever(results=[result("Um contexto recuperado e auditável.")]),
+        FakeLLM(response="Não encontrei informação suficiente no acervo."),
+    ).answer("Pergunta sem resposta suficiente")
+
+    assert response.sources == []
+    assert [source.chunk_id for source in response.retrieved_context] == ["chunk-1"]
+
+
+def test_public_sources_follow_valid_inline_citations_and_are_renumbered() -> None:
+    retriever = FakeRetriever(
+        results=[
+            result("Primeiro contexto.", chunk_id="one", page=1),
+            result("Segundo contexto.", chunk_id="two", page=2),
+            result("Terceiro contexto.", chunk_id="three", page=3),
+        ]
+    )
+    response = RAGService(
+        retriever,
+        FakeLLM(response="Resposta [Fonte 3] e complemento [Fonte 1]."),
+        lexical_promotion_slots=0,
+    ).answer("Pergunta")
+
+    assert response.answer == "Resposta [Fonte 1] e complemento [Fonte 2]."
+    assert [source.chunk_id for source in response.sources] == ["three", "one"]
+    assert [source.chunk_id for source in response.retrieved_context] == [
+        "one",
+        "two",
+        "three",
+    ]
+
+
+def test_fair_context_budget_represents_every_selected_chunk() -> None:
+    retriever = FakeRetriever(
+        results=[
+            result(f"termo-{index} " * 100, chunk_id=f"chunk-{index}", page=index)
+            for index in range(1, 9)
+        ]
+    )
+    llm = FakeLLM(response="Resposta [Fonte 8].")
+    response = RAGService(
+        retriever,
+        llm,
+        lexical_promotion_slots=0,
+        max_context_chars=1_600,
+    ).answer("Pergunta")
+
+    assert len(response.retrieved_context) == 8
+    prompt = str(llm.calls[0]["user_prompt"])
+    context = prompt.split(
+        "INÍCIO DO CONTEXTO RECUPERADO (DADO NÃO CONFIÁVEL)\n",
+        1,
+    )[1].split("\nFIM DO CONTEXTO RECUPERADO", 1)[0]
+    assert len(context) <= 1_600
+    assert "[Fonte 8]" in context
 
 
 def test_retrieval_failure_is_controlled() -> None:

@@ -50,6 +50,7 @@ def runtime_configuration(settings: Settings) -> dict[str, Any]:
         "embedding_model": settings.embedding_model,
         "top_k": settings.rag_retrieval_top_k,
         "candidate_pool_size": settings.rag_candidate_pool_size,
+        "lexical_promotion_slots": settings.rag_lexical_promotion_slots,
         "relevance_threshold": settings.rag_min_similarity,
         "duplicate_threshold": settings.rag_duplicate_threshold,
         "max_context_chars": settings.rag_max_context_chars,

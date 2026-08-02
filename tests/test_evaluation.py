@@ -6,12 +6,14 @@ import pytest
 from app.config import Settings
 from evaluation.bm25_baseline import BM25Index, CorpusChunk, summarize, tokenize
 from evaluation.configuration import (
+    benchmark_fingerprint,
     configuration_fingerprint,
     frozen_configuration,
     safe_settings,
     validate_runtime_configuration,
 )
 from evaluation.complete import _derived_record
+from evaluation.freeze_config import freeze_configuration
 from evaluation.generate_benchmark import generate_benchmark, generate_corpus_benchmark
 from evaluation.io import (
     benchmark_from_xlsx,
@@ -28,7 +30,13 @@ from evaluation.metrics import (
 )
 from evaluation.models import Benchmark, BenchmarkQuestion, RunOutput, RunRecord
 from evaluation.report import generate_reports
-from evaluation.run import execute_question, is_refusal, run_benchmark
+from evaluation.run import (
+    approved_preflight,
+    execute_question,
+    is_refusal,
+    run_benchmark,
+    validate_frozen_benchmark_identity,
+)
 from evaluation.validate_benchmark import validate_benchmark
 from frontend.api_client import APIClientError, APITimeoutError
 
@@ -246,6 +254,159 @@ def test_runtime_configuration_mismatch_is_rejected(tmp_path: Path):
     assert any("top_k" in error for error in errors)
 
 
+def test_approved_preflight_is_explicit_and_fingerprinted(tmp_path: Path):
+    settings = Settings(processed_dir=tmp_path, _env_file=None)
+    benchmark_path = tmp_path / "synthetic-benchmark.json"
+    benchmark = valid_benchmark()
+    write_benchmark(benchmark_path, benchmark)
+    benchmark_sha256 = benchmark_fingerprint(benchmark_path)
+    execution = {
+        **safe_settings(settings),
+        "configuration_fingerprint": "sha256:configuration",
+        "benchmark_version": benchmark.benchmark_version,
+        "benchmark_fingerprint": benchmark_sha256,
+        "code_revision": "abc123",
+        "working_tree": {"dirty": True, "fingerprint": "sha256:tree"},
+        "runtime_versions": {"python": "3.14.0"},
+    }
+
+    preflight = approved_preflight(
+        execution,
+        {"status": "ok", "configuration": safe_settings(settings)},
+        benchmark.benchmark_version,
+        benchmark_sha256,
+    )
+
+    assert preflight.passed is True
+    assert preflight.configuration_match is True
+    assert preflight.corpus_match is True
+    assert preflight.benchmark_match is True
+    assert preflight.benchmark_fingerprint == benchmark_sha256
+    assert preflight.configuration_fingerprint == "sha256:configuration"
+    assert preflight.working_tree["dirty"] is True
+
+
+def test_rejected_preflight_aborts_before_a_run_is_created(tmp_path: Path):
+    settings = Settings(processed_dir=tmp_path, _env_file=None)
+    execution = {
+        **safe_settings(settings),
+        "benchmark_version": "2.0",
+        "benchmark_fingerprint": "sha256:benchmark",
+    }
+    actual = safe_settings(settings)
+    actual["top_k"] = 3
+
+    with pytest.raises(ValueError, match="Preflight reprovado"):
+        approved_preflight(
+            execution,
+            {"status": "ok", "configuration": actual},
+            "2.0",
+            "sha256:benchmark",
+        )
+
+
+def test_benchmark_identity_rejects_content_change_without_version_change(
+    tmp_path: Path,
+):
+    benchmark_path = tmp_path / "synthetic-benchmark.json"
+    benchmark = valid_benchmark()
+    write_benchmark(benchmark_path, benchmark)
+    frozen = {
+        "benchmark_version": benchmark.benchmark_version,
+        "benchmark_fingerprint": benchmark_fingerprint(benchmark_path),
+    }
+    benchmark.questions[0].question = "Conteúdo sintético alterado"
+    write_benchmark(benchmark_path, benchmark)
+
+    with pytest.raises(ValueError, match="Fingerprint do benchmark difere"):
+        validate_frozen_benchmark_identity(
+            frozen,
+            benchmark.benchmark_version,
+            benchmark_fingerprint(benchmark_path),
+        )
+
+
+def test_preflight_rejects_same_version_with_different_benchmark_fingerprint(
+    tmp_path: Path,
+):
+    settings = Settings(processed_dir=tmp_path, _env_file=None)
+    execution = {
+        **safe_settings(settings),
+        "benchmark_version": "1.0",
+        "benchmark_fingerprint": "sha256:original",
+    }
+
+    with pytest.raises(
+        ValueError,
+        match="versão ou fingerprint do benchmark divergente",
+    ):
+        approved_preflight(
+            execution,
+            {"status": "ok", "configuration": safe_settings(settings)},
+            "1.0",
+            "sha256:alterado",
+        )
+
+
+def test_benchmark_identity_rejects_version_change():
+    frozen = {
+        "benchmark_version": "1.0",
+        "benchmark_fingerprint": "sha256:benchmark",
+    }
+
+    with pytest.raises(ValueError, match="Versão do benchmark difere"):
+        validate_frozen_benchmark_identity(
+            frozen,
+            "2.0",
+            "sha256:benchmark",
+        )
+
+
+def test_benchmark_mismatch_aborts_before_first_api_call(
+    tmp_path: Path,
+    monkeypatch,
+):
+    benchmark_path = tmp_path / "synthetic-benchmark.json"
+    benchmark = valid_benchmark()
+    write_benchmark(benchmark_path, benchmark)
+    frozen_path = tmp_path / "frozen.json"
+    frozen_path.write_text(
+        json.dumps(
+            {
+                "status": "frozen",
+                "benchmark_version": benchmark.benchmark_version,
+                "benchmark_fingerprint": benchmark_fingerprint(benchmark_path),
+            }
+        ),
+        encoding="utf-8",
+    )
+    benchmark.questions[0].expected_answer = "Gabarito sintético alterado"
+    write_benchmark(benchmark_path, benchmark)
+    api_constructions = 0
+
+    def forbidden_api_client(*args, **kwargs):
+        nonlocal api_constructions
+        api_constructions += 1
+        raise AssertionError("A API não deveria ser criada")
+
+    monkeypatch.setattr("evaluation.run.APIClient", forbidden_api_client)
+    monkeypatch.setattr("evaluation.run.validate_benchmark", lambda *args: [])
+
+    with pytest.raises(ValueError, match="Fingerprint do benchmark difere"):
+        run_benchmark(
+            benchmark_path,
+            "final",
+            tmp_path / "run.json",
+            "http://api",
+            1,
+            confirm_final=True,
+            frozen_path=frozen_path,
+        )
+
+    assert api_constructions == 0
+    assert not (tmp_path / "run.json").exists()
+
+
 def test_frozen_configuration_has_reproducibility_metadata(
     tmp_path: Path,
     monkeypatch,
@@ -257,7 +418,12 @@ def test_frozen_configuration_has_reproducibility_metadata(
         lambda: {"python": "3.14.0"},
     )
 
-    frozen = frozen_configuration(settings, "2.0", 42)
+    frozen = frozen_configuration(
+        settings,
+        "2.0",
+        42,
+        "sha256:benchmark",
+    )
     configuration = safe_settings(settings)
 
     assert frozen["experiment"] == "official_bm25_end_to_end"
@@ -265,7 +431,49 @@ def test_frozen_configuration_has_reproducibility_metadata(
     assert frozen["configuration_fingerprint"] == configuration_fingerprint(
         configuration
     )
+    assert frozen["benchmark_fingerprint"] == "sha256:benchmark"
     assert frozen["runtime_versions"] == {"python": "3.14.0"}
+
+
+def test_freeze_and_preflight_expose_only_synthetic_benchmark_fingerprint(
+    tmp_path: Path,
+    monkeypatch,
+):
+    marker = "CONTEUDO-E-GABARITO-SINTETICO-NAO-PUBLICO"
+    benchmark = valid_benchmark()
+    benchmark.questions[0].question = marker
+    benchmark.questions[0].expected_answer = marker
+    benchmark_path = tmp_path / "synthetic-benchmark.json"
+    frozen_path = tmp_path / "synthetic-frozen.json"
+    write_benchmark(benchmark_path, benchmark)
+    settings = Settings(processed_dir=tmp_path, _env_file=None)
+    monkeypatch.setattr("evaluation.configuration.code_revision", lambda: "abc123")
+    monkeypatch.setattr(
+        "evaluation.configuration.runtime_versions",
+        lambda: {"python": "3.14.0"},
+    )
+
+    frozen = freeze_configuration(settings, benchmark_path, frozen_path)
+    preflight = approved_preflight(
+        frozen,
+        {"status": "ok", "configuration": safe_settings(settings)},
+        benchmark.benchmark_version,
+        benchmark_fingerprint(benchmark_path),
+    )
+    public_metadata = json.dumps(
+        {
+            "provenance": frozen,
+            "preflight": preflight.model_dump(mode="json"),
+        },
+        ensure_ascii=False,
+    )
+
+    assert frozen_path.is_file()
+    assert frozen["benchmark_fingerprint"] == benchmark_fingerprint(benchmark_path)
+    assert preflight.benchmark_fingerprint == frozen["benchmark_fingerprint"]
+    assert marker not in public_metadata
+    assert "expected_answer" not in public_metadata
+    assert "required_facts" not in public_metadata
 
 
 def test_page_recall_requires_the_expected_document():

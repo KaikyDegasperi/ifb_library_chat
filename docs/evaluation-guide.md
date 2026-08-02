@@ -147,9 +147,9 @@ uv run python -m evaluation.report \
 ## 9. Interpretação
 
 - Recall de documento e MRR do estágio inicial usam o ranking de `/search`.
-- Recall e MRR de contexto usam somente as fontes finais selecionadas por `/chat`.
+- Recall e MRR de contexto usam `retrieved_context`, separado das fontes públicas.
 - Recall de página exige interseção entre páginas esperadas e recuperadas.
-- Taxas de citação usam as fontes efetivamente apresentadas por `/chat`.
+- Taxas de citação usam `sources`, as fontes efetivamente citadas e apresentadas.
 - A matriz de confusão e as contagens absolutas acompanham acurácia, precisão,
   recall, F1 e o baseline de sempre responder.
 - Recusa correta exige pergunta marcada como sem resposta no acervo e resposta explicitamente negativa.

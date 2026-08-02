@@ -14,6 +14,14 @@ class RAGSource(BaseModel):
     score: float
 
 
+class SelectionTrace(BaseModel):
+    chunk_id: str
+    bm25_rank: int
+    normalized_score: float
+    lexical_relevance: float
+    decision: str
+
+
 class RAGTimings(BaseModel):
     embedding_time_ms: int = 0
     vector_search_time_ms: int = 0
@@ -34,6 +42,8 @@ class RAGObservation(BaseModel):
 class RAGResponse(BaseModel):
     answer: str
     sources: list[RAGSource]
+    retrieved_context: list[RAGSource] = Field(default_factory=list)
+    selection_trace: list[SelectionTrace] = Field(default_factory=list)
     retrieval_time_ms: int
     generation_time_ms: int
     observation: RAGObservation | None = Field(default=None, exclude=True)

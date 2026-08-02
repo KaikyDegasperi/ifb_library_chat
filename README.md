@@ -211,6 +211,7 @@ arquivo, URL ou log. Um token negado é descartado da sessão.
 | `LLM_MAX_TOKENS` | `256` | Limite de tokens da resposta |
 | `RAG_RETRIEVAL_TOP_K` | `8` | Trechos mantidos no contexto final; padrão de `/chat` |
 | `RAG_CANDIDATE_POOL_SIZE` | `24` | Candidatos recuperados antes da seleção |
+| `RAG_LEXICAL_PROMOTION_SLOTS` | `2` | Vagas do top-8 reservadas a promoções lexicais; as demais preservam a ordem BM25 |
 | `RAG_MIN_SIMILARITY` | `0.35` | Limiar de relevância; no BM25 incide sobre o score normalizado |
 | `RAG_MAX_CONTEXT_CHARS` | `12000` | Limite total do contexto enviado ao LLM |
 | `RAG_MAX_QUESTION_CHARS` | `2000` | Limite da pergunta |
@@ -397,10 +398,17 @@ comando termina com código 1. Erros de entrada terminam com código 2.
 ## Pipeline RAG
 
 O pipeline oficial usa recuperação lexical BM25 (`k1=1,5`, `b=0,75`). O serviço
-recupera um pool de 24 candidatos, reordena-os por cobertura lexical e score BM25,
-aplica o limiar de relevância e a deduplicação e mantém até oito trechos no contexto.
+recupera um pool de 24 candidatos, aplica o limiar e a deduplicação e preserva seis
+âncoras na ordem BM25. As duas vagas restantes podem promover candidatos pela
+cobertura lexical, sem eliminar as âncoras. O contexto continua limitado a oito
+trechos e seu orçamento de caracteres é distribuído entre todos os selecionados.
+Essa regra é uma mudança metodológica calibrada no split de desenvolvimento.
 O recuperador denso permanece disponível somente para reprodução dos experimentos
 históricos com `RETRIEVAL_PROVIDER=dense`.
+
+`POST /chat` separa `retrieved_context`, usado para auditoria da seleção, de
+`sources`, que contém somente fontes citadas inline na resposta. Recusas e falhas de
+geração nunca expõem fontes públicas; o contexto recuperado permanece auditável.
 
 Configuração de um endpoint compatível com a API de chat da OpenAI:
 

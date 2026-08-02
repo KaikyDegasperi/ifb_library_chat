@@ -197,6 +197,8 @@ Reranqueamento lexical
     ↓
 Limiar de relevância e deduplicação
     ↓
+6 âncoras BM25 + até 2 promoções lexicais
+    ↓
 Contexto final de até 8 trechos
     ↓
 Construção do prompt
@@ -209,6 +211,9 @@ Resposta com fontes
 Classificação metodológica: pipeline RAG com recuperação lexical em duas etapas,
 composto por recuperação inicial BM25 e seleção lexical heurística do contexto.
 Não classificar como híbrido.
+
+O payload distingue o contexto interno recuperado das fontes efetivamente citadas.
+Recusas não apresentam fontes públicas, mas preservam o contexto para auditoria.
 
 A resposta não deve inventar informações que não estejam nos documentos
 recuperados.

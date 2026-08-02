@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.rag.models import RAGSource
+from app.rag.models import RAGSource, SelectionTrace
 
 
 class ChatRequest(BaseModel):
@@ -23,5 +23,7 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     answer: str
     sources: list[RAGSource]
+    retrieved_context: list[RAGSource]
+    selection_trace: list[SelectionTrace]
     retrieval_time_ms: int
     generation_time_ms: int

@@ -6,10 +6,16 @@ import json
 import platform
 import subprocess
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from app.config import Settings
 from app.runtime import runtime_configuration
+
+
+def benchmark_fingerprint(path: Path) -> str:
+    """Calcula o SHA-256 dos bytes integrais do arquivo de benchmark."""
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def code_revision() -> str:
@@ -19,6 +25,24 @@ def code_revision() -> str:
         ).stdout.strip()
     except (OSError, subprocess.SubprocessError):
         return "unknown"
+
+
+def working_tree_provenance() -> dict[str, Any]:
+    """Registra o estado local sem persistir o conteúdo potencialmente sensível."""
+    try:
+        status = subprocess.run(
+            ["git", "status", "--short", "--untracked-files=all"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout
+    except (OSError, subprocess.SubprocessError):
+        return {"dirty": None, "fingerprint": "unknown"}
+    return {
+        "dirty": bool(status.strip()),
+        "fingerprint": "sha256:"
+        + hashlib.sha256(status.encode("utf-8")).hexdigest(),
+    }
 
 
 def safe_settings(settings: Settings) -> dict[str, Any]:
@@ -70,6 +94,7 @@ def frozen_configuration(
     settings: Settings,
     benchmark_version: str,
     seed: int,
+    benchmark_sha256: str,
 ) -> dict[str, Any]:
     configuration = safe_settings(settings)
     return {
@@ -79,6 +104,7 @@ def frozen_configuration(
         **configuration,
         "configuration_fingerprint": configuration_fingerprint(configuration),
         "benchmark_version": benchmark_version,
+        "benchmark_fingerprint": benchmark_sha256,
         "seed": seed,
         "runtime_versions": runtime_versions(),
         "code_revision": code_revision(),

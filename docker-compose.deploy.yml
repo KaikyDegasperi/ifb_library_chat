@@ -8,6 +8,7 @@ services:
       LLM_TEMPERATURE: "0.1"
       LLM_TOP_P: "0.9"
       LLM_MAX_TOKENS: "256"
+      RAG_LEXICAL_PROMOTION_SLOTS: "2"
     volumes:
       - ./pdfs_ifb:/data/pdfs
       - ./data/processed:/data/processed

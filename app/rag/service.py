@@ -9,8 +9,15 @@ from typing import Protocol
 
 from app.observability import current_request_id
 from app.rag.exceptions import InvalidQuestionError, LLMTimeoutError
+from app.rag.grounding import align_public_sources
 from app.rag.llm import LanguageModelProvider
-from app.rag.models import RAGObservation, RAGResponse, RAGSource, RAGTimings
+from app.rag.models import (
+    RAGObservation,
+    RAGResponse,
+    RAGSource,
+    RAGTimings,
+    SelectionTrace,
+)
 from app.rag.prompts import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE
 from app.vectorstore.models import SearchResult, SearchTimings
 
@@ -62,7 +69,7 @@ RETRIEVAL_FAILURE_ANSWER = (
 )
 GENERATION_FAILURE_ANSWER = (
     "Encontrei trechos relacionados, mas não foi possível gerar a resposta neste "
-    "momento. Consulte as fontes apresentadas abaixo."
+    "momento. Tente novamente mais tarde."
 )
 
 
@@ -83,6 +90,7 @@ class RAGService:
         llm_provider: LanguageModelProvider,
         retrieval_top_k: int = 8,
         candidate_pool_size: int | None = None,
+        lexical_promotion_slots: int = 2,
         min_similarity: float = 0.35,
         max_context_chars: int = 12_000,
         max_question_chars: int = 2_000,
@@ -93,6 +101,7 @@ class RAGService:
         if (
             retrieval_top_k < 1
             or (candidate_pool_size is not None and candidate_pool_size < 1)
+            or lexical_promotion_slots < 0
             or max_context_chars < 1
             or max_question_chars < 1
         ):
@@ -108,6 +117,7 @@ class RAGService:
             retrieval_top_k,
             candidate_pool_size or retrieval_top_k,
         )
+        self.lexical_promotion_slots = lexical_promotion_slots
         self.min_similarity = min_similarity
         self.max_context_chars = max_context_chars
         self.max_question_chars = max_question_chars
@@ -170,8 +180,19 @@ class RAGService:
         retrieval_time = self._elapsed_ms(retrieval_started)
 
         context_started = time.perf_counter()
-        selected = self._select_results(retrieved, question)[:effective_top_k]
+        selected, selection_trace = self._select_results(
+            retrieved,
+            question,
+            effective_top_k,
+        )
         context, selected = self._build_context(selected)
+        included_ids = {item.chunk_id for item in selected}
+        for trace_item in selection_trace:
+            if (
+                trace_item.decision in {"bm25_anchor", "lexical_promotion"}
+                and trace_item.chunk_id not in included_ids
+            ):
+                trace_item.decision = "context_budget"
         if not selected:
             context_preparation_time = self._elapsed_ms(context_started)
             return self._finish(
@@ -186,7 +207,7 @@ class RAGService:
                 status="no_context",
             )
 
-        sources = [self._source(item) for item in selected]
+        retrieved_context = [self._source(item) for item in selected]
         user_prompt = USER_PROMPT_TEMPLATE.format(
             question=question,
             context=context,
@@ -209,9 +230,12 @@ class RAGService:
             logger.error("Falha controlada na geração do RAG: %s", error_type)
             answer = GENERATION_FAILURE_ANSWER
         generation_time = self._elapsed_ms(generation_started)
+        answer, response_sources = align_public_sources(answer, retrieved_context)
         return self._finish(
             answer=answer,
-            sources=sources,
+            sources=response_sources,
+            retrieved_context=retrieved_context,
+            selection_trace=selection_trace,
             retrieval_time_ms=retrieval_time,
             generation_time_ms=generation_time,
             total_started=total_started,
@@ -235,6 +259,8 @@ class RAGService:
         context_chars: int,
         status: str,
         error_type: str | None = None,
+        retrieved_context: list[RAGSource] | None = None,
+        selection_trace: list[SelectionTrace] | None = None,
     ) -> RAGResponse:
         timings = RAGTimings(
             embedding_time_ms=search_timings.embedding_time_ms,
@@ -266,6 +292,8 @@ class RAGService:
         return RAGResponse(
             answer=answer,
             sources=sources,
+            retrieved_context=retrieved_context or [],
+            selection_trace=selection_trace or [],
             retrieval_time_ms=retrieval_time_ms,
             generation_time_ms=generation_time_ms,
             observation=observation,
@@ -275,37 +303,68 @@ class RAGService:
         self,
         results: list[SearchResult],
         question: str,
-    ) -> list[SearchResult]:
-        selected: list[SearchResult] = []
+        limit: int,
+    ) -> tuple[list[SearchResult], list[SelectionTrace]]:
+        eligible: list[SearchResult] = []
         normalized: list[str] = []
         topic_terms = self._topic_terms(question)
-        ranked = sorted(
-            results,
-            key=lambda item: (
-                self._lexical_relevance(item, topic_terms),
-                item.similarity,
-            ),
-            reverse=True,
-        )
-        for item in ranked:
+        decisions: dict[str, str] = {}
+        for item in results:
             lexical_relevance = self._lexical_relevance(item, topic_terms)
             if (
                 item.similarity < self.min_similarity
                 and lexical_relevance < 0.5
             ) or not item.content.strip():
+                decisions[item.chunk_id] = "relevance_filter"
                 continue
             candidate = self._normalize(item.content)
             if not candidate:
+                decisions[item.chunk_id] = "empty_content"
                 continue
             if any(
                 SequenceMatcher(None, candidate, previous).ratio()
                 >= self.duplicate_threshold
                 for previous in normalized
             ):
+                decisions[item.chunk_id] = "deduplicated"
                 continue
-            selected.append(item)
+            eligible.append(item)
             normalized.append(candidate)
-        return selected
+
+        promotion_slots = min(self.lexical_promotion_slots, limit)
+        anchor_count = max(0, limit - promotion_slots)
+        anchors = eligible[:anchor_count]
+        anchor_ids = {item.chunk_id for item in anchors}
+        lexical_candidates = sorted(
+            (item for item in eligible if item.chunk_id not in anchor_ids),
+            key=lambda item: (
+                self._lexical_relevance(item, topic_terms),
+                item.similarity,
+            ),
+            reverse=True,
+        )
+        promoted = lexical_candidates[: max(0, limit - len(anchors))]
+        selected = [*anchors, *promoted]
+        for item in anchors:
+            decisions[item.chunk_id] = "bm25_anchor"
+        for item in promoted:
+            decisions[item.chunk_id] = "lexical_promotion"
+        for item in eligible:
+            decisions.setdefault(item.chunk_id, "not_selected")
+        trace = [
+            SelectionTrace(
+                chunk_id=item.chunk_id,
+                bm25_rank=rank,
+                normalized_score=item.similarity,
+                lexical_relevance=round(
+                    self._lexical_relevance(item, topic_terms),
+                    6,
+                ),
+                decision=decisions[item.chunk_id],
+            )
+            for rank, item in enumerate(results, 1)
+        ]
+        return selected, trace
 
     @classmethod
     def _topic_terms(cls, question: str) -> set[str]:
@@ -346,34 +405,58 @@ class RAGService:
         self,
         results: list[SearchResult],
     ) -> tuple[str, list[SearchResult]]:
+        included = list(results)
+        headers: list[str] = []
+        while included:
+            headers = []
+            for source_number, item in enumerate(included, 1):
+                page = self._page_label(item.page_start, item.page_end)
+                headers.append(
+                    f"[Fonte {source_number}]\n"
+                    f"Arquivo: {item.file_name}\n"
+                    f"Título: {item.title or ''}\n"
+                    f"Página(s): {page}\n"
+                    f"Seção: {item.section or ''}\n"
+                    "Trecho:\n"
+                )
+            fixed_size = sum(map(len, headers)) + 2 * (len(included) - 1)
+            if fixed_size + len(included) <= self.max_context_chars:
+                break
+            included.pop()
+        if not included:
+            return "", []
+        content_budget = self.max_context_chars - fixed_size
+        lengths = self._fair_content_lengths(
+            [len(item.content.strip()) for item in included],
+            content_budget,
+        )
         blocks: list[str] = []
-        included: list[SearchResult] = []
-        used = 0
-        for item in results:
-            source_number = len(included) + 1
-            page = self._page_label(item.page_start, item.page_end)
-            header = (
-                f"[Fonte {source_number}]\n"
-                f"Arquivo: {item.file_name}\n"
-                f"Título: {item.title or ''}\n"
-                f"Página(s): {page}\n"
-                f"Seção: {item.section or ''}\n"
-                "Trecho:\n"
-            )
-            separator_size = 2 if blocks else 0
-            available = self.max_context_chars - used - len(header) - separator_size
-            if available <= 0:
-                break
-            content = item.content.strip()[:available]
+        for item, header, length in zip(included, headers, lengths, strict=True):
+            content = item.content.strip()[:length]
             if not content:
+                continue
+            blocks.append(f"{header}{content}")
+        return "\n\n".join(blocks), included[: len(blocks)]
+
+    @staticmethod
+    def _fair_content_lengths(lengths: list[int], budget: int) -> list[int]:
+        allocations = [0] * len(lengths)
+        active = set(range(len(lengths)))
+        remaining = budget
+        while active and remaining > 0:
+            share = max(1, remaining // len(active))
+            completed = [index for index in active if lengths[index] <= share]
+            if not completed:
+                for index in sorted(active):
+                    allocation = min(share, lengths[index], remaining)
+                    allocations[index] = allocation
+                    remaining -= allocation
                 break
-            block = f"{header}{content}"
-            blocks.append(block)
-            included.append(item)
-            used += len(block) + separator_size
-            if len(content) < len(item.content.strip()):
-                break
-        return "\n\n".join(blocks), included
+            for index in completed:
+                allocations[index] = lengths[index]
+                remaining -= lengths[index]
+                active.remove(index)
+        return allocations
 
     @staticmethod
     def _normalize(text: str) -> str:

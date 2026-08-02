@@ -44,6 +44,7 @@ def _flat_record(record: dict[str, Any]) -> dict[str, Any]:
         "returned_passages": json.dumps(record.get("returned_passages", []), ensure_ascii=False),
         "sources": json.dumps(record.get("sources", []), ensure_ascii=False),
         "retrieval_results": json.dumps(record.get("retrieval_results", []), ensure_ascii=False),
+        "selection_trace": json.dumps(record.get("selection_trace", []), ensure_ascii=False),
         "settings": json.dumps(record.get("settings", {}), ensure_ascii=False),
     }
 

@@ -72,6 +72,7 @@ class Settings(BaseSettings):
     rag_output_token_reserve: int = Field(default=256, ge=32)
     rag_retrieval_top_k: int = Field(default=8, ge=1)
     rag_candidate_pool_size: int = Field(default=24, ge=1)
+    rag_lexical_promotion_slots: int = Field(default=2, ge=0)
     rag_min_similarity: float = Field(default=0.35, ge=-1.0, le=1.0)
     rag_max_context_chars: int = Field(default=12_000, ge=500)
     rag_max_question_chars: int = Field(default=2_000, ge=1, le=10_000)
@@ -96,6 +97,10 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_production_security(self) -> "Settings":
+        if self.rag_lexical_promotion_slots > self.rag_retrieval_top_k:
+            raise ValueError(
+                "RAG_LEXICAL_PROMOTION_SLOTS não pode exceder RAG_RETRIEVAL_TOP_K"
+            )
         if self.max_request_size_mb < self.max_upload_size_mb:
             raise ValueError(
                 "MAX_REQUEST_SIZE_MB deve ser maior ou igual a MAX_UPLOAD_SIZE_MB"

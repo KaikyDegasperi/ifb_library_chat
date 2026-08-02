@@ -463,6 +463,8 @@ def test_chat_endpoint_returns_answer_sources_and_times(api_services) -> None:
     assert payload["answer"].endswith("[Fonte 1].")
     assert payload["sources"][0]["file_name"] == "teste.pdf"
     assert payload["sources"][0]["page_start"] == 3
+    assert payload["retrieved_context"] == []
+    assert payload["selection_trace"] == []
     assert payload["retrieval_time_ms"] == 12
     assert payload["generation_time_ms"] == 20
     assert "observation" not in payload

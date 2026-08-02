@@ -74,6 +74,7 @@ class RunRecord(HumanScores):
     context_documents: list[str] = Field(default_factory=list)
     context_pages: list[int] = Field(default_factory=list)
     sources: list[dict] = Field(default_factory=list)
+    selection_trace: list[dict] = Field(default_factory=list)
     top_k: int
     similarity_threshold: float
     total_time_ms: int = 0
@@ -88,6 +89,22 @@ class RunRecord(HumanScores):
     llm_judge_score: dict | None = None
 
 
+class PreflightRecord(BaseModel):
+    passed: bool
+    checked_at: str
+    health_status: str
+    configuration_match: bool
+    corpus_match: bool
+    benchmark_match: bool
+    configuration_fingerprint: str
+    corpus_fingerprint: str
+    benchmark_version: str
+    benchmark_fingerprint: str | None = None
+    code_revision: str
+    working_tree: dict
+    runtime_versions: dict[str, str]
+
+
 class RunOutput(BaseModel):
     run_version: str = "1.0"
     benchmark_version: str
@@ -95,4 +112,5 @@ class RunOutput(BaseModel):
     started_at: str
     completed_at: str
     settings: dict
+    preflight: PreflightRecord | None = None
     records: list[RunRecord]
