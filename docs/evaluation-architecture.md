@@ -7,13 +7,19 @@ O projeto usa Python 3.14, FastAPI no backend e Streamlit como camada de apresen
 O fluxo de consulta é:
 
 ```text
-POST /chat → RAGService → BM25 (padrão) ou busca densa → filtro/remoção de duplicatas
-           → montagem do contexto → provedor de LLM → resposta e citações
+POST /chat → RAGService → BM25 → pool de 24 candidatos → seleção heurística
+           → filtro/deduplicação → contexto top-8 → LLM → resposta e fontes
 ```
 
-O payload de `POST /chat` é `{"question": "...", "top_k": 5, "document_id": null, "title": null}`. A resposta pública contém `answer`, `sources`, `retrieval_time_ms` e `generation_time_ms`. Cada fonte contém `document_id`, `title`, `file_name`, `page_start`, `page_end`, `section`, `chunk_id` e `score`. A paginação preservada pela ingestão é a página real do arquivo PDF, começando em 1.
+O payload mínimo de `POST /chat` é `{"question": "..."}`. Quando `top_k` é
+omitido, a API usa `RAG_RETRIEVAL_TOP_K=8`; um override explícito continua aceito.
+A resposta pública contém `answer`, `sources`, `retrieval_time_ms` e
+`generation_time_ms`.
 
-`POST /search` recebe `query`, `top_k` e filtros opcionais. Além dos metadados e do score, retorna o texto do chunk. A avaliação chama `/chat` para medir a resposta e `/search` para registrar o ranking e os trechos recuperados, pois o contrato de `/chat` não expõe o conteúdo dos chunks.
+`POST /search` registra o ranking inicial do recuperador. A avaliação também
+registra, separadamente, a ordem das fontes de `/chat`, que corresponde ao contexto
+final após seleção, limiar e deduplicação. Hit@k e MRR podem assim ser relatados para
+os dois estágios sem tratá-los como equivalentes.
 
 ## Ingestão e persistência
 
@@ -29,7 +35,7 @@ ChromaDB; o manifesto e os artefatos estruturados usam JSON.
 
 Os parâmetros padrão são:
 
-- busca pública: `SEARCH_TOP_K=5`;
+- busca pública: `SEARCH_TOP_K=5` quando o cliente não informa `top_k`;
 - candidatos do RAG: `RAG_RETRIEVAL_TOP_K=8`;
 - limiar: `RAG_MIN_SIMILARITY=0.35`;
 - contexto máximo: `RAG_MAX_CONTEXT_CHARS=12000`;
@@ -44,12 +50,17 @@ O pacote `evaluation` é externo às regras do frontend e não modifica os contr
 1. `evaluation.diagnose` lê cada PDF e reaproveita metadados/chunks produzidos pelo Docling.
 2. `evaluation.generate_benchmark` seleciona evidências dos chunks processados e cria apenas candidatos `pending_review`.
 3. A revisão ocorre em XLSX. `evaluation.review` importa decisões explícitas; `evaluation.validate_benchmark` bloqueia fontes/páginas inválidas e itens não aprovados.
-4. `evaluation.run` usa somente as APIs públicas `/chat` e `/search`. O split final exige confirmação e configuração congelada.
-5. `evaluation.metrics` calcula métricas sem usar o score como prova de correção: compara nomes de arquivos, interseções de páginas e recusas explícitas.
+4. `evaluation.run` valida a configuração efetiva da API antes de usar `/chat` e
+   `/search`. O split final exige confirmação e configuração congelada.
+5. `evaluation.metrics` calcula recuperação nos dois estágios, matriz de confusão,
+   acurácia, precisão, recall, F1, baseline e categorias determinísticas de fontes.
 6. `evaluation.report` produz relatórios locais. Notas humanas permanecem separadas de qualquer julgamento automático.
 
 Nenhuma credencial é serializada. A configuração congelada contém somente parâmetros técnicos seguros, versão/hash do prompt, versão do benchmark, seed, revisão Git e data UTC.
 
 ## Limites do contrato atual
 
-Os tempos internos detalhados existem no objeto interno `RAGObservation`, mas não são públicos. A avaliação registra os tempos públicos de recuperação e geração, o tempo total observado pelo cliente e o tempo separado de `/search`. Como `/chat` e `/search` são duas chamadas, seus rankings podem divergir se o índice mudar entre elas; por isso o acervo e a configuração devem permanecer congelados durante uma execução.
+Como `/chat` e `/search` são duas chamadas, o acervo deve permanecer imutável
+durante a execução. O congelamento inclui um fingerprint dos artefatos de chunks, e
+o preflight impede que parâmetros apenas registrados sejam confundidos com os usados
+pela API.

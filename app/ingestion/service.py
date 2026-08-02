@@ -1,6 +1,7 @@
 """Serviço independente para converter PDFs e produzir chunks rastreáveis."""
 
 import hashlib
+import importlib.metadata
 import json
 import logging
 import time
@@ -49,6 +50,7 @@ class IngestionService:
         self.output_dir = Path(output_dir)
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
+        self.embedding_model = embedding_model
         pipeline_options = PdfPipelineOptions(
             accelerator_options=AcceleratorOptions(device=device),
             heading_hierarchy_options=HeadingHierarchyOptions(enabled=True),
@@ -131,6 +133,7 @@ class IngestionService:
         if (
             previous
             and previous.get("pipeline_version") == PIPELINE_VERSION
+            and previous.get("ingestion_config") == self._ingestion_config()
             and Path(previous["output_file"]).exists()
             and Path(previous["structured_document_file"]).exists()
         ):
@@ -188,6 +191,7 @@ class IngestionService:
                 "document_id": document_id,
                 "document_hash": document_hash,
                 "pipeline_version": PIPELINE_VERSION,
+                "ingestion_config": self._ingestion_config(),
                 "chunks": [chunk.model_dump(mode="json") for chunk in chunks],
             },
         )
@@ -199,6 +203,7 @@ class IngestionService:
             "chunks": len(chunks),
             "processed_at": processed_at.isoformat(),
             "pipeline_version": PIPELINE_VERSION,
+            "ingestion_config": self._ingestion_config(),
         }
         logger.info("Documento processado: %s (%d chunks)", pdf_path, len(chunks))
         return DocumentResult(
@@ -256,3 +261,13 @@ class IngestionService:
             encoding="utf-8",
         )
         temporary.replace(path)
+
+    def _ingestion_config(self) -> dict[str, Any]:
+        return {
+            "chunk_size": self.chunk_size,
+            "chunk_overlap": self.chunk_overlap,
+            "embedding_model": self.embedding_model,
+            "tokenizer": self.embedding_model,
+            "docling_version": importlib.metadata.version("docling"),
+            "transformers_version": importlib.metadata.version("transformers"),
+        }

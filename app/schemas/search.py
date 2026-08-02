@@ -6,7 +6,6 @@ class SearchRequest(BaseModel):
         json_schema_extra={
             "example": {
                 "query": "Quais trabalhos discutem discalculia?",
-                "top_k": 5,
                 "document_id": None,
                 "title": None,
             }
@@ -14,7 +13,7 @@ class SearchRequest(BaseModel):
     )
 
     query: str = Field(min_length=1)
-    top_k: int = Field(default=5, ge=1)
+    top_k: int | None = Field(default=None, ge=1)
     document_id: str | None = None
     title: str | None = None
 

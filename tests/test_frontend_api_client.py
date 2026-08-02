@@ -87,7 +87,7 @@ def test_chat_response_with_multiple_sources_is_preserved() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         body = json.loads(request.content)
         assert request.url.path == "/chat"
-        assert body == {"question": "Tecnologia", "top_k": 5}
+        assert body == {"question": "Tecnologia"}
         return json_response(payload)
 
     client = APIClient(transport=httpx.MockTransport(handler))

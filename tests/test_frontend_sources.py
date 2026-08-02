@@ -28,3 +28,5 @@ render_sources([
     ).run(timeout=10)
 
     assert not app.exception
+    assert any("Fontes do contexto" in item.value for item in app.markdown)
+    assert any("relevância 0.499" in item.value for item in app.markdown)

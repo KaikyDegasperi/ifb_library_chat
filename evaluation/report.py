@@ -37,6 +37,9 @@ def _flat_record(record: dict[str, Any]) -> dict[str, Any]:
         "expected_pages": json.dumps(record.get("expected_pages", []), ensure_ascii=False),
         "retrieved_documents": json.dumps(record.get("retrieved_documents", []), ensure_ascii=False),
         "retrieved_pages": json.dumps(record.get("retrieved_pages", []), ensure_ascii=False),
+        "context_results": json.dumps(record.get("context_results", []), ensure_ascii=False),
+        "context_documents": json.dumps(record.get("context_documents", []), ensure_ascii=False),
+        "context_pages": json.dumps(record.get("context_pages", []), ensure_ascii=False),
         "similarities": json.dumps(record.get("similarities", []), ensure_ascii=False),
         "returned_passages": json.dumps(record.get("returned_passages", []), ensure_ascii=False),
         "sources": json.dumps(record.get("sources", []), ensure_ascii=False),
@@ -88,7 +91,13 @@ def write_xlsx(path: Path, report: dict[str, Any]) -> None:
 
 
 def _metric_bars(metrics: dict[str, Any]) -> str:
-    keys = ["document_recall_at_1", "document_recall_at_3", "document_recall_at_k", "page_recall_at_k"]
+    keys = [
+        "document_recall_at_1",
+        "document_recall_at_3",
+        "document_recall_at_k",
+        "context_recall_at_k",
+        "page_recall_at_k",
+    ]
     return "".join(
         f"<div class='bar-row'><span>{escape(key)}</span><div class='bar'><i style='width:{float(metrics[key])*100:.1f}%'></i></div><b>{float(metrics[key]):.1%}</b></div>"
         for key in keys
@@ -115,6 +124,21 @@ def render_html(report: dict[str, Any]) -> str:
         )
     refusal_correct = float(metrics["correct_refusal_rate"]) * 100
     refusal_wrong = float(metrics["improper_refusal_rate"]) * 100
+    confusion_table = (
+        "<table><tr><th>Situação real</th><th>Respondeu</th><th>Recusou</th></tr>"
+        f"<tr><td>Com resposta no acervo</td><td>{metrics['true_positives']} (VP)</td>"
+        f"<td>{metrics['false_negatives']} (FN)</td></tr>"
+        f"<tr><td>Sem resposta no acervo</td><td>{metrics['false_positives']} (FP)</td>"
+        f"<td>{metrics['true_negatives']} (VN)</td></tr></table>"
+    )
+    source_table = (
+        "<table><tr><th>Categoria</th><th>Quantidade</th></tr>"
+        f"<tr><td>Resposta com citação inline válida</td><td>{metrics['answer_with_valid_inline_source_count']}</td></tr>"
+        f"<tr><td>Resposta sem citação inline</td><td>{metrics['answer_without_inline_source_count']}</td></tr>"
+        f"<tr><td>Citou somente documento não esperado</td><td>{metrics['only_non_expected_documents_cited_count']}</td></tr>"
+        f"<tr><td>Recusa correta sem fonte</td><td>{metrics['correct_refusal_without_sources_count']}</td></tr>"
+        "</table>"
+    )
     times = [float(record.get("total_time_ms", 0)) for record in report["records"]]
     maximum_time = max(times, default=1.0) or 1.0
     time_bars = "".join(
@@ -134,6 +158,8 @@ def render_html(report: dict[str, Any]) -> str:
 <section><h2>Recuperação</h2>{_metric_bars(metrics)}</section>
 <section><h2>Recuperação por tipo</h2><table><tr><th>Tipo</th><th>N</th><th>Recall@k</th><th>Recusa correta</th></tr>{type_rows}</table></section>
 <section><h2>Recusas</h2><div class='bar-row'><span>Corretas</span><div class='bar'><i style='width:{refusal_correct:.1f}%'></i></div><b>{refusal_correct:.1f}%</b></div><div class='bar-row'><span>Indevidas</span><div class='bar'><i style='width:{refusal_wrong:.1f}%;background:#b33'></i></div><b>{refusal_wrong:.1f}%</b></div></section>
+<section><h2>Decisão de responder ou recusar</h2>{confusion_table}<p>Acurácia {metrics['decision_accuracy']:.1%} · precisão {metrics['decision_precision']:.1%} · recall {metrics['decision_recall']:.1%} · F1 {metrics['decision_f1']:.1%}.</p><p>Baseline de sempre responder: acurácia {metrics['always_answer_accuracy']:.1%}.</p></section>
+<section><h2>Presença de fontes</h2>{source_table}<p>Presença de fonte não é prova de correção factual.</p></section>
 <section><h2>Distribuição dos tempos</h2><div class='hist'>{time_bars}</div><p>Média {metrics['mean_time_ms']:.0f} ms · mediana {metrics['median_time_ms']:.0f} ms · p95 {metrics['p95_time_ms']:.0f} ms</p></section>
 <section><h2>Notas humanas</h2>{''.join(score_bars)}<p>Os campos de correção, fidelidade, completude, qualidade de citação e observações ficam editáveis (amarelos) no XLSX. Valores ausentes não são substituídos por avaliação automática.</p></section>
 <section><h2>Configuração</h2><table><tr><th>Parâmetro</th><th>Valor</th></tr>{settings_rows}</table></section>

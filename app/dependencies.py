@@ -10,10 +10,13 @@ from app.config import Settings, get_settings
 from app.ingestion.service import IngestionService
 from app.rag.factory import create_rag_service
 from app.rag.service import RAGService, Retriever
-from app.retrieval import BM25IndexService
+from app.retrieval import (
+    BM25IndexService,
+    create_bm25_retriever,
+    create_dense_retriever,
+)
 from app.repositories.documents import ChromaDocumentRepository
 from app.services.documents import DocumentService
-from app.vectorstore.embeddings import SentenceTransformerProvider
 from app.vectorstore.service import VectorIndexService
 
 
@@ -54,33 +57,18 @@ async def require_admin(
 
 @lru_cache
 def _dense_service() -> VectorIndexService:
-    settings = get_settings()
-    return VectorIndexService(
-        persist_dir=settings.chroma_dir,
-        collection_name=settings.chroma_collection,
-        embedding_provider=SentenceTransformerProvider(
-            settings.embedding_model,
-            settings.embedding_batch_size,
-        ),
-        batch_size=settings.embedding_batch_size,
-    )
+    return create_dense_retriever(get_settings())
 
 
 @lru_cache
 def _bm25_service() -> BM25IndexService:
     settings = get_settings()
-    service = BM25IndexService(
-        settings.processed_dir,
-        k1=settings.bm25_k1,
-        b=settings.bm25_b,
-    )
     repository = ChromaDocumentRepository(_dense_service().collection)
     active_document_ids = {item.document_id for item in repository.list()}
-    service.index(
-        settings.processed_dir,
-        allowed_document_ids=active_document_ids,
+    return create_bm25_retriever(
+        settings,
+        active_document_ids=active_document_ids,
     )
-    return service
 
 
 @lru_cache

@@ -41,9 +41,11 @@ evidência e a numeração real das páginas, editar a pergunta e somente então
   resultados.
 - Page Recall@k: proporção em que ao menos uma página esperada foi recuperada.
 - MRR: valor médio do inverso da posição do primeiro documento correto.
-- Baseline lexical BM25: comparação com os mesmos chunks, perguntas e valor de `k`
-  usados pelo recuperador denso. A comparação deve relatar as métricas dos dois
-  métodos lado a lado, separadamente nos conjuntos de desenvolvimento e final.
+- Estágio inicial: Hit@k e MRR sobre o ranking BM25 retornado por `/search`.
+- Contexto final: as mesmas métricas sobre as fontes efetivamente selecionadas por
+  `/chat` depois do reranqueamento, limiar e deduplicação.
+- A comparação BM25 versus denso existente é retrospectiva e deve permanecer
+  identificada como histórica.
 
 ### Geração (avaliação humana cega, escala 0–2)
 
@@ -65,6 +67,9 @@ ser resolvidas por consenso, sem alterar as perguntas finais.
   resposta;
 - média, mediana e percentil 95 da latência;
 - quantidade de erros e timeouts.
+- matriz de confusão com valores absolutos, acurácia, precisão, recall e F1;
+- respostas com citação inline válida, sem citação, com documento não esperado e
+  recusas corretas sem fontes.
 
 ## Procedimento reproduzível
 

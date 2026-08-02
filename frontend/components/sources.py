@@ -11,7 +11,7 @@ def render_sources(sources: list[dict[str, Any]]) -> None:
         st.info("A resposta não utilizou fontes do acervo.")
         return
 
-    st.markdown("#### Fontes utilizadas")
+    st.markdown("#### Fontes do contexto")
     for index, source in enumerate(sources, start=1):
         title = escape(
             str(
@@ -23,14 +23,14 @@ def render_sources(sources: list[dict[str, Any]]) -> None:
         page = _page_label(source.get("page_start"), source.get("page_end"))
         chapter = escape(str(source.get("section") or "Seção não informada"))
         score = source.get("score")
-        similarity = f"{score * 100:.0f}%" if isinstance(score, (int, float)) else "—"
+        relevance = f"{score:.3f}" if isinstance(score, (int, float)) else "—"
 
         st.markdown(
             f"""
             <div class="source-card">
                 <div class="section-kicker">Fonte {index:02d}</div>
                 <h4>{title}</h4>
-                <p>{'Página ' + page if page else 'Página não informada'} · {chapter} · {similarity} de similaridade</p>
+                <p>{'Página ' + page if page else 'Página não informada'} · {chapter} · relevância {relevance}</p>
             </div>
             """,
             unsafe_allow_html=True,

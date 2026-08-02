@@ -27,7 +27,7 @@ async def search(
             status.HTTP_422_UNPROCESSABLE_CONTENT,
             "Consulta excede o limite configurado",
         )
-    if request.top_k > settings.api_max_top_k:
+    if request.top_k is not None and request.top_k > settings.api_max_top_k:
         raise HTTPException(
             status.HTTP_422_UNPROCESSABLE_CONTENT,
             "top_k excede o limite configurado",
@@ -42,9 +42,10 @@ async def search(
         )
     started = time.perf_counter()
     try:
+        effective_top_k = request.top_k or settings.search_top_k
         results = service.search(
             request.query,
-            request.top_k,
+            effective_top_k,
             request.document_id,
             request.title,
         )

@@ -5,6 +5,9 @@ services:
       LLM_BASE_URL: https://api.openai.com/v1
       LLM_MODEL: gpt-4o-mini
       LLM_TIMEOUT_SECONDS: "60"
+      LLM_TEMPERATURE: "0.1"
+      LLM_TOP_P: "0.9"
+      LLM_MAX_TOKENS: "256"
     volumes:
       - ./pdfs_ifb:/data/pdfs
       - ./data/processed:/data/processed

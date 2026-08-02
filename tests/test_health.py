@@ -36,6 +36,10 @@ def test_health_reports_essential_components(tmp_path: Path) -> None:
     assert response.status_code == 200
     payload = response.json()
     assert payload["status"] == "ok"
+    assert payload["retrieval"]["provider"] == "bm25"
+    assert payload["configuration"]["top_k"] == 8
+    assert payload["configuration"]["llm_temperature"] == 0.1
+    assert payload["configuration"]["corpus"]["artifact_count"] == 0
     assert payload["chroma"]["available"] is True
     assert payload["embeddings"]["available"] is True
     assert payload["llm"] == {

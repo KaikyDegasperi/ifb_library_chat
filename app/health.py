@@ -7,6 +7,7 @@ from typing import Any
 import chromadb
 
 from app.config import Settings
+from app.runtime import runtime_configuration
 
 logger = logging.getLogger(__name__)
 
@@ -65,6 +66,7 @@ def build_health(settings: Settings) -> dict[str, Any]:
             "provider": settings.retrieval_provider,
             "detail": "configured",
         },
+        "configuration": runtime_configuration(settings),
         "chroma": chroma,
         "embeddings": embeddings,
         "llm": llm,

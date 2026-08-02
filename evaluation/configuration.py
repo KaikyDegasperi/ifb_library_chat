@@ -1,12 +1,11 @@
-"""Captura segura das configurações relevantes, sem credenciais."""
+"""Captura segura das configurações e do corpus, sem credenciais."""
 
-import hashlib
 import subprocess
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any
 
 from app.config import Settings
+from app.runtime import runtime_configuration
 
 
 def code_revision() -> str:
@@ -18,30 +17,30 @@ def code_revision() -> str:
         return "unknown"
 
 
-def prompt_version() -> str:
-    path = Path("app/rag/prompts.py")
-    if not path.is_file():
-        return "unknown"
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()[:16]
-
-
 def safe_settings(settings: Settings) -> dict[str, Any]:
+    configuration = runtime_configuration(settings)
+    # Campo legado mantido nos novos resultados para leitores antigos.
     return {
-        "chunk_size": settings.ingest_chunk_size,
-        "chunk_overlap": settings.ingest_chunk_overlap,
-        "top_k": settings.rag_retrieval_top_k,
-        "candidate_pool_size": settings.rag_candidate_pool_size,
-        "similarity_threshold": settings.rag_min_similarity,
-        "retrieval_provider": settings.retrieval_provider,
-        "bm25_k1": settings.bm25_k1,
-        "bm25_b": settings.bm25_b,
-        "embedding_model": settings.embedding_model,
-        "generator_model": settings.llm_model or f"provider:{settings.llm_provider}",
-        "prompt_version": prompt_version(),
-        "llm_timeout_seconds": settings.llm_timeout_seconds,
-        "max_context_chars": settings.rag_max_context_chars,
-        "duplicate_threshold": settings.rag_duplicate_threshold,
+        **configuration,
+        "similarity_threshold": configuration["relevance_threshold"],
     }
+
+
+def validate_runtime_configuration(
+    expected: dict[str, Any],
+    actual: dict[str, Any],
+) -> list[str]:
+    """Compara a configuração congelada com a API realmente em execução."""
+    keys = runtime_configuration(Settings(_env_file=None)).keys()
+    errors: list[str] = []
+    for key in keys:
+        if key not in expected:
+            errors.append(f"configuração congelada não contém {key}")
+        elif actual.get(key) != expected.get(key):
+            errors.append(
+                f"{key}: congelado={expected.get(key)!r}, API={actual.get(key)!r}"
+            )
+    return errors
 
 
 def frozen_configuration(settings: Settings, benchmark_version: str, seed: int) -> dict[str, Any]:

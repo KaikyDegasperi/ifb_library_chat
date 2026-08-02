@@ -3,7 +3,9 @@ from pathlib import Path
 
 import pytest
 
+from app.config import Settings
 from evaluation.bm25_baseline import BM25Index, CorpusChunk, summarize, tokenize
+from evaluation.configuration import safe_settings, validate_runtime_configuration
 from evaluation.complete import _derived_record
 from evaluation.generate_benchmark import generate_benchmark, generate_corpus_benchmark
 from evaluation.io import (
@@ -12,7 +14,13 @@ from evaluation.io import (
     write_benchmark,
     write_benchmark_xlsx,
 )
-from evaluation.metrics import document_recall_at, mean_reciprocal_rank, page_recall_at
+from evaluation.metrics import (
+    calculate_metrics,
+    context_recall_at,
+    document_recall_at,
+    mean_reciprocal_rank,
+    page_recall_at,
+)
 from evaluation.models import Benchmark, BenchmarkQuestion, RunOutput, RunRecord
 from evaluation.report import generate_reports
 from evaluation.run import execute_question, is_refusal, run_benchmark
@@ -53,6 +61,8 @@ def record(identifier: str = "Q001", **changes) -> dict:
             {"file_name": "doc.pdf", "page_start": 2, "page_end": 2},
         ],
         "sources": [{"file_name": "doc.pdf", "page_start": 2, "page_end": 2}],
+        "context_results": [{"file_name": "doc.pdf", "page_start": 2, "page_end": 2}],
+        "context_documents": ["doc.pdf"], "context_pages": [2],
         "top_k": 2, "similarity_threshold": 0.35, "total_time_ms": 10,
         "retrieval_time_ms": 4, "generation_time_ms": 6, "refused": False,
         "error": None, "timeout": False, "timestamp": "2026-01-01T00:00:00+00:00",
@@ -176,6 +186,59 @@ def test_recall_mrr_and_page_metrics():
     assert mean_reciprocal_rank(records) == 0.5
     assert page_recall_at(records, 1) == 0
     assert page_recall_at(records, 2) == 1
+    assert context_recall_at(records, 2) == 1
+
+
+def test_decision_confusion_matrix_baseline_and_sources():
+    records = [
+        record("Q001", produced_answer="Resposta [Fonte 1]."),
+        record("Q002", answerable=True, refused=True, produced_answer="Não encontrei."),
+        record(
+            "Q003",
+            answerable=False,
+            expected_document=None,
+            expected_pages=[],
+            refused=False,
+            produced_answer="Resposta indevida.",
+            sources=[],
+            context_results=[],
+            context_documents=[],
+            context_pages=[],
+        ),
+        record(
+            "Q004",
+            answerable=False,
+            expected_document=None,
+            expected_pages=[],
+            refused=True,
+            produced_answer="Não encontrei.",
+            sources=[],
+            context_results=[],
+            context_documents=[],
+            context_pages=[],
+        ),
+    ]
+
+    metrics = calculate_metrics(records)
+
+    assert (metrics["true_positives"], metrics["false_negatives"]) == (1, 1)
+    assert (metrics["false_positives"], metrics["true_negatives"]) == (1, 1)
+    assert metrics["decision_accuracy"] == 0.5
+    assert metrics["always_answer_accuracy"] == 0.5
+    assert metrics["answer_with_valid_inline_source_count"] == 1
+    assert metrics["answer_without_inline_source_count"] == 1
+    assert metrics["correct_refusal_without_sources_count"] == 1
+
+
+def test_runtime_configuration_mismatch_is_rejected(tmp_path: Path):
+    settings = Settings(processed_dir=tmp_path, _env_file=None)
+    expected = safe_settings(settings)
+    actual = {key: value for key, value in expected.items() if key != "corpus"}
+    actual["top_k"] = 5
+
+    errors = validate_runtime_configuration(expected, actual)
+
+    assert any("top_k" in error for error in errors)
 
 
 def test_page_recall_requires_the_expected_document():

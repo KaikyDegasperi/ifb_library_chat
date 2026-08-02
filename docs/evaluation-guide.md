@@ -3,7 +3,7 @@
 ## 1. Instalação
 
 ```bash
-uv sync
+uv sync --locked
 ```
 
 Inicie a API em outro terminal antes de executar perguntas:
@@ -70,15 +70,19 @@ Use somente o split de desenvolvimento para escolher parâmetros:
 uv run python -m evaluation.run \
   --benchmark evaluation/benchmark/benchmark_approved.json \
   --split development \
-  --output evaluation/results/development_run.json
+  --output evaluation/results/official_bm25/development_run.json
 ```
+
+Antes da primeira pergunta, o executor consulta `/health` e compara recuperador,
+parâmetros BM25, `top_k`, chunking, limiares, modelo gerador e hash do prompt com a
+configuração registrada. A execução é interrompida se a API ativa divergir.
 
 Para auditar que nenhum item final vazou para uma execução de desenvolvimento:
 
 ```bash
 uv run python -m evaluation.validate_benchmark \
   --benchmark evaluation/benchmark/benchmark_approved.json \
-  --development-run evaluation/results/development_run.json
+  --development-run evaluation/results/official_bm25/development_run.json
 ```
 
 ## 6. Congelamento
@@ -101,10 +105,14 @@ uv run python -m evaluation.run \
   --benchmark evaluation/benchmark/benchmark_approved.json \
   --split final \
   --confirm-final \
-  --output evaluation/results/final_run.json
+  --output evaluation/results/official_bm25/final_run.json
 ```
 
 Esse comando não deve ser executado durante desenvolvimento. A entrega do módulo não executa o split final.
+Os arquivos em `evaluation/results/complete` são da execução densa histórica;
+não os sobrescreva nem os atribua ao pipeline BM25 atual. Como o conjunto final
+existente já foi observado na comparação retrospectiva, uma confirmação rigorosa
+requer um conjunto novo e ainda não observado.
 
 ## 8. Relatórios e notas humanas
 
@@ -112,8 +120,8 @@ Gere os quatro formatos:
 
 ```bash
 uv run python -m evaluation.report \
-  --run evaluation/results/development_run.json \
-  --output-dir evaluation/results
+  --run evaluation/results/official_bm25/development_run.json \
+  --output-dir evaluation/results/official_bm25/development
 ```
 
 No `report.xlsx`, preencha as colunas amarelas `correctness`, `faithfulness`, `completeness`, `citation_quality` (0, 1 ou 2) e `human_notes`. A rubrica é: 0 incorreto/inventado; 1 parcial; 2 correto e sustentado.
@@ -122,23 +130,27 @@ Importe as notas e gere novamente os relatórios:
 
 ```bash
 uv run python -m evaluation.import_scores \
-  --run evaluation/results/development_run.json \
-  --xlsx evaluation/results/report.xlsx \
-  --output evaluation/results/development_run_scored.json
+  --run evaluation/results/official_bm25/development_run.json \
+  --xlsx evaluation/results/official_bm25/development/report.xlsx \
+  --output evaluation/results/official_bm25/development_run_scored.json
 
 uv run python -m evaluation.report \
-  --run evaluation/results/development_run_scored.json \
-  --output-dir evaluation/results
+  --run evaluation/results/official_bm25/development_run_scored.json \
+  --output-dir evaluation/results/official_bm25/development_scored
 ```
 
 ## 9. Interpretação
 
-- Recall de documento verifica se o arquivo esperado aparece até a posição indicada.
+- Recall de documento e MRR do estágio inicial usam o ranking de `/search`.
+- Recall e MRR de contexto usam somente as fontes finais selecionadas por `/chat`.
 - Recall de página exige interseção entre páginas esperadas e recuperadas.
-- MRR premia o primeiro documento correto em posições mais altas.
 - Taxas de citação usam as fontes efetivamente apresentadas por `/chat`.
+- A matriz de confusão e as contagens absolutas acompanham acurácia, precisão,
+  recall, F1 e o baseline de sempre responder.
 - Recusa correta exige pergunta marcada como sem resposta no acervo e resposta explicitamente negativa.
 - Recusa indevida é uma negativa em pergunta com resposta no acervo.
 - Resposta indevida é uma resposta não negativa a uma pergunta sem resposta.
 
 O score vetorial nunca é tratado como prova de correção. Resultados sem nota humana continuam sem nota; nenhuma avaliação automática substitui a revisão.
+Uma execução completa também depende do provedor de LLM configurado e de sua
+credencial, que nunca é gravada nos artefatos.

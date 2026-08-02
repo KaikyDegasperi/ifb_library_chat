@@ -24,7 +24,7 @@ async def chat(
             status.HTTP_422_UNPROCESSABLE_CONTENT,
             "Pergunta excede o limite configurado",
         )
-    if request.top_k > settings.api_max_top_k:
+    if request.top_k is not None and request.top_k > settings.api_max_top_k:
         raise HTTPException(
             status.HTTP_422_UNPROCESSABLE_CONTENT,
             "top_k excede o limite configurado",

@@ -17,7 +17,7 @@ uma interface Streamlit para consulta e administração do acervo.
 Clone o repositório, entre na pasta e execute:
 
 ```bash
-uv sync
+uv sync --locked
 cp .env.example .env
 ```
 
@@ -206,8 +206,12 @@ arquivo, URL ou log. Um token negado é descartado da sessão.
 | `LLM_MODEL` | vazio | Modelo de linguagem |
 | `LLM_API_KEY` | vazio | Credencial local; nunca é retornada pela API |
 | `LLM_TIMEOUT_SECONDS` | `30` | Tempo máximo para geração |
-| `RAG_RETRIEVAL_TOP_K` | `8` | Candidatos recuperados antes da seleção |
-| `RAG_MIN_SIMILARITY` | `0.35` | Similaridade mínima aceita como contexto |
+| `LLM_TEMPERATURE` | `0.1` | Temperatura usada pelo gerador |
+| `LLM_TOP_P` | `0.9` | Amostragem nucleus do gerador |
+| `LLM_MAX_TOKENS` | `256` | Limite de tokens da resposta |
+| `RAG_RETRIEVAL_TOP_K` | `8` | Trechos mantidos no contexto final; padrão de `/chat` |
+| `RAG_CANDIDATE_POOL_SIZE` | `24` | Candidatos recuperados antes da seleção |
+| `RAG_MIN_SIMILARITY` | `0.35` | Limiar de relevância; no BM25 incide sobre o score normalizado |
 | `RAG_MAX_CONTEXT_CHARS` | `12000` | Limite total do contexto enviado ao LLM |
 | `RAG_MAX_QUESTION_CHARS` | `2000` | Limite da pergunta |
 | `RAG_DUPLICATE_THRESHOLD` | `0.92` | Limiar para remover chunks quase idênticos |
@@ -334,7 +338,7 @@ uv run python -m app.cli.search \
   --title "Título exato do trabalho"
 ```
 
-Cada resultado inclui similaridade, documento, arquivo, páginas, seção, hash
+Cada resultado inclui pontuação de relevância, documento, arquivo, páginas, seção, hash
 e caminho do PDF original.
 
 ## Diagnóstico ponta a ponta do acervo
@@ -392,9 +396,11 @@ comando termina com código 1. Erros de entrada terminam com código 2.
 
 ## Pipeline RAG
 
-O serviço RAG é independente da API HTTP. Ele valida a pergunta, consulta o
-recuperador configurado, descarta resultados abaixo do limiar, remove trechos quase idênticos,
-limita o contexto e chama o provedor de linguagem configurado.
+O pipeline oficial usa recuperação lexical BM25 (`k1=1,5`, `b=0,75`). O serviço
+recupera um pool de 24 candidatos, reordena-os por cobertura lexical e score BM25,
+aplica o limiar de relevância e a deduplicação e mantém até oito trechos no contexto.
+O recuperador denso permanece disponível somente para reprodução dos experimentos
+históricos com `RETRIEVAL_PROVIDER=dense`.
 
 Configuração de um endpoint compatível com a API de chat da OpenAI:
 
@@ -418,7 +424,7 @@ rag = create_rag_service(get_settings())
 response = rag.answer("O que os TCCs dizem sobre discalculia?")
 ```
 
-Quando não há resultado com similaridade suficiente, o LLM não é chamado.
+Quando não há resultado com relevância suficiente, o LLM não é chamado.
 Falhas e timeouts na geração retornam uma mensagem controlada junto das fontes
 recuperadas.
 
@@ -666,6 +672,41 @@ políticas de acesso da instituição.
 ```bash
 uv run pytest
 ```
+
+## Avaliação reproduzível
+
+Os resultados de `evaluation/results/complete` pertencem à execução densa
+histórica e não devem ser atribuídos ao BM25 atual. O executor faz um preflight da
+configuração segura publicada por `/health` e interrompe a execução quando a API
+diverge do arquivo congelado.
+
+Com a API BM25 ativa, execute desenvolvimento em uma pasta nova:
+
+```bash
+uv run python -m evaluation.run \
+  --benchmark evaluation/benchmark/benchmark_approved.json \
+  --split development \
+  --output evaluation/results/official_bm25/development_run.json
+```
+
+Depois de revisar exclusivamente o desenvolvimento, congele e execute o conjunto
+final uma vez. A comparação BM25 no conjunto final existente é retrospectiva; uma
+avaliação confirmatória rigorosa exige um novo conjunto ainda não observado.
+
+```bash
+uv run python -m evaluation.freeze_config
+uv run python -m evaluation.run \
+  --benchmark evaluation/benchmark/benchmark_approved.json \
+  --split final --confirm-final \
+  --output evaluation/results/official_bm25/final_run.json
+uv run python -m evaluation.report \
+  --run evaluation/results/official_bm25/final_run.json \
+  --output-dir evaluation/results/official_bm25/final
+```
+
+Os relatórios incluem o ranking inicial do recuperador, o contexto final do RAG,
+matriz de confusão, acurácia, precisão, recall, F1, baseline de sempre responder e
+contagens de citações. Nenhuma dessas medidas comprova correção factual.
 
 ## Scraper
 

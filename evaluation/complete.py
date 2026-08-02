@@ -246,7 +246,11 @@ def _derived_record(
     repetition: int,
 ) -> dict[str, Any]:
     answerable = bool(benchmark["answerable"])
-    results = list(record.get("retrieval_results", []))[: int(record.get("top_k", 0))]
+    stage_one_results = list(record.get("retrieval_results", []))
+    context_results = list(
+        record.get("context_results") or record.get("sources", [])
+    )
+    results = context_results[: int(record.get("top_k", 0))]
     expected_document = benchmark.get("expected_document")
     expected_pages = list(benchmark.get("expected_pages", []))
     documents = [item.get("file_name") for item in results]
@@ -363,6 +367,8 @@ def _derived_record(
         "expected_pages": expected_pages,
         "printed_pages": benchmark.get("printed_pages", []),
         "retrieval_results": results,
+        "stage_one_retrieval_results": stage_one_results,
+        "context_results": context_results,
         "retrieved_documents": documents,
         "retrieved_pages": record.get("retrieved_pages", []),
         "scores": [item.get("score") for item in results],
@@ -446,10 +452,39 @@ def _metric(
     }
 
 
+def _scalar_metric(
+    name: str,
+    value: float | int,
+    denominator: int,
+    *,
+    percentage: bool = False,
+    notes: str = "",
+) -> dict[str, Any]:
+    return {
+        "metric": name,
+        "value": value,
+        "numerator": None,
+        "denominator": denominator,
+        "percentage": value * 100 if percentage else None,
+        "measurable": True,
+        "notes": notes,
+    }
+
+
 def calculate_summary(rows: list[dict[str, Any]], scope: str) -> list[dict[str, Any]]:
     selected = rows if scope == "overall" else [row for row in rows if row["split"] == scope]
     answerable = [row for row in selected if row["answerable"]]
     negative = [row for row in selected if not row["answerable"]]
+    answered = [row for row in selected if not row["refused"]]
+    true_positives = sum(row["answerable"] and not row["refused"] for row in selected)
+    false_positives = sum(not row["answerable"] and not row["refused"] for row in selected)
+    false_negatives = sum(row["answerable"] and row["refused"] for row in selected)
+    true_negatives = sum(not row["answerable"] and row["refused"] for row in selected)
+    precision = true_positives / len(answered) if answered else 0.0
+    recall = true_positives / len(answerable) if answerable else 0.0
+    f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
+    accuracy = (true_positives + true_negatives) / len(selected) if selected else 0.0
+    always_answer_accuracy = len(answerable) / len(selected) if selected else 0.0
     k = int(selected[0]["settings"].get("top_k", 0)) if selected else 0
     metrics = [
         _metric(answerable, "hit_rate_at_1", [row["hit_rate_at_1"] for row in answerable]),
@@ -471,6 +506,38 @@ def calculate_summary(rows: list[dict[str, Any]], scope: str) -> list[dict[str, 
         _metric(negative, "correct_refusal", [row["correct_refusal"] for row in negative]),
         _metric(answerable, "improper_refusal", [row["improper_refusal"] for row in answerable]),
         _metric(negative, "improper_answer", [row["improper_answer"] for row in negative]),
+        _scalar_metric("true_positives", true_positives, len(selected)),
+        _scalar_metric("false_positives", false_positives, len(selected)),
+        _scalar_metric("false_negatives", false_negatives, len(selected)),
+        _scalar_metric("true_negatives", true_negatives, len(selected)),
+        _scalar_metric("decision_accuracy", accuracy, len(selected), percentage=True),
+        _scalar_metric("decision_precision", precision, len(answered), percentage=True),
+        _scalar_metric("decision_recall", recall, len(answerable), percentage=True),
+        _scalar_metric("decision_f1", f1, len(selected), percentage=True),
+        _scalar_metric(
+            "always_answer_accuracy",
+            always_answer_accuracy,
+            len(selected),
+            percentage=True,
+            notes="Baseline trivial que responde a todas as perguntas.",
+        ),
+        _metric(
+            selected,
+            "valid_inline_source",
+            [bool(row["citation_indices"]) for row in selected],
+        ),
+        _metric(
+            negative,
+            "correct_refusal_without_source",
+            [
+                bool(
+                    row["correct_refusal"]
+                    and not row["sources"]
+                    and not row["citation_indices"]
+                )
+                for row in negative
+            ],
+        ),
         _metric(selected, "empty_answer", [row["empty_answer"] for row in selected]),
         _metric(selected, "errors", [bool(row["error"]) for row in selected]),
         _metric(selected, "timeouts", [row["timeout"] for row in selected]),
@@ -488,7 +555,15 @@ def calculate_summary(rows: list[dict[str, Any]], scope: str) -> list[dict[str, 
 
 
 def _flat(row: dict[str, Any]) -> dict[str, Any]:
-    excluded = {"raw_record", "judge_raw", "retrieval_results", "sources", "settings"}
+    excluded = {
+        "raw_record",
+        "judge_raw",
+        "retrieval_results",
+        "stage_one_retrieval_results",
+        "context_results",
+        "sources",
+        "settings",
+    }
     result: dict[str, Any] = {}
     for key, value in row.items():
         if key in excluded:
@@ -497,6 +572,12 @@ def _flat(row: dict[str, Any]) -> dict[str, Any]:
     result["documents_retrieved"] = json.dumps(row["retrieved_documents"], ensure_ascii=False)
     result["pages_retrieved"] = json.dumps(row["retrieved_pages"], ensure_ascii=False)
     result["retrieval_results_json"] = json.dumps(row["retrieval_results"], ensure_ascii=False)
+    result["stage_one_retrieval_results_json"] = json.dumps(
+        row["stage_one_retrieval_results"], ensure_ascii=False
+    )
+    result["context_results_json"] = json.dumps(
+        row["context_results"], ensure_ascii=False
+    )
     result["sources_json"] = json.dumps(row["sources"], ensure_ascii=False)
     return result
 
@@ -534,6 +615,8 @@ def _display(item: dict[str, Any]) -> str:
     if item["value"] is None:
         return "não mensurável"
     if item["percentage"] is not None:
+        if item["numerator"] is None:
+            return f"{item['percentage']:.1f}% (N={item['denominator']})"
         return f"{item['percentage']:.1f}% ({item['numerator']}/{item['denominator']})"
     return f"{item['value']:.4f} (N={item['denominator']})"
 
@@ -556,6 +639,8 @@ def _write_documents(
         "page_tolerance_1", "citation_document_correct", "citation_page_exact",
         "factual_correct", "mean_completeness", "mean_faithfulness", "mean_relevance",
         "fully_correct", "correct_refusal", "improper_refusal", "improper_answer",
+        "decision_accuracy", "decision_precision", "decision_recall", "decision_f1",
+        "always_answer_accuracy", "valid_inline_source", "correct_refusal_without_source",
         "latency_total_ms_mean", "latency_total_ms_p95", "latency_total_ms_p99",
         "errors", "timeouts", "manual_review_required",
     ]

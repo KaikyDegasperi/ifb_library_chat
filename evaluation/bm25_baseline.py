@@ -20,6 +20,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from app.retrieval import BM25IndexService
 from evaluation.io import read_json
 
 
@@ -264,11 +265,20 @@ def evaluate_bm25(
         if question.get("status") == "approved"
     ]
     chunks = load_chunks(processed_dir)
-    index = BM25Index(chunks, k1=k1, b=b)
+    index = BM25IndexService(processed_dir, k1=k1, b=b)
+    index.index(processed_dir)
     records: list[dict[str, Any]] = []
     for question in questions:
         started = time.perf_counter()
-        results = index.search(question["question"], top_k)
+        search_results = index.search(question["question"], top_k)
+        results = [
+            {
+                "rank": rank,
+                **item.model_dump(mode="json", exclude={"similarity"}),
+                "score": item.similarity,
+            }
+            for rank, item in enumerate(search_results, 1)
+        ]
         elapsed_ms = (time.perf_counter() - started) * 1000
         rank = (
             _first_document_rank(results, question.get("expected_document"))
@@ -325,6 +335,7 @@ def evaluate_bm25(
             "b": b,
             "tokenization": "NFKC + casefold + palavras Unicode; sem stemming e sem stopwords",
             "retrieval_unit": "chunk",
+            "implementation": "app.retrieval.BM25IndexService",
         },
         "corpus": {
             "document_count": len({_normalized_name(chunk.file_name) for chunk in chunks}),

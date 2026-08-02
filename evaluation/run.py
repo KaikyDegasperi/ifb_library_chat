@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from app.config import get_settings
-from evaluation.configuration import safe_settings
+from evaluation.configuration import safe_settings, validate_runtime_configuration
 from evaluation.io import read_benchmark, read_json, write_json
 from evaluation.models import RunOutput, RunRecord
 from evaluation.validate_benchmark import validate_benchmark
@@ -70,6 +70,9 @@ def execute_question(client: APIClient, question, split: str, settings: dict[str
         similarities=[float(result.get("score", 0.0)) for result in results],
         returned_passages=[str(result.get("content", "")) for result in results],
         retrieval_results=list(results),
+        context_results=list(sources),
+        context_documents=[str(source.get("file_name", "")) for source in sources],
+        context_pages=_pages(sources),
         sources=list(sources), top_k=int(settings["top_k"]),
         similarity_threshold=float(settings["similarity_threshold"]),
         total_time_ms=max(0, round((time.perf_counter() - started) * 1000)),
@@ -115,6 +118,21 @@ def run_benchmark(
     started_at = datetime.now(timezone.utc).isoformat()
     client = APIClient(base_url, default_timeout=timeout_seconds, chat_timeout=timeout_seconds)
     try:
+        try:
+            health = client.health()
+        except APIClientError as exc:
+            raise ValueError(
+                "Não foi possível validar a configuração da API antes da avaliação"
+            ) from exc
+        runtime_errors = validate_runtime_configuration(
+            execution_settings,
+            dict(health.get("configuration") or {}),
+        )
+        if runtime_errors:
+            raise ValueError(
+                "A API em execução diverge da configuração avaliada: "
+                + "; ".join(runtime_errors)
+            )
         records = [execute_question(client, question, split, execution_settings) for question in selected]
     finally:
         client.close()

@@ -70,6 +70,9 @@ class RunRecord(HumanScores):
     similarities: list[float] = Field(default_factory=list)
     returned_passages: list[str] = Field(default_factory=list)
     retrieval_results: list[dict] = Field(default_factory=list)
+    context_results: list[dict] = Field(default_factory=list)
+    context_documents: list[str] = Field(default_factory=list)
+    context_pages: list[int] = Field(default_factory=list)
     sources: list[dict] = Field(default_factory=list)
     top_k: int
     similarity_threshold: float

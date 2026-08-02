@@ -88,11 +88,13 @@ class APIClient:
     def chat(
         self,
         question: str,
-        top_k: int = 5,
+        top_k: int | None = None,
         document_id: str | None = None,
         title: str | None = None,
     ) -> dict[str, Any]:
-        payload: dict[str, Any] = {"question": question, "top_k": top_k}
+        payload: dict[str, Any] = {"question": question}
+        if top_k is not None:
+            payload["top_k"] = top_k
         if document_id:
             payload["document_id"] = document_id
         if title:
@@ -104,11 +106,14 @@ class APIClient:
             json=payload,
         )
 
-    def search(self, query: str, top_k: int = 5) -> dict[str, Any]:
+    def search(self, query: str, top_k: int | None = None) -> dict[str, Any]:
+        payload: dict[str, Any] = {"query": query}
+        if top_k is not None:
+            payload["top_k"] = top_k
         return self._request(
             "POST",
             "/search",
-            json={"query": query, "top_k": top_k},
+            json=payload,
         )
 
     def _request(

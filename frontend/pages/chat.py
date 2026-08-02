@@ -124,7 +124,6 @@ def _render_messages() -> None:
 
 
 def _submit_question(client: APIClient, question: str, history: Any) -> None:
-    top_k = 5
     recent = st.session_state.setdefault("recent_questions", [])
     if question not in recent:
         recent.insert(0, question)
@@ -132,7 +131,7 @@ def _submit_question(client: APIClient, question: str, history: Any) -> None:
     with history:
         with st.spinner("Consultando o acervo e montando a resposta..."):
             try:
-                payload = client.chat(question, top_k=top_k)
+                payload = client.chat(question)
             except APITimeoutError as exc:
                 _store_error(str(exc), "timeout")
                 st.rerun()

@@ -8,8 +8,7 @@ from app.rag.llm import (
     UnavailableLLMProvider,
 )
 from app.rag.service import RAGService, Retriever
-from app.retrieval import BM25IndexService
-from app.vectorstore import SentenceTransformerProvider, VectorIndexService
+from app.retrieval.factory import create_retriever
 
 
 def create_llm_provider(settings: Settings) -> LanguageModelProvider:
@@ -21,18 +20,18 @@ def create_llm_provider(settings: Settings) -> LanguageModelProvider:
             base_url=settings.llm_base_url or "",
             model=settings.llm_model or "",
             api_key=settings.llm_api_key,
-            default_temperature=settings.local_llm_temperature,
-            default_top_p=settings.local_llm_top_p,
-            default_max_tokens=settings.local_llm_max_tokens,
+            default_temperature=settings.llm_temperature,
+            default_top_p=settings.llm_top_p,
+            default_max_tokens=settings.llm_max_tokens,
         )
     if provider in {"ollama", "ollama-compatible", "local-llm", "local_llm"}:
         return OllamaChatProvider(
             base_url=settings.llm_base_url or "",
             model=settings.llm_model or "",
             api_key=settings.llm_api_key,
-            default_temperature=settings.local_llm_temperature,
-            default_top_p=settings.local_llm_top_p,
-            default_max_tokens=settings.local_llm_max_tokens,
+            default_temperature=settings.llm_temperature,
+            default_top_p=settings.llm_top_p,
+            default_max_tokens=settings.llm_max_tokens,
             default_context_window=settings.local_llm_context_size,
             keep_alive=settings.local_llm_keep_alive or None,
         )
@@ -43,25 +42,8 @@ def create_rag_service(
     settings: Settings,
     retriever: Retriever | None = None,
 ) -> RAGService:
-    if retriever is None and settings.retrieval_provider == "bm25":
-        bm25 = BM25IndexService(
-            settings.processed_dir,
-            k1=settings.bm25_k1,
-            b=settings.bm25_b,
-        )
-        bm25.index(settings.processed_dir)
-        retriever = bm25
-    elif retriever is None:
-        embedding_provider = SentenceTransformerProvider(
-            model_name=settings.embedding_model,
-            batch_size=settings.embedding_batch_size,
-        )
-        retriever = VectorIndexService(
-            persist_dir=settings.chroma_dir,
-            collection_name=settings.chroma_collection,
-            embedding_provider=embedding_provider,
-            batch_size=settings.embedding_batch_size,
-        )
+    if retriever is None:
+        retriever = create_retriever(settings)
     return RAGService(
         retriever=retriever,
         llm_provider=create_llm_provider(settings),

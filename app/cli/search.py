@@ -7,8 +7,7 @@ from pathlib import Path
 
 from app.config import get_settings
 from app.logging_config import configure_logging
-from app.retrieval import BM25IndexService
-from app.vectorstore import SentenceTransformerProvider, VectorIndexService
+from app.retrieval import create_retriever
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -34,23 +33,16 @@ def main() -> int:
     settings = get_settings()
     args = build_parser().parse_args()
     configure_logging(settings.log_level, settings.logs_dir)
-    if args.provider == "bm25":
-        service = BM25IndexService(
-            args.processed_dir,
-            k1=settings.bm25_k1,
-            b=settings.bm25_b,
-        )
-        service.index(args.processed_dir)
-    else:
-        provider = SentenceTransformerProvider(
-            args.model,
-            settings.embedding_batch_size,
-        )
-        service = VectorIndexService(
-            persist_dir=args.chroma_dir,
-            collection_name=args.collection,
-            embedding_provider=provider,
-        )
+    runtime_settings = settings.model_copy(
+        update={
+            "retrieval_provider": args.provider,
+            "processed_dir": args.processed_dir,
+            "chroma_dir": args.chroma_dir,
+            "chroma_collection": args.collection,
+            "embedding_model": args.model,
+        }
+    )
+    service = create_retriever(runtime_settings)
     started = time.perf_counter()
     results = service.search(
         query=args.query,

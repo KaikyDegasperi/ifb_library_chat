@@ -51,6 +51,9 @@ class Settings(BaseSettings):
     llm_model: str | None = None
     llm_api_key: str | None = Field(default=None, repr=False)
     llm_timeout_seconds: float = Field(default=30.0, gt=0)
+    llm_temperature: float = Field(default=0.1, ge=0.0, le=2.0)
+    llm_top_p: float = Field(default=0.9, ge=0.0, le=1.0)
+    llm_max_tokens: int = Field(default=256, ge=1)
 
     local_llm_context_size: int = Field(default=2_048, ge=256)
     local_llm_max_tokens: int = Field(default=256, ge=32)
