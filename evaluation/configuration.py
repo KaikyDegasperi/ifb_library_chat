@@ -1,5 +1,9 @@
 """Captura segura das configurações e do corpus, sem credenciais."""
 
+import hashlib
+import importlib.metadata
+import json
+import platform
 import subprocess
 from datetime import datetime, timezone
 from typing import Any
@@ -26,6 +30,25 @@ def safe_settings(settings: Settings) -> dict[str, Any]:
     }
 
 
+def configuration_fingerprint(configuration: dict[str, Any]) -> str:
+    canonical = json.dumps(
+        configuration,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return "sha256:" + hashlib.sha256(canonical).hexdigest()
+
+
+def runtime_versions() -> dict[str, str]:
+    return {
+        "python": platform.python_version(),
+        "chromadb": importlib.metadata.version("chromadb"),
+        "docling": importlib.metadata.version("docling"),
+        "transformers": importlib.metadata.version("transformers"),
+    }
+
+
 def validate_runtime_configuration(
     expected: dict[str, Any],
     actual: dict[str, Any],
@@ -43,12 +66,21 @@ def validate_runtime_configuration(
     return errors
 
 
-def frozen_configuration(settings: Settings, benchmark_version: str, seed: int) -> dict[str, Any]:
+def frozen_configuration(
+    settings: Settings,
+    benchmark_version: str,
+    seed: int,
+) -> dict[str, Any]:
+    configuration = safe_settings(settings)
     return {
         "status": "frozen",
-        **safe_settings(settings),
+        "experiment": "official_bm25_end_to_end",
+        "target_split": "final",
+        **configuration,
+        "configuration_fingerprint": configuration_fingerprint(configuration),
         "benchmark_version": benchmark_version,
         "seed": seed,
+        "runtime_versions": runtime_versions(),
         "code_revision": code_revision(),
         "frozen_at": datetime.now(timezone.utc).isoformat(),
     }

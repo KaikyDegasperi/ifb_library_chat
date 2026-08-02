@@ -1,4 +1,4 @@
-# AGENTS.md
+# AGENT.md
 
 ## 1. Objetivo do projeto
 
@@ -10,9 +10,9 @@ O sistema permite:
 - enviar documentos PDF;
 - processar PDFs com Docling;
 - dividir documentos em chunks;
-- gerar embeddings;
-- indexar os chunks no ChromaDB;
-- realizar busca semântica;
+- indexar os chunks no recuperador lexical BM25;
+- manter embeddings e ChromaDB para o catálogo e a reprodução histórica;
+- realizar recuperação lexical em duas etapas;
 - gerar respostas com contexto usando um LLM;
 - exibir as fontes usadas na resposta;
 - administrar documentos por uma interface Streamlit.
@@ -52,6 +52,7 @@ Rotas
 Serviços
     ↓
 Ingestão, ChromaDB e RAG
+```
 
 O frontend deve sempre chamar a API usando frontend/api_client.py.
 
@@ -63,18 +64,21 @@ serviços de ingestão;
 serviços RAG;
 repositórios;
 modelo de embeddings.
-4. Estrutura do projeto
+
+## 4. Estrutura do projeto
+
 Aplicação principal
 app/api.py: criação e configuração principal da aplicação FastAPI.
 app/main.py: alias da aplicação para inicialização.
 app/config.py: configurações carregadas por variáveis de ambiente.
+app/runtime.py: captura segura da configuração e fingerprint do corpus.
 app/dependencies.py: construção e injeção de dependências.
 app/health.py: verificações de saúde dos componentes.
 app/logging_config.py: configuração de logs.
 Rotas HTTP
 app/routes/health.py: health check.
 app/routes/documents.py: upload, ingestão, listagem e exclusão.
-app/routes/search.py: busca semântica sem geração.
+app/routes/search.py: ranking inicial do recuperador configurado, BM25 por padrão.
 app/routes/chat.py: perguntas e respostas usando RAG.
 app/routes/errors.py: respostas de erro padronizadas.
 
@@ -127,6 +131,7 @@ app/ingestion/models.py: modelos da ingestão.
 
 Fluxo esperado:
 
+```text
 PDF
     ↓
 Docling
@@ -136,6 +141,7 @@ Documento estruturado
 Chunks com metadados
     ↓
 Arquivos em data/processed
+```
 
 O chunker deve preservar, quando possível:
 
@@ -155,6 +161,17 @@ app/vectorstore/models.py: modelos dos resultados vetoriais.
 
 O ChromaDB deve permanecer persistente em data/chroma.
 
+O ChromaDB e o recuperador denso não constituem o fluxo RAG oficial. Eles permanecem
+necessários para o catálogo de documentos e para reproduzir experimentos históricos.
+
+### Recuperação oficial
+
+app/retrieval/bm25.py: implementa o índice BM25 sobre os chunks processados.
+app/retrieval/factory.py: seleciona o recuperador a partir da configuração central.
+
+O padrão oficial é `RETRIEVAL_PROVIDER=bm25`, com `BM25_K1=1.5` e
+`BM25_B=0.75`. A opção `dense` existe apenas para reprodução histórica.
+
 Não alterar o modelo de embeddings sem verificar:
 
 dimensão dos vetores;
@@ -171,21 +188,27 @@ app/rag/exceptions.py: falhas controladas.
 
 Fluxo esperado:
 
+```text
 Pergunta
     ↓
-Busca vetorial
+BM25 recupera 24 candidatos
     ↓
-Filtro por similaridade
+Reranqueamento lexical
     ↓
-Remoção de resultados duplicados
+Limiar de relevância e deduplicação
     ↓
-Limitação do contexto
+Contexto final de até 8 trechos
     ↓
 Construção do prompt
     ↓
 LLM
     ↓
 Resposta com fontes
+```
+
+Classificação metodológica: pipeline RAG com recuperação lexical em duas etapas,
+composto por recuperação inicial BM25 e seleção lexical heurística do contexto.
+Não classificar como híbrido.
 
 A resposta não deve inventar informações que não estejam nos documentos
 recuperados.
@@ -204,7 +227,7 @@ O frontend deve permanecer uma camada de apresentação.
 
 Não colocar nele regras de ingestão, busca vetorial ou geração de respostas.
 
-5. Regras de implementação
+## 5. Regras de implementação
 
 Ao alterar o código:
 
@@ -224,7 +247,8 @@ não exponha segredos;
 nunca coloque chaves reais no repositório;
 não altere .env.example com credenciais;
 mantenha o frontend desacoplado do backend.
-6. Segurança de documentos
+
+## 6. Segurança de documentos
 
 No upload de PDFs, preservar as validações existentes:
 
@@ -240,7 +264,7 @@ não sobrescrever arquivos de forma insegura.
 
 Não remover validações de segurança para simplificar uma implementação.
 
-7. Configurações importantes
+## 7. Configurações importantes
 
 As configurações devem continuar vindo de variáveis de ambiente.
 
@@ -263,6 +287,9 @@ CHROMA_COLLECTION
 EMBEDDING_MODEL
 EMBEDDING_BATCH_SIZE
 SEARCH_TOP_K
+RETRIEVAL_PROVIDER
+BM25_K1
+BM25_B
 
 LLM_PROVIDER
 LLM_BASE_URL
@@ -271,6 +298,7 @@ LLM_API_KEY
 LLM_TIMEOUT_SECONDS
 
 RAG_RETRIEVAL_TOP_K
+RAG_CANDIDATE_POOL_SIZE
 RAG_MIN_SIMILARITY
 RAG_MAX_CONTEXT_CHARS
 RAG_MAX_QUESTION_CHARS
@@ -279,7 +307,7 @@ RAG_DUPLICATE_THRESHOLD
 Não criar valores de configuração espalhados pelo código quando eles já podem
 ser definidos em app/config.py.
 
-8. Uso com Ollama
+## 8. Uso com Ollama
 
 Para usar um modelo local compatível com a API OpenAI:
 
@@ -292,7 +320,7 @@ LLM_TIMEOUT_SECONDS=60
 O modelo usado pelo chatbot do acervo e o modelo usado pelo assistente do VS
 Code são usos separados, mesmo que ambos sejam servidos pelo Ollama.
 
-9. Testes
+## 9. Testes
 
 Antes de alterar uma funcionalidade, procure o teste relacionado.
 
@@ -324,7 +352,7 @@ uv run pytest tests/test_rag.py::nome_do_teste
 
 Não considerar a tarefa concluída sem informar como ela foi validada.
 
-10. Execução local
+## 10. Execução local
 
 Instalar dependências:
 
@@ -351,7 +379,7 @@ http://127.0.0.1:8000/docs
 Frontend:
 
 http://127.0.0.1:8501
-11. Comandos da pipeline
+## 11. Comandos da pipeline
 
 Ingerir documentos:
 
@@ -368,7 +396,7 @@ uv run python -m app.cli.search "consulta desejada"
 Antes de modificar esses comandos, verificar os argumentos reais definidos nos
 respectivos módulos em app/cli.
 
-12. Procedimento obrigatório para agentes
+## 12. Procedimento obrigatório para agentes
 
 Antes de escrever código:
 
@@ -399,7 +427,7 @@ Informe os testes executados.
 Informe qualquer teste que não tenha sido executado.
 Aponte riscos ou limitações restantes.
 Não declare que algo funciona sem ter validado.
-13. Estratégia para modelos pequenos
+## 13. Estratégia para modelos pequenos
 
 Este repositório pode ser trabalhado com modelos locais pequenos.
 
@@ -449,7 +477,7 @@ frontend/pages/chat.py
 frontend/pages/documents.py
 frontend/components/sources.py
 tests/test_frontend_api_client.py
-14. Formato esperado de resposta do agente
+## 14. Formato esperado de resposta do agente
 
 Para tarefas de análise, responder nesta ordem:
 
@@ -468,7 +496,7 @@ Para tarefas de implementação, responder nesta ordem:
 4. Testes adicionados ou modificados
 5. Comandos de validação
 6. Limitações ou riscos
-15. Restrições
+## 15. Restrições
 
 Não fazer sem solicitação explícita:
 

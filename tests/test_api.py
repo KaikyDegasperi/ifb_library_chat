@@ -1,6 +1,5 @@
 import asyncio
 import logging
-from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
 

@@ -5,7 +5,12 @@ import pytest
 
 from app.config import Settings
 from evaluation.bm25_baseline import BM25Index, CorpusChunk, summarize, tokenize
-from evaluation.configuration import safe_settings, validate_runtime_configuration
+from evaluation.configuration import (
+    configuration_fingerprint,
+    frozen_configuration,
+    safe_settings,
+    validate_runtime_configuration,
+)
 from evaluation.complete import _derived_record
 from evaluation.generate_benchmark import generate_benchmark, generate_corpus_benchmark
 from evaluation.io import (
@@ -239,6 +244,28 @@ def test_runtime_configuration_mismatch_is_rejected(tmp_path: Path):
     errors = validate_runtime_configuration(expected, actual)
 
     assert any("top_k" in error for error in errors)
+
+
+def test_frozen_configuration_has_reproducibility_metadata(
+    tmp_path: Path,
+    monkeypatch,
+):
+    settings = Settings(processed_dir=tmp_path, _env_file=None)
+    monkeypatch.setattr("evaluation.configuration.code_revision", lambda: "abc123")
+    monkeypatch.setattr(
+        "evaluation.configuration.runtime_versions",
+        lambda: {"python": "3.14.0"},
+    )
+
+    frozen = frozen_configuration(settings, "2.0", 42)
+    configuration = safe_settings(settings)
+
+    assert frozen["experiment"] == "official_bm25_end_to_end"
+    assert frozen["target_split"] == "final"
+    assert frozen["configuration_fingerprint"] == configuration_fingerprint(
+        configuration
+    )
+    assert frozen["runtime_versions"] == {"python": "3.14.0"}
 
 
 def test_page_recall_requires_the_expected_document():
