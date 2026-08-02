@@ -1,4 +1,4 @@
-# Pacote final da avaliação para o TCC
+# Pacote da avaliação e rastreabilidade para o TCC
 
 ## Arquivos que devem ser usados
 
@@ -9,7 +9,8 @@
    auditáveis da comparação.
 4. `evaluation/results/bm25_baseline/bm25_results.json`: resultados por pergunta do
    baseline lexical.
-5. `evaluation/config/frozen_config_bm25.json`: configuração BM25 registrada.
+5. `evaluation/config/frozen_config_bm25.json`: configuração da comparação BM25
+   retrospectiva.
 
 ## Artefatos históricos que devem ser preservados
 
@@ -22,7 +23,8 @@ para impedir que sejam confundidos com a versão final BM25.
 
 - O BM25 foi selecionado no conjunto de desenvolvimento e integrado como recuperador
   principal.
-- Na recuperação final, o BM25 obteve Hit@1 de 97,62%, Hit@8 de 100% e MRR de 0,988.
+- No split denominado `final` da comparação retrospectiva de recuperação, o BM25
+  obteve Hit@1 de 97,62%, Hit@8 de 100% e MRR de 0,988.
 - O recuperador denso obteve Hit@1 de 64,29%, Hit@8 de 83,33% e MRR de 0,713 no mesmo
   conjunto.
 - Na execução histórica da decisão, o recall foi de 80,95%.
@@ -42,6 +44,10 @@ para impedir que sejam confundidos com a versão final BM25.
 Os 80,95% de recall da decisão pertencem à execução histórica densa. O BM25 reproduziu
 e superou os resultados de recuperação, mas a métrica de decisão depende também do
 gerador externo e não deve ser transferida entre configurações.
+
+Ainda não existe uma execução BM25 ponta a ponta em
+`evaluation/results/official_bm25`. Até que ela seja produzida, não se devem atribuir
+ao sistema BM25 atual métricas de decisão, geração ou qualidade factual.
 
 ## Terminologia obrigatória
 
@@ -69,3 +75,5 @@ Evitar:
 - [ ] Declarar que o gabarito usa um único documento esperado por pergunta.
 - [ ] Identificar as métricas de decisão como execução histórica densa.
 - [ ] Apresentar o BM25 como recuperador final implementado.
+- [ ] Executar e arquivar a avaliação BM25 ponta a ponta antes de atribuir a ela
+      métricas de decisão ou geração.

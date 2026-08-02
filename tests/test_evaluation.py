@@ -366,6 +366,14 @@ def test_final_requires_frozen_config(tmp_path: Path, monkeypatch):
         )
 
 
+def test_checked_in_final_configuration_is_an_explicit_barrier():
+    path = Path(__file__).parents[1] / "evaluation/config/frozen_config.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+
+    assert payload["status"] == "not_frozen"
+    assert payload["experiment"] == "official_bm25_end_to_end"
+
+
 def test_report_generation(tmp_path: Path):
     run = RunOutput(
         benchmark_version="1.0", split="development",

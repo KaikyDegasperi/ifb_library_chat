@@ -94,7 +94,12 @@ uv run python -m evaluation.freeze_config \
   --benchmark evaluation/benchmark/benchmark_approved.json
 ```
 
-O arquivo entregue inicialmente tem `status: not_frozen` e serve como barreira explícita. O comando o substitui por uma captura com `status: frozen`. Revise e versione `evaluation/config/frozen_config.json`. Não altere configurações após observar resultados finais.
+O arquivo canônico `evaluation/config/frozen_config.json` tem `status: not_frozen` e
+serve como barreira explícita. O comando o substitui por uma captura completa com
+`status: frozen`. Revise e versione o arquivo gerado. Não altere configurações após
+observar resultados finais. A configuração da execução densa foi preservada em
+`evaluation/config/frozen_config_legacy_dense.json`; a configuração da comparação
+BM25 retrospectiva permanece em `evaluation/config/frozen_config_bm25.json`.
 
 ## 7. Execução final
 

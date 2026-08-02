@@ -91,7 +91,7 @@ Exemplo de busca sem geração:
 ```bash
 curl -X POST http://127.0.0.1:8000/search \
   -H 'Content-Type: application/json' \
-  -d '{"query":"tecnologia no ensino de matemática","top_k":5}'
+  -d '{"query":"tecnologia no ensino de matemática"}'
 ```
 
 Exemplo de conversa RAG:
@@ -99,7 +99,7 @@ Exemplo de conversa RAG:
 ```bash
 curl -X POST http://127.0.0.1:8000/chat \
   -H 'Content-Type: application/json' \
-  -d '{"question":"Quais TCCs discutem tecnologia?","top_k":5}'
+  -d '{"question":"Quais TCCs discutem tecnologia?"}'
 ```
 
 Upload e ingestão:

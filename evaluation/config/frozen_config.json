@@ -1,18 +1,7 @@
 {
-  "status": "frozen",
-  "chunk_size": 500,
-  "chunk_overlap": 50,
-  "top_k": 8,
-  "candidate_pool_size": 24,
-  "similarity_threshold": 0.35,
-  "embedding_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
-  "generator_model": "gpt-4o-mini",
-  "prompt_version": "sha256:a624d1c16f35bebf",
-  "llm_timeout_seconds": 60.0,
-  "max_context_chars": 12000,
-  "duplicate_threshold": 0.92,
-  "benchmark_version": "2.0",
-  "seed": 42,
-  "code_revision": "13c1fed6db0259fcc8944cb5da27dc1caa2fd076",
-  "frozen_at": "2026-07-23T01:27:48.953510+00:00"
+  "status": "not_frozen",
+  "experiment": "official_bm25_end_to_end",
+  "reason": "Execute e analise somente o split development do pipeline BM25 atual antes de congelar a configuração final.",
+  "historical_dense_config": "evaluation/config/frozen_config_legacy_dense.json",
+  "retrospective_bm25_config": "evaluation/config/frozen_config_bm25.json"
 }

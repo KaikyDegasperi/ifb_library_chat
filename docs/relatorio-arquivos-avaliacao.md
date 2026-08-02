@@ -7,7 +7,7 @@ IFB Library Chat e explica a função de cada um. A finalidade é distinguir:
 
 - os arquivos que definem o experimento;
 - os arquivos efetivamente usados para executar as perguntas;
-- os resultados oficiais de desenvolvimento e teste final;
+- os resultados históricos existentes e os futuros artefatos BM25 ponta a ponta;
 - os relatórios derivados desses resultados;
 - os experimentos preliminares de calibração;
 - os testes automatizados de software, que não equivalem à avaliação das
@@ -58,7 +58,7 @@ Esse detalhe é importante: as métricas de Hit Rate e MRR são calculadas sobre
 os resultados de `/search`, enquanto a resposta, a recusa e as fontes do
 contexto são obtidas de `/chat`.
 
-## 3. Fontes canônicas do teste oficial
+## 3. Fontes canônicas e estado dos experimentos
 
 Os seguintes arquivos devem ser considerados as fontes principais para
 documentar o experimento no TCC.
@@ -66,13 +66,14 @@ documentar o experimento no TCC.
 | Arquivo | Papel no experimento |
 |---|---|
 | `evaluation/benchmark/benchmark_approved.json` | Gabarito aprovado das 100 perguntas |
-| `evaluation/config/frozen_config.json` | Registro da configuração escolhida antes do teste final |
-| `evaluation/results/complete/development_run.json` | Execução oficial das 50 perguntas de desenvolvimento |
-| `evaluation/results/complete/final_run.json` | Execução oficial das 50 perguntas do teste final |
+| `evaluation/config/frozen_config.json` | Barreira canônica ainda não congelada para a execução BM25 ponta a ponta |
+| `evaluation/results/complete/development_run.json` | Execução densa histórica das 50 perguntas de desenvolvimento |
+| `evaluation/results/complete/final_run.json` | Execução densa histórica das 50 perguntas do split final |
 | `evaluation/results/complete/resultados_brutos.jsonl` | Consolidação auditável, uma pergunta por linha |
 | `evaluation/results/complete/resumo_metricas.csv` | Métricas gerais, de desenvolvimento e finais |
 | `evaluation/results/complete/experiment_manifest.json` | Hash do benchmark e metadados da consolidação |
-| `evaluation/config/frozen_config_bm25.json` | Configuração do BM25 integrado |
+| `evaluation/config/frozen_config_legacy_dense.json` | Configuração preservada da execução densa histórica |
+| `evaluation/config/frozen_config_bm25.json` | Configuração da comparação BM25 retrospectiva |
 | `evaluation/results/bm25_baseline/bm25_results.json` | Resultados BM25 por pergunta |
 | `evaluation/results/bm25_baseline/retrieval_comparison.csv` | Comparação BM25 versus denso |
 | `evaluation/RELATORIO_COMPLETO_REVISAO_METRICAS.md` | Texto final revisado para o TCC |
@@ -122,7 +123,7 @@ resposta no acervo em cada split.
 
 ### 3.2 Configuração congelada da execução histórica densa
 
-**Arquivo:** `evaluation/config/frozen_config.json`
+**Arquivo preservado:** `evaluation/config/frozen_config_legacy_dense.json`
 
 Esse arquivo registra a configuração selecionada antes da execução final:
 
@@ -141,17 +142,20 @@ Esse arquivo registra a configuração selecionada antes da execução final:
 | benchmark | versão 2.0 |
 | semente | 42 |
 
-A configuração atual selecionada após a comparação está registrada em
+A configuração usada na comparação retrospectiva está registrada em
 `evaluation/config/frozen_config_bm25.json`, com `retrieval_provider=bm25`,
-`bm25_k1=1,5` e `bm25_b=0,75`.
+`bm25_k1=1,5` e `bm25_b=0,75`. Ela não substitui o congelamento de uma execução
+BM25 ponta a ponta.
 
 Também são registrados o hash do prompt, a revisão Git conhecida no momento do
 congelamento e a data UTC.
 
-Limitação: o executor lê esse arquivo e o anexa ao resultado, mas não confirma
-que a API em execução está efetivamente usando os mesmos valores.
+O caminho canônico `evaluation/config/frozen_config.json` permanece com
+`status=not_frozen` até a análise do split de desenvolvimento atual. O executor novo
+consulta `/health` e bloqueia a avaliação se configuração, prompt ou fingerprint do
+corpus divergirem da API efetivamente em execução.
 
-### 3.3 Execução oficial de desenvolvimento
+### 3.3 Execução histórica de desenvolvimento
 
 **Arquivo:** `evaluation/results/complete/development_run.json`
 
@@ -174,7 +178,7 @@ Essa execução começou em `2026-07-23T01:28:04Z` e terminou em
 O desenvolvimento foi o conjunto usado para ajustes e calibração. Não existe
 um terceiro split independente chamado `calibration`.
 
-### 3.4 Execução oficial do teste final
+### 3.4 Execução histórica do split final
 
 **Arquivo:** `evaluation/results/complete/final_run.json`
 
@@ -298,6 +302,8 @@ O split final exige:
 - arquivo de configuração existente;
 - `status=frozen`;
 - mesma versão de benchmark.
+- correspondência integral entre configuração, corpus e API publicada em
+  `/health`.
 
 ### 4.6 `evaluation/metrics.py`
 
@@ -306,9 +312,12 @@ Implementa as métricas determinísticas do relatório simples:
 - Document Recall/Hit Rate@1, @3 e @k;
 - Page Recall@k;
 - MRR;
+- Recall e MRR separados para ranking inicial e contexto final;
 - fonte do documento esperado;
 - fonte da página esperada;
 - recusa correta e indevida;
+- matriz de confusão, acurácia, precisão, recall, F1 e baseline de sempre responder;
+- respostas com fonte inline válida, sem fonte e recusas sem fonte inventada;
 - latências;
 - erros e timeouts.
 
@@ -353,39 +362,36 @@ não foi utilizado.
 | `app/routes/chat.py` | Expõe a resposta RAG usada nas métricas de recusa |
 | `frontend/api_client.py` | Cliente usado pelo executor para chamar a API |
 
-### 5.1 Recuperação vetorial
+### 5.1 Recuperação oficial atual
 
-`app/vectorstore/service.py` cria a coleção com:
+`app/retrieval/bm25.py` constrói o índice lexical a partir dos mesmos artefatos de
+chunks usados pela aplicação. A pontuação é BM25 de Okapi, com `k1=1,5` e
+`b=0,75`, normalizada para o contrato público de relevância. O BM25 é o recuperador
+padrão e é compartilhado pela API, CLI e comparação de recuperação.
 
-```python
-configuration={"hnsw": {"space": "cosine"}}
-```
+A recuperação densa em `app/vectorstore/service.py` permanece implementada somente
+para reprodução da execução histórica. Nessa configuração, o Chroma usa HNSW com
+distância cosseno e converte a distância em `similarity = 1 - distance`.
 
-O score armazenado é:
+### 5.2 Seleção do contexto
 
-```python
-similarity = 1.0 - distance
-```
-
-Não há BM25.
-
-### 5.2 Reranqueamento
-
-`app/rag/service.py` ordena os 24 candidatos pela tupla:
+No pipeline oficial, `app/rag/service.py` solicita 24 candidatos ao BM25 e os ordena
+pela tupla:
 
 ```python
-(lexical_relevance, similarity)
+(lexical_relevance, bm25_score_normalizado)
 ```
 
-Não há pesos numéricos entre os dois sinais. A relevância lexical tem
-precedência e a similaridade cosseno é usada como segundo critério.
+Não há combinação com embeddings no fluxo oficial, portanto ele não deve ser
+descrito como híbrido. Trata-se de recuperação BM25 seguida por uma etapa heurística
+de seleção de contexto.
 
 ### 5.3 Filtros e deduplicação
 
 Um candidato é descartado quando:
 
 ```text
-similaridade < 0,35 E relevância lexical < 0,5
+score BM25 normalizado < 0,35 E relevância lexical < 0,5
 ```
 
 Chunks cujo conteúdo normalizado alcança razão de similaridade de 0,92 pelo
@@ -561,7 +567,8 @@ LLM. Como o juiz não foi executado, o campo ficou ausente, mas
 `evaluation.complete` converteu a condição em `False` e a contabilizou como
 mensurável.
 
-Diretamente em `final_run.json`, é possível verificar:
+Diretamente no `final_run.json` **da execução densa histórica**, é possível
+verificar:
 
 - documento esperado entre as fontes do `/chat`: 37/42;
 - documento e página esperados entre as fontes: 28/42;
@@ -576,11 +583,13 @@ mensuráveis, não como zero acertos.
 |---|---|
 | Construção do benchmark | `generate_benchmark.py`, `full_corpus_draft.xlsx`, `benchmark_approved.json` |
 | Protocolo e divisão | `PROTOCOL.md`, `validate_benchmark.py`, `benchmark_approved.json` |
-| Configuração | `frozen_config.json`, `configuration.py`, `app/config.py` |
-| Recuperação | `embeddings.py`, `vectorstore/service.py`, `rag/service.py` |
-| Execução | `evaluation/run.py`, `development_run.json`, `final_run.json` |
+| Configuração atual | `frozen_config.json`, `runtime.py`, `configuration.py`, `app/config.py` |
+| Recuperação atual | `retrieval/bm25.py`, `retrieval/factory.py`, `rag/service.py` |
+| Execução BM25 ponta a ponta | `evaluation/run.py`, futura pasta `results/official_bm25/` |
+| Execução densa histórica | `results/complete/development_run.json`, `results/complete/final_run.json` |
 | Fórmulas | `evaluation/metrics.py`, `evaluation/complete.py` |
-| Resultados finais | `final_run.json`, `resultados_brutos.jsonl`, `resumo_metricas.csv` |
+| Comparação retrospectiva | `results/bm25_baseline/bm25_results.json`, `retrieval_comparison.csv` |
+| Resultados BM25 ponta a ponta | ainda não produzidos; não substituir por resultados densos |
 | Limitações | `experiment_manifest.json`, campos humanos vazios e divergências descritas neste relatório |
 | Testes de software | arquivos em `tests/`, separados da avaliação experimental |
 
@@ -590,24 +599,26 @@ mensuráveis, não como zero acertos.
 python -m evaluation.validate_benchmark \
   --benchmark evaluation/benchmark/benchmark_approved.json
 
-python -m evaluation.freeze_config
-
 python -m evaluation.run \
   --benchmark evaluation/benchmark/benchmark_approved.json \
   --split development \
-  --output evaluation/results/complete/development_run.json
+  --output evaluation/results/official_bm25/development_run.json
 
+# Somente depois de analisar o desenvolvimento e encerrar os ajustes:
+python -m evaluation.freeze_config
+
+# Usar apenas com um split final ainda não observado e confirmação deliberada:
 python -m evaluation.run \
   --benchmark evaluation/benchmark/benchmark_approved.json \
   --split final \
   --confirm-final \
-  --output evaluation/results/complete/final_run.json
+  --output evaluation/results/official_bm25/final_run.json
 
 python -m evaluation.complete \
   --benchmark evaluation/benchmark/benchmark_approved.json \
-  --development-run evaluation/results/complete/development_run.json \
-  --final-run evaluation/results/complete/final_run.json \
-  --output-dir evaluation/results/complete \
+  --development-run evaluation/results/official_bm25/development_run.json \
+  --final-run evaluation/results/official_bm25/final_run.json \
+  --output-dir evaluation/results/official_bm25/complete \
   --skip-llm-judge
 ```
 
@@ -621,7 +632,7 @@ Antes de uma nova reprodução, deve-se garantir que:
 
 ## 14. Síntese
 
-A avaliação oficial é definida por quatro arquivos principais:
+A futura avaliação BM25 ponta a ponta será definida por quatro arquivos principais:
 
 ```text
 benchmark_approved.json
@@ -630,11 +641,14 @@ development_run.json
 final_run.json
 ```
 
-Os scripts de avaliação transformam esses arquivos em métricas e relatórios. Os
+Neste repositório, apenas o benchmark existe nesse conjunto novo; a configuração
+canônica está deliberadamente `not_frozen` e os dois arquivos de execução ainda não
+foram produzidos. Os scripts de avaliação transformam esses arquivos em métricas e relatórios. Os
 arquivos das pastas `development_baseline`, `development_questions_v1` e
 `development_rerank_v2` documentam calibração preliminar. Os arquivos em
 `tests/` verificam o software, mas não medem a qualidade das respostas.
 
-Para apresentar resultados científicos, deve-se usar o escopo `final` do
-`resumo_metricas.csv` e conferir qualquer conclusão diretamente em
-`final_run.json` ou `resultados_brutos.jsonl`.
+Os resultados em `results/complete` podem ser apresentados somente como execução
+densa histórica. Os resultados em `results/bm25_baseline` podem ser apresentados
+somente como comparação retrospectiva de recuperação. Nenhum deles deve ser
+renomeado ou reinterpretado como avaliação BM25 ponta a ponta.

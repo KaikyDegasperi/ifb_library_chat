@@ -90,14 +90,19 @@ python -m evaluation.diagnose
 python -m evaluation.generate_benchmark --full-corpus
 python -m evaluation.review --xlsx evaluation/benchmark/full_corpus_draft.xlsx
 python -m evaluation.validate_benchmark --benchmark evaluation/benchmark/benchmark_approved.json
-python -m evaluation.run --benchmark evaluation/benchmark/benchmark_approved.json --split development --output evaluation/results/development_run.json
+python -m evaluation.run --benchmark evaluation/benchmark/benchmark_approved.json --split development --output evaluation/results/official_bm25/development_run.json
 python -m evaluation.freeze_config
-python -m evaluation.run --benchmark evaluation/benchmark/benchmark_approved.json --split final --confirm-final --output evaluation/results/final_run.json
-python -m evaluation.report --run evaluation/results/final_run.json --output-dir evaluation/results/final
+python -m evaluation.run --benchmark evaluation/benchmark/benchmark_approved.json --split final --confirm-final --output evaluation/results/official_bm25/final_run.json
+python -m evaluation.report --run evaluation/results/official_bm25/final_run.json --output-dir evaluation/results/official_bm25/final
 python -m evaluation.bm25_baseline \
   --dense-run evaluation/results/complete/development_run.json \
   --dense-run evaluation/results/complete/final_run.json
 ```
+
+O congelamento ocorre somente depois da análise de desenvolvimento. Como o split
+final do benchmark 2.0 já foi observado na comparação retrospectiva, o comando final
+acima só constitui avaliação confirmatória se for usado com um novo conjunto ainda
+não observado.
 
 ## Interpretação
 
