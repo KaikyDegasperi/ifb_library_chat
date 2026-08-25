@@ -60,6 +60,41 @@ def test_ollama_provider_uses_chat_endpoint_and_preserves_options(monkeypatch) -
     assert captured["json"]["options"]["top_p"] == 0.9
 
 
+def test_openai_reasoning_model_uses_supported_parameters(monkeypatch) -> None:
+    captured: dict[str, object] = {}
+
+    class DummyResponse:
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self) -> dict[str, object]:
+            return {"choices": [{"message": {"content": "Resposta"}}]}
+
+    def fake_post(
+        url: str,
+        headers: dict[str, str] | None = None,
+        json: dict[str, object] | None = None,
+        timeout: float | None = None,
+    ) -> DummyResponse:
+        captured["json"] = json
+        return DummyResponse()
+
+    monkeypatch.setattr("app.rag.llm.httpx.post", fake_post)
+    provider = OpenAICompatibleProvider(
+        "https://api.openai.com/v1",
+        "gpt-5.6-luna",
+        default_max_tokens=256,
+    )
+
+    assert provider.generate("system", "user", timeout_seconds=5) == "Resposta"
+    payload = captured["json"]
+    assert payload["max_completion_tokens"] == 256
+    assert payload["reasoning_effort"] == "low"
+    assert "max_tokens" not in payload
+    assert "temperature" not in payload
+    assert "top_p" not in payload
+
+
 @pytest.mark.parametrize(
     "provider",
     [

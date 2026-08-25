@@ -578,6 +578,23 @@ button[kind="primary"]:disabled {
     .chat-window-status {
         display: none;
     }
+
+    /* Evita que a sidebar aberta espreme o conteúdo em telas estreitas
+       (celular e tablet retrato): ela passa a flutuar sobre a página
+       em vez de dividir a largura com o conteúdo principal. */
+    [data-testid="stSidebar"] {
+        position: fixed !important;
+        top: 0;
+        height: 100dvh !important;
+        z-index: 999997;
+        box-shadow: 0 12px 45px rgba(0, 0, 0, 0.28);
+    }
+
+    /* Altura do histórico de conversa acompanha telas curtas (ex.: celular
+       na horizontal), para o campo de pergunta não ficar fora da tela. */
+    .st-key-chat_history {
+        height: min(520px, 60dvh) !important;
+    }
 }
 </style>
 """

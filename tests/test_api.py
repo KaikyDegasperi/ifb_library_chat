@@ -175,6 +175,7 @@ class FakeRAGService:
         document_id: str | None = None,
         title: str | None = None,
         top_k: int | None = None,
+        assistive_query_handling: bool = False,
     ) -> RAGResponse:
         self.calls.append(
             {
@@ -182,6 +183,7 @@ class FakeRAGService:
                 "top_k": top_k,
                 "document_id": document_id,
                 "title": title,
+                "assistive_query_handling": assistive_query_handling,
             }
         )
         return RAGResponse(
@@ -292,6 +294,18 @@ def test_document_endpoints(api_services) -> None:
     assert deleted.json() == {"document_id": "doc-1", "deleted_chunks": 2}
     assert missing.status_code == 404
     assert missing.json()["detail"] == "Documento não encontrado"
+
+
+def test_document_file_is_served_inline_from_catalog(api_services) -> None:
+    api_services.documents_dir.mkdir(parents=True, exist_ok=True)
+    (api_services.documents_dir / "teste.pdf").write_bytes(b"%PDF-1.4\nfixture")
+
+    response = request("GET", "/documents/doc-1/file")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/pdf"
+    assert response.headers["content-disposition"].startswith("inline;")
+    assert response.content.startswith(b"%PDF-")
 
 
 def test_valid_pdf_upload_is_ingested(api_services) -> None:
@@ -469,6 +483,21 @@ def test_chat_endpoint_returns_answer_sources_and_times(api_services) -> None:
     assert payload["generation_time_ms"] == 20
     assert "observation" not in payload
     assert api_services.rag.calls[0]["top_k"] == 5
+    assert api_services.rag.calls[0]["assistive_query_handling"] is False
+
+
+def test_chat_assistive_mode_is_explicitly_opt_in(api_services) -> None:
+    response = request(
+        "POST",
+        "/chat",
+        json={
+            "question": "Me fale dos TCCs",
+            "assistive_query_handling": True,
+        },
+    )
+
+    assert response.status_code == 200
+    assert api_services.rag.calls[0]["assistive_query_handling"] is True
 
 
 def test_request_observability_adds_identifier_and_safe_fields(

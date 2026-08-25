@@ -55,7 +55,9 @@ def test_bm25_is_the_default_retrieval_provider() -> None:
     assert settings.rag_retrieval_top_k == 8
     assert settings.llm_temperature == 0.1
     assert settings.llm_top_p == 0.9
-    assert settings.llm_max_tokens == 256
+    assert settings.llm_max_tokens == 1024
+    assert settings.rag_spelling_fallback_enabled is False
+    assert settings.rag_vague_question_handling_enabled is False
 
 
 def test_retrieval_provider_is_validated() -> None:

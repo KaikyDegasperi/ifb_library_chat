@@ -18,6 +18,7 @@ class ChatRequest(BaseModel):
     top_k: int | None = Field(default=None, ge=1)
     document_id: str | None = None
     title: str | None = None
+    assistive_query_handling: bool = False
 
 
 class ChatResponse(BaseModel):

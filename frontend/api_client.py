@@ -57,6 +57,30 @@ class APIClient:
     def list_documents(self) -> list[dict[str, Any]]:
         return self._request("GET", "/documents")
 
+    def get_document_pdf(self, document_id: str) -> bytes:
+        try:
+            response = self._client.get(
+                f"/documents/{document_id}/file",
+                timeout=self.default_timeout,
+            )
+            response.raise_for_status()
+            if not response.content.startswith(b"%PDF-"):
+                raise APIClientError("A API não retornou um PDF válido.")
+            return response.content
+        except httpx.TimeoutException as exc:
+            raise APITimeoutError(
+                "A prévia demorou mais que o esperado. Tente novamente."
+            ) from exc
+        except httpx.ConnectError as exc:
+            raise APIUnavailableError(
+                "A API FastAPI está indisponível. Confirme se o backend está ativo."
+            ) from exc
+        except httpx.HTTPStatusError as exc:
+            raise APIResponseError(
+                self._error_detail(exc.response),
+                exc.response.status_code,
+            ) from exc
+
     def ingest_document(
         self,
         file_name: str,
@@ -91,6 +115,8 @@ class APIClient:
         top_k: int | None = None,
         document_id: str | None = None,
         title: str | None = None,
+        *,
+        assistive_query_handling: bool = False,
     ) -> dict[str, Any]:
         payload: dict[str, Any] = {"question": question}
         if top_k is not None:
@@ -99,6 +125,8 @@ class APIClient:
             payload["document_id"] = document_id
         if title:
             payload["title"] = title
+        if assistive_query_handling:
+            payload["assistive_query_handling"] = True
         return self._request(
             "POST",
             "/chat",

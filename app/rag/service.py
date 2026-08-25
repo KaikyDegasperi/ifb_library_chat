@@ -60,6 +60,24 @@ _QUERY_STOPWORDS = {
     "uma",
 }
 
+_VAGUE_TERMS = _QUERY_STOPWORDS | {
+    "acervo",
+    "ajuda",
+    "biblioteca",
+    "coisa",
+    "conte",
+    "diga",
+    "fale",
+    "informacao",
+    "informacoes",
+    "me",
+    "mostre",
+    "pode",
+    "saber",
+    "tema",
+    "temas",
+}
+
 NO_CONTEXT_ANSWER = (
     "Não encontrei informações suficientemente relevantes nos TCCs indexados "
     "para responder a essa pergunta."
@@ -70,6 +88,11 @@ RETRIEVAL_FAILURE_ANSWER = (
 GENERATION_FAILURE_ANSWER = (
     "Encontrei trechos relacionados, mas não foi possível gerar a resposta neste "
     "momento. Tente novamente mais tarde."
+)
+VAGUE_QUESTION_ANSWER = (
+    "Posso pesquisar o acervo de TCCs, mas preciso de um pouco mais de detalhe. "
+    "Informe, por exemplo, um tema (como educação matemática ou tecnologia), "
+    "um autor, um título, uma metodologia ou o tipo de resultado que procura."
 )
 
 
@@ -97,6 +120,8 @@ class RAGService:
         duplicate_threshold: float = 0.92,
         llm_timeout_seconds: float = 30.0,
         metrics_details_enabled: bool = False,
+        spelling_fallback_enabled: bool = False,
+        vague_question_handling_enabled: bool = False,
     ) -> None:
         if (
             retrieval_top_k < 1
@@ -124,6 +149,8 @@ class RAGService:
         self.duplicate_threshold = duplicate_threshold
         self.llm_timeout_seconds = llm_timeout_seconds
         self.metrics_details_enabled = metrics_details_enabled
+        self.spelling_fallback_enabled = spelling_fallback_enabled
+        self.vague_question_handling_enabled = vague_question_handling_enabled
 
     def answer(
         self,
@@ -131,6 +158,7 @@ class RAGService:
         document_id: str | None = None,
         title: str | None = None,
         top_k: int | None = None,
+        assistive_query_handling: bool = False,
     ) -> RAGResponse:
         total_started = time.perf_counter()
         question = question.strip()
@@ -143,6 +171,23 @@ class RAGService:
         effective_top_k = top_k or self.retrieval_top_k
         if effective_top_k < 1:
             raise InvalidQuestionError("top_k deve ser maior que zero")
+
+        if (
+            assistive_query_handling
+            and self.vague_question_handling_enabled
+            and self._is_vague_question(question)
+        ):
+            return self._finish(
+                answer=VAGUE_QUESTION_ANSWER,
+                sources=[],
+                retrieval_time_ms=0,
+                generation_time_ms=0,
+                total_started=total_started,
+                search_timings=SearchTimings(),
+                context_preparation_time_ms=0,
+                context_chars=0,
+                status="vague_question",
+            )
 
         retrieval_started = time.perf_counter()
         search_timings = SearchTimings()
@@ -186,6 +231,47 @@ class RAGService:
             effective_top_k,
         )
         context, selected = self._build_context(selected)
+        if (
+            not selected
+            and assistive_query_handling
+            and self.spelling_fallback_enabled
+        ):
+            suggested_query = self._suggest_query(question)
+            if suggested_query != question:
+                try:
+                    timed_search = getattr(self.retriever, "search_with_timings", None)
+                    if callable(timed_search):
+                        retrieved, fallback_timings = timed_search(
+                            suggested_query,
+                            top_k=max(effective_top_k, self.candidate_pool_size),
+                            document_id=document_id,
+                            title=title,
+                        )
+                        search_timings.embedding_time_ms += (
+                            fallback_timings.embedding_time_ms
+                        )
+                        search_timings.vector_search_time_ms += (
+                            fallback_timings.vector_search_time_ms
+                        )
+                    else:
+                        retrieved = self.retriever.search(
+                            suggested_query,
+                            top_k=max(effective_top_k, self.candidate_pool_size),
+                            document_id=document_id,
+                            title=title,
+                        )
+                    selected, selection_trace = self._select_results(
+                        retrieved,
+                        suggested_query,
+                        effective_top_k,
+                    )
+                    context, selected = self._build_context(selected)
+                    retrieval_time = self._elapsed_ms(retrieval_started)
+                except Exception as exc:
+                    logger.info(
+                        "Falha controlada na sugestão ortográfica: %s",
+                        type(exc).__name__,
+                    )
         included_ids = {item.chunk_id for item in selected}
         for trace_item in selection_trace:
             if (
@@ -374,6 +460,21 @@ class RAGService:
             for word in words
             if len(word) >= 3 and word not in _QUERY_STOPWORDS
         }
+
+    @classmethod
+    def _is_vague_question(cls, question: str) -> bool:
+        words = cls._normalize(question).split()
+        meaningful = [
+            word for word in words if len(word) >= 3 and word not in _VAGUE_TERMS
+        ]
+        return not meaningful
+
+    def _suggest_query(self, question: str) -> str:
+        suggest = getattr(self.retriever, "suggest_query", None)
+        if not callable(suggest):
+            return question
+        suggested = suggest(question)
+        return suggested.strip() if isinstance(suggested, str) else question
 
     @classmethod
     def _lexical_relevance(

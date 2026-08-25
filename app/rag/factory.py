@@ -56,4 +56,8 @@ def create_rag_service(
         duplicate_threshold=settings.rag_duplicate_threshold,
         llm_timeout_seconds=settings.llm_timeout_seconds,
         metrics_details_enabled=settings.metrics_details_enabled,
+        spelling_fallback_enabled=settings.rag_spelling_fallback_enabled,
+        vague_question_handling_enabled=(
+            settings.rag_vague_question_handling_enabled
+        ),
     )

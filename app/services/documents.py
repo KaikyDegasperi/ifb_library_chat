@@ -80,6 +80,16 @@ class DocumentService:
             raise DocumentNotFoundError("Documento não encontrado")
         return document
 
+    def get_document_file(self, document_id: str) -> Path:
+        document = self.get_document(document_id)
+        target = (self.documents_dir / document.file_name).resolve()
+        self._ensure_within_documents_dir(target)
+        if not target.is_file():
+            raise DocumentNotFoundError("Arquivo PDF não encontrado")
+        if target.suffix.casefold() != ".pdf" or not self._has_pdf_signature(target):
+            raise InvalidDocumentError("O arquivo catalogado não é um PDF válido")
+        return target
+
     def delete_document(self, document_id: str) -> int:
         deleted = self.repository.delete(document_id)
         if not deleted:

@@ -144,6 +144,15 @@ Navegador → Streamlit → FastAPI → serviços RAG e de ingestão
 
 Inicie os dois processos em terminais separados.
 
+Ou inicie API e interface juntas com o script local:
+
+```bash
+./scripts/run-local.sh
+```
+
+Use `Ctrl+C` para encerrar os dois processos. As portas podem ser alteradas com
+`API_PORT` e `STREAMLIT_PORT`.
+
 Terminal 1:
 
 ```bash
@@ -216,6 +225,12 @@ arquivo, URL ou log. Um token negado é descartado da sessão.
 | `RAG_MAX_CONTEXT_CHARS` | `12000` | Limite total do contexto enviado ao LLM |
 | `RAG_MAX_QUESTION_CHARS` | `2000` | Limite da pergunta |
 | `RAG_DUPLICATE_THRESHOLD` | `0.92` | Limiar para remover chunks quase idênticos |
+| `RAG_SPELLING_FALLBACK_ENABLED` | `false` | Refaz consultas sem contexto usando sugestão ortográfica; opcional e fora da avaliação oficial |
+| `RAG_VAGUE_QUESTION_HANDLING_ENABLED` | `false` | Solicita refinamento quando a pergunta não contém tema identificável |
+
+Esses recursos conversacionais ficam desativados por padrão para preservar a
+reprodução das métricas oficiais. Eles podem ser habilitados somente no `.env`
+local, sem modificar as configurações congeladas da avaliação.
 
 Em `APP_ENV=production`, a aplicação falha na inicialização quando
 `ADMIN_API_TOKEN` está ausente ou vazio. Em desenvolvimento, as rotas
@@ -724,5 +739,6 @@ Com o grupo `scraper` instalado e o Chromium disponível:
 uv run python scraper/tcc_ifbs_licenciatura_em_matematica.py
 ```
 
-O scraper existente usa navegador com interface gráfica e salva os PDFs em
-`pdfs_ifb/` quando executado a partir da raiz do projeto.
+O scraper usa Chromium sem interface gráfica por padrão e salva os PDFs em
+`pdfs_ifb/` quando executado a partir da raiz do projeto. Para acompanhar o
+navegador visualmente, execute com `SCRAPER_HEADLESS=false`.

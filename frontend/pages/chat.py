@@ -91,7 +91,7 @@ def render_chat_page(
                 if selected:
                     suggested_question = selected
             else:
-                _render_messages()
+                _render_messages(client)
 
         question = st.chat_input(
             "Pergunte sobre os TCCs do acervo...",
@@ -109,8 +109,8 @@ def render_chat_page(
         _submit_question(client, prompt.strip(), history)
 
 
-def _render_messages() -> None:
-    for message in st.session_state.chat_messages:
+def _render_messages(client: APIClient) -> None:
+    for message_index, message in enumerate(st.session_state.chat_messages):
         if message["role"] == "user":
             with st.chat_message("user", avatar=":material/person:"):
                 st.markdown(message["content"])
@@ -119,7 +119,11 @@ def _render_messages() -> None:
                 st.caption("RESPOSTA FUNDAMENTADA NO ACERVO")
                 st.markdown(message["content"])
                 if message.get("sources"):
-                    render_sources(message.get("sources", []))
+                    render_sources(
+                        message.get("sources", []),
+                        client,
+                        key_prefix=f"message-{message_index}",
+                    )
                 _render_times(message)
 
 
@@ -131,7 +135,7 @@ def _submit_question(client: APIClient, question: str, history: Any) -> None:
     with history:
         with st.spinner("Consultando o acervo e montando a resposta..."):
             try:
-                payload = client.chat(question)
+                payload = client.chat(question, assistive_query_handling=True)
             except APITimeoutError as exc:
                 _store_error(str(exc), "timeout")
                 st.rerun()

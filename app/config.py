@@ -53,7 +53,7 @@ class Settings(BaseSettings):
     llm_timeout_seconds: float = Field(default=30.0, gt=0)
     llm_temperature: float = Field(default=0.1, ge=0.0, le=2.0)
     llm_top_p: float = Field(default=0.9, ge=0.0, le=1.0)
-    llm_max_tokens: int = Field(default=256, ge=1)
+    llm_max_tokens: int = Field(default=1_024, ge=1)
 
     local_llm_context_size: int = Field(default=2_048, ge=256)
     local_llm_max_tokens: int = Field(default=256, ge=32)
@@ -77,6 +77,8 @@ class Settings(BaseSettings):
     rag_max_context_chars: int = Field(default=12_000, ge=500)
     rag_max_question_chars: int = Field(default=2_000, ge=1, le=10_000)
     rag_duplicate_threshold: float = Field(default=0.92, ge=0.0, le=1.0)
+    rag_spelling_fallback_enabled: bool = False
+    rag_vague_question_handling_enabled: bool = False
 
     ingest_max_concurrency: int = Field(default=2, ge=1)
     embedding_max_concurrency: int = Field(default=2, ge=1)

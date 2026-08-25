@@ -36,6 +36,20 @@ def test_client_uses_real_health_and_documents_contracts() -> None:
     assert client.list_documents()[0]["document_id"] == "doc-1"
 
 
+def test_client_fetches_valid_document_pdf() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/documents/doc-1/file"
+        return httpx.Response(
+            200,
+            content=b"%PDF-1.4\nfixture",
+            headers={"Content-Type": "application/pdf"},
+        )
+
+    client = APIClient(transport=httpx.MockTransport(handler))
+
+    assert client.get_document_pdf("doc-1").startswith(b"%PDF-")
+
+
 def test_timeout_has_clear_error() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         raise httpx.ReadTimeout("timeout", request=request)
@@ -95,6 +109,19 @@ def test_chat_response_with_multiple_sources_is_preserved() -> None:
 
     assert len(response["sources"]) == 2
     assert response["sources"][1]["file_name"] == "b.pdf"
+
+
+def test_chat_can_enable_assistive_handling_for_streamlit_only() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert json.loads(request.content) == {
+            "question": "Me fale dos TCCs",
+            "assistive_query_handling": True,
+        }
+        return json_response({"answer": "Informe um tema.", "sources": []})
+
+    client = APIClient(transport=httpx.MockTransport(handler))
+
+    client.chat("Me fale dos TCCs", assistive_query_handling=True)
 
 
 def test_ingestion_sends_multipart_pdf() -> None:

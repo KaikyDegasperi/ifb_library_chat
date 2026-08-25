@@ -10,6 +10,7 @@ import statistics
 import time
 import unicodedata
 from collections import Counter, defaultdict
+from difflib import SequenceMatcher
 from pathlib import Path
 from threading import RLock
 from typing import Any
@@ -203,6 +204,49 @@ class BM25IndexService:
         timings = SearchTimings()
         results = self.search(query, top_k, document_id, title, timings=timings)
         return results, timings
+
+    def suggest_query(self, query: str) -> str:
+        """Sugere correções sem modificar a busca ou o índice BM25 oficial."""
+        with self._lock:
+            vocabulary = tuple(self._postings)
+            document_frequencies = {
+                term: len(matches) for term, matches in self._postings.items()
+            }
+        if not vocabulary:
+            return query
+
+        known = set(vocabulary)
+        replacements: dict[str, str] = {}
+        for term in dict.fromkeys(tokenize(query)):
+            if term in known or len(term) < 4:
+                continue
+            candidates = [
+                candidate
+                for candidate in vocabulary
+                if abs(len(candidate) - len(term)) <= 2
+                and candidate[0] == term[0]
+            ]
+            if not candidates:
+                continue
+            scored = [
+                (
+                    SequenceMatcher(None, term, candidate).ratio(),
+                    document_frequencies[candidate],
+                    candidate,
+                )
+                for candidate in candidates
+            ]
+            ratio, _, replacement = max(scored)
+            cutoff = 0.8 if len(term) <= 4 else 0.74
+            if ratio >= cutoff:
+                replacements[term] = replacement
+
+        if not replacements:
+            return query
+        return TOKEN_PATTERN.sub(
+            lambda match: replacements.get(match.group(0).casefold(), match.group(0)),
+            query,
+        )
 
     def _rebuild(self) -> None:
         chunks = tuple(

@@ -38,12 +38,19 @@ async def chat(
             "Filtro excede o limite configurado",
         )
     try:
-        response = service.answer(
+        arguments = (
             request.question,
             request.document_id,
             request.title,
             request.top_k,
         )
+        if request.assistive_query_handling:
+            response = service.answer(
+                *arguments,
+                assistive_query_handling=True,
+            )
+        else:
+            response = service.answer(*arguments)
     except InvalidQuestionError as exc:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(exc)) from exc
     return ChatResponse.model_validate(response.model_dump())

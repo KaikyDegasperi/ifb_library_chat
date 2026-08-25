@@ -130,3 +130,20 @@ def test_bm25_startup_respects_active_document_ids(tmp_path: Path) -> None:
     assert {result.document_id for result in service.search("matemática")} == {
         "active"
     }
+
+
+def test_bm25_suggests_spelling_without_changing_regular_search(tmp_path: Path) -> None:
+    write_chunks(
+        tmp_path / "a.chunks.json",
+        document_id="doc-a",
+        file_name="matematica.pdf",
+        title="Educação matemática",
+        texts=["Tecnologia aplicada à educação matemática."],
+    )
+    service = BM25IndexService(tmp_path)
+    service.index(tmp_path)
+
+    assert service.search("tecnlogia")[0].similarity == 0.0
+    assert service.suggest_query("tecnlogia na educaçao") == (
+        "tecnologia na educação"
+    )

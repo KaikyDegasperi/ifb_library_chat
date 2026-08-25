@@ -156,3 +156,31 @@ def test_deletion_removes_only_index_entries(tmp_path: Path) -> None:
 
     assert deleted == 2
     assert pdf.is_file()
+
+
+def test_document_preview_resolves_only_catalogued_pdf(tmp_path: Path) -> None:
+    class PreviewRepository(DeleteOnlyRepository):
+        def get(self, document_id: str):
+            if document_id != "doc-1":
+                return None
+            from app.repositories.models import DocumentRecord
+
+            return DocumentRecord(
+                document_id="doc-1",
+                title="TCC",
+                file_name="trabalho.pdf",
+                file_path="/caminho/interno/ignorado.pdf",
+                document_hash="hash",
+                processed_at="2026-01-01T00:00:00Z",
+                chunk_count=1,
+                page_start=1,
+                page_end=2,
+            )
+
+    service = make_service(tmp_path)
+    service.repository = PreviewRepository()
+    service.documents_dir.mkdir()
+    expected = service.documents_dir / "trabalho.pdf"
+    expected.write_bytes(b"%PDF-1.4\nfixture")
+
+    assert service.get_document_file("doc-1") == expected.resolve()

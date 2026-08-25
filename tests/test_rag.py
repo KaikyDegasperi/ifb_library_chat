@@ -14,6 +14,7 @@ from app.rag.service import (
     NO_CONTEXT_ANSWER,
     RETRIEVAL_FAILURE_ANSWER,
     RAGService,
+    VAGUE_QUESTION_ANSWER,
 )
 from app.vectorstore.models import SearchResult, SearchTimings
 
@@ -235,6 +236,58 @@ def test_empty_database_does_not_call_llm() -> None:
     assert response.observation is not None
     assert response.observation.status == "no_context"
     assert response.observation.context_chars == 0
+
+
+def test_vague_question_requests_detail_without_search_or_llm() -> None:
+    retriever = FakeRetriever(results=[result("Contexto que não deve ser usado")])
+    llm = FakeLLM()
+
+    response = RAGService(
+        retriever,
+        llm,
+        vague_question_handling_enabled=True,
+    ).answer("Me fale sobre os TCCs do acervo", assistive_query_handling=True)
+
+    assert response.answer == VAGUE_QUESTION_ANSWER
+    assert response.sources == []
+    assert retriever.calls == []
+    assert llm.calls == []
+    assert response.observation is not None
+    assert response.observation.status == "vague_question"
+
+
+def test_optional_spelling_fallback_only_runs_after_empty_original_search() -> None:
+    class SpellingRetriever(FakeRetriever):
+        def suggest_query(self, query: str) -> str:
+            assert query == "tecnlogia na educacao"
+            return "tecnologia na educação"
+
+        def search(
+            self,
+            query: str,
+            top_k: int = 5,
+            document_id: str | None = None,
+            title: str | None = None,
+        ) -> list[SearchResult]:
+            super().search(query, top_k, document_id, title)
+            if query == "tecnologia na educação":
+                return [result("Tecnologia aplicada à educação matemática.")]
+            return []
+
+    retriever = SpellingRetriever()
+    llm = FakeLLM()
+    response = RAGService(
+        retriever,
+        llm,
+        spelling_fallback_enabled=True,
+    ).answer("tecnlogia na educacao", assistive_query_handling=True)
+
+    assert [call["query"] for call in retriever.calls] == [
+        "tecnlogia na educacao",
+        "tecnologia na educação",
+    ]
+    assert response.answer == "Resposta fundamentada [Fonte 1]."
+    assert len(llm.calls) == 1
 
 
 def test_irrelevant_results_are_not_sent_to_llm() -> None:

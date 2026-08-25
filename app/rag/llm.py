@@ -39,6 +39,13 @@ class OpenAICompatibleProvider(LanguageModelProvider):
         self.default_top_p = default_top_p
         self.default_max_tokens = default_max_tokens
 
+    def _uses_openai_reasoning_parameters(self) -> bool:
+        """Detecta modelos de raciocínio servidos pela API oficial da OpenAI."""
+        model = self.model.strip().lower()
+        return "api.openai.com" in self.base_url.lower() and model.startswith(
+            ("gpt-5", "o1", "o3", "o4")
+        )
+
     def generate(
         self,
         system_prompt: str,
@@ -55,14 +62,23 @@ class OpenAICompatibleProvider(LanguageModelProvider):
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            "temperature": generation_kwargs.get(
-                "temperature", self.default_temperature
-            ),
-            "top_p": generation_kwargs.get("top_p", self.default_top_p),
         }
+        uses_reasoning_parameters = self._uses_openai_reasoning_parameters()
+        if uses_reasoning_parameters:
+            payload["reasoning_effort"] = generation_kwargs.get(
+                "reasoning_effort", "low"
+            )
+        else:
+            payload["temperature"] = generation_kwargs.get(
+                "temperature", self.default_temperature
+            )
+            payload["top_p"] = generation_kwargs.get("top_p", self.default_top_p)
         max_tokens = generation_kwargs.get("max_tokens", self.default_max_tokens)
         if max_tokens is not None:
-            payload["max_tokens"] = max_tokens
+            token_parameter = (
+                "max_completion_tokens" if uses_reasoning_parameters else "max_tokens"
+            )
+            payload[token_parameter] = max_tokens
         try:
             response = httpx.post(
                 f"{self.base_url}/chat/completions",

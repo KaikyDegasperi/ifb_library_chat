@@ -1,6 +1,7 @@
 from pathlib import Path
 from urllib.parse import urljoin
 import math
+import os
 import re
 import time
 
@@ -18,6 +19,11 @@ URL_LISTAGEM = (
 
 PASTA_DOWNLOADS = Path("pdfs_ifb")
 ITENS_POR_PAGINA = 20
+HEADLESS = os.getenv("SCRAPER_HEADLESS", "true").strip().lower() not in {
+    "0",
+    "false",
+    "no",
+}
 
 
 def limpar_nome_arquivo(nome: str) -> str:
@@ -36,7 +42,11 @@ def obter_total_paginas(page) -> int:
 
     texto = info.inner_text().strip()
 
-    match = re.search(r"(\d+)\s*-\s*(\d+)\s*de\s*(\d+)", texto)
+    match = re.search(
+        r"(\d+)\s*-\s*(\d+)\s*(?:de|of)\s*(\d+)",
+        texto,
+        flags=re.IGNORECASE,
+    )
 
     if not match:
         raise RuntimeError(
@@ -163,7 +173,7 @@ def executar():
 
     with sync_playwright() as p:
         browser = p.chromium.launch(
-            headless=False,
+            headless=HEADLESS,
             slow_mo=50,
         )
 

@@ -37,7 +37,8 @@ COPY main.py ./main.py
 RUN groupadd --gid 10001 appuser \
     && useradd --uid 10001 --gid appuser --create-home --shell /usr/sbin/nologin appuser \
     && mkdir -p /data/pdfs /data/processed /data/chroma /data/logs /home/appuser/.cache \
-    && chown -R appuser:appuser /data /home/appuser
+    && chown -R appuser:appuser /data \
+    && chown appuser:appuser /home/appuser /home/appuser/.cache
 
 USER 10001:10001
 

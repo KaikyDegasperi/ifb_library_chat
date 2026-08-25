@@ -1,0 +1,14 @@
+FROM ifb-library-chat:local
+
+USER root
+
+RUN uv pip install --python /app/.venv/bin/python \
+    "streamlit==1.59.1" \
+    "streamlit-pdf==2.0.1"
+
+COPY app /app/app
+COPY frontend /app/frontend
+COPY .streamlit /app/.streamlit
+COPY main.py /app/main.py
+
+USER 10001:10001

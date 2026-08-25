@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi.responses import FileResponse
 
 from app.config import Settings
 from app.dependencies import provide_document_service, provide_settings, require_admin
@@ -49,6 +50,28 @@ async def get_document(
     except DocumentServiceError as exc:
         raise document_http_error(exc) from exc
     return DocumentResponse.model_validate(document)
+
+
+@router.get(
+    "/{document_id}/file",
+    response_class=FileResponse,
+    responses={404: {"model": ErrorResponse}},
+    summary="Exibe o PDF original de um TCC",
+)
+async def get_document_file(
+    document_id: str,
+    service: DocumentService = Depends(provide_document_service),
+) -> FileResponse:
+    try:
+        path = service.get_document_file(document_id)
+    except DocumentServiceError as exc:
+        raise document_http_error(exc) from exc
+    return FileResponse(
+        path,
+        media_type="application/pdf",
+        filename=path.name,
+        content_disposition_type="inline",
+    )
 
 
 @admin_router.post(
